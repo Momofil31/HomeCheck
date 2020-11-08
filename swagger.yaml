@@ -29,17 +29,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            required:
-              - email
-              - password
-            properties:
-              email:
-                type: string
-                description: 'Email address of the user'
-              password:
-                type: string
-                description: 'Password of the user'
+            $ref: '#/definitions/LoginForm'
       responses:
         200:
           description: Logged in correctly
@@ -57,28 +47,10 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            required:
-              - email
-              - password
-              - firstname
-              - lastname
-            properties:
-              email:
-                type: string
-                description: 'Email address of the user'
-              password:
-                type: string
-                description: 'Password of the user'
-              firstname:
-                type: string
-                description: 'Firstname of the user'
-              lastname:
-                type: string
-                description: 'Lastname of the user'
+            $ref: '#/definitions/RegisterForm'
       responses:
         200:
-          description: Register succesful
+          description: Register successful
   /logout:
     x-summary: Logout
     get:
@@ -87,7 +59,7 @@ paths:
         - Users
       responses:
         200:
-          description: Logout succesful
+          description: Logout successful
   /products/:
     x-summary: Products Collection
     get:
@@ -125,8 +97,11 @@ paths:
       responses:
         200:
           description: 'Successful response'
+          schema: 
+            $ref: '#/definitions/Product'
           examples:
             application/json:
+                id: "123456"
                 name: "Tomato Sauce"
                 quantity: 7
                 expiryDate: 25/12/2020
@@ -249,6 +224,8 @@ paths:
       responses:
         200:
           description: 'Successful response'
+          schema:
+            $ref: '#/definitions/Category'
           examples:
             application/json:
                 name: "Bread"
@@ -322,3 +299,107 @@ paths:
           description: Not authorized to do this action
         404:
           description: 'Category not found'
+          
+definitions:
+  LoginForm:
+    type: object
+    required:
+      - email
+      - password
+    properties:
+      email:
+        type: string
+        description: 'Email address of the user'
+      password:
+        type: string
+        description: 'Password of the user'
+        
+  RegisterForm:
+    type: object
+    required:
+      - email
+      - password
+      - firstname
+      - lastname
+    properties:
+      email:
+        type: string
+        description: 'Email address of the user'
+      password:
+        type: string
+        description: 'Password of the user'
+      firstname:
+        type: string
+        description: 'Firstname of the user'
+      lastname:
+        type: string
+        description: 'Lastname of the user'
+  User:
+    type: object
+    required:
+      - id
+      - email
+      - password
+      - firstname
+      - lastname
+    properties:
+      id:
+        type: string
+        description: 'Id of the user'
+      email:
+        type: string
+        description: 'Email address of the user'
+      password:
+        type: string
+        description: 'Password of the user'
+      firstname:
+        type: string
+        description: 'Firstname of the user'
+      lastname:
+        type: string
+        description: 'Lastname of the user'
+  Product:
+    type: object
+    required:
+      - id
+      - name
+      - quantity
+      - expiryDate
+      - category
+      - group
+    properties:
+      id:
+        type: string
+        description: 'Id of the product'
+      name:
+        type: string
+        description: 'Name of the product'
+      quantity:
+        type: "integer"
+        format: "int64"
+        description: 'Product quantity'
+      expiryDate:
+        type: string
+        description: 'Expiry date of product'
+      category:
+        type: string
+        description: 'Category of product such as pasta, sauce..'
+      group:
+        type: string
+        description: 'Group of product such as fridge, pantry, freezer..'
+  Category:
+    type : object
+    required:
+      - id
+      - name
+      - icon
+    properties:
+      id:
+        type: string
+        description: 'Id of the category'
+      name:
+        type: string
+        description: 'Name of the category'
+      icon:
+        type: string
+        description: 'Path of the category icon'
