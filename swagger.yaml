@@ -1,0 +1,324 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "HomeCheck"
+  description: UNITN - Ingegneria del software 2 project
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: homecheck.apiblueprint.org
+basePath: /v1
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+security:
+  - bearerAuth: [ ]
+paths:
+  /login:
+    x-summary: Login
+    post:
+      security: [ ]
+      summary: Send login data
+      tags:
+        - Users
+      parameters:
+        - name: user
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                description: 'Email address of the user'
+              password:
+                type: string
+                description: 'Password of the user'
+      responses:
+        200:
+          description: Logged in correctly
+        401:
+          description: User not logged in correctly
+  /register:
+    x-summary: Register
+    post:
+      security: [ ]
+      summary: Send register data
+      tags:
+        - Users
+      parameters:
+        - name: user
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - email
+              - password
+              - firstname
+              - lastname
+            properties:
+              email:
+                type: string
+                description: 'Email address of the user'
+              password:
+                type: string
+                description: 'Password of the user'
+              firstname:
+                type: string
+                description: 'Firstname of the user'
+              lastname:
+                type: string
+                description: 'Lastname of the user'
+      responses:
+        200:
+          description: Register succesful
+  /logout:
+    x-summary: Logout
+    get:
+      summary: Logout current user
+      tags:
+        - Users
+      responses:
+        200:
+          description: Logout succesful
+  /products/:
+    x-summary: Products Collection
+    get:
+      summary: Get list of products
+      tags:
+        - Products
+      responses:
+        200:
+          description: 'Successful response'
+          examples:
+            application/json:
+              - name: "Tomato Sauce"
+                quantity: 7
+                expiryDate: 25/12/2020
+                category:
+                    name: "Sauce"
+                    icon: "/path/to/icon"
+                group:
+                    name: "Pantry"
+        401:
+          description: 'User not logged in'
+  /products/{productId}:
+    x-summary: Product
+    parameters:
+      - name: "productId"
+        in: "path"
+        description: "Id of the product"
+        required: true
+        type: "integer"
+        format: "int64"
+    get:
+      summary: Get product by id
+      tags:
+        - Products
+      responses:
+        200:
+          description: 'Successful response'
+          examples:
+            application/json:
+                name: "Tomato Sauce"
+                quantity: 7
+                expiryDate: 25/12/2020
+                category:
+                  name: "Sauce"
+                  icon: "/path/to/icon"
+                group:
+                  name: "Pantry"
+        401:
+          description: 'User not logged in'
+    put:
+      summary: Update a product info
+      tags:
+        - Products
+      parameters:
+        - in: body
+          name: product
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 'Name of the product'
+              quantity:
+                type: "integer"
+                format: "int64"
+                description: 'Product quantity'
+              expiryDate:
+                type: string
+                description: 'Expiry date of product'
+              category:
+                type: string
+                description: 'Category of product such as pasta, sauce..'
+              group:
+                type: string
+                description: 'Group of product such as fridge, pantry, freezer..'
+      responses:
+        200:
+          description: 'Successful update'
+        401:
+          description: 'User not logged in'
+        403:
+          description: 'Not authorized to do this action'
+    post:
+      summary: Insert a new product
+      tags:
+        - Products
+      parameters:
+        - in: body
+          name: product
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 'Name of the product'
+              quantity:
+                type: "integer"
+                format: "int64"
+                description: 'Product quantity'
+              expiryDate:
+                type: string
+                description: 'Expiry date of product'
+              category:
+                type: string
+                description: 'Category of product such as pasta, sauce..'
+              group:
+                type: string
+                description: 'Group of product such as fridge, pantry, freezer..'
+      responses:
+        200:
+          description: 'Successful insert'
+        401:
+          description: 'User not logged in'
+        403:
+          description: 'Not authorized to do this action'
+    delete:
+      summary: Delete a product
+      tags:
+        - Products
+      responses:
+        200:
+          description: Successful response
+        401:
+          description: User not logged in
+        403:
+          description: Not authorized to do this action
+  /categories/:
+    x-summary: Categories Collection
+    get:
+      summary: Get list of categories
+      tags:
+        - Categories
+      responses:
+        200:
+          description: 'Successful response'
+          examples:
+            application/json:
+              - name: "Bread"
+                icon: "/path/to/icon"
+        401:
+          description: 'User not logged in'
+        404:
+          description: 'Category not found'
+  /categories/{categoryId}:
+    x-summary: Category
+    parameters:
+      - name: "categoryId"
+        in: "path"
+        description: "Id of the category"
+        required: true
+        type: "integer"
+        format: "int64"
+    get:
+      summary: Get category by id
+      tags:
+        - Categories
+      responses:
+        200:
+          description: 'Successful response'
+          examples:
+            application/json:
+                name: "Bread"
+                icon: "/path/to/icon"
+        401:
+          description: 'User not logged in'
+        404:
+          description: 'Category not found'
+    put:
+      summary: Update category info
+      tags:
+        - Categories
+      parameters:
+        - in: body
+          name: category
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 'Name of the category'
+              icon:
+                type: string
+                description: 'Path of the category icon'
+      responses:
+        200:
+          description: 'Successful update'
+        401:
+          description: 'User not logged in'
+        403:
+          description: 'Not authorized to do this action'
+        404:
+          description: 'Category not found'
+    post:
+      summary: Insert a new category
+      tags:
+        - Categories
+      parameters:
+        - in: body
+          name: category
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: 'Name of the category'
+              icon:
+                type: string
+                description: 'Path of the category icon'
+      responses:
+        200:
+          description: 'Successful update'
+        401:
+          description: 'User not logged in'
+        403:
+          description: 'Not authorized to do this action'
+        404:
+          description: 'Category not found'
+    delete:
+      summary: Delete a category
+      tags:
+        - Categories
+      responses:
+        200:
+          description: Successful response
+        401:
+          description: User not logged in
+        403:
+          description: Not authorized to do this action
+        404:
+          description: 'Category not found'
