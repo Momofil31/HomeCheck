@@ -5,10 +5,6 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-const productRoutes = require('./api/routes/products');
-const categoryRoutes = require('./api/routes/categories');
-const userRoutes = require('./api/routes/users');
-
 mongoose.connect(`mongodb+srv://filippo:${process.env.MONGO_ATLAS_PW}@api.iknun.mongodb.net/API?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
   if (err) console.log(err);
   else console.log('Database connection successful');
@@ -21,9 +17,8 @@ app.use(express.json()); // Parses JSON
 // Handling CORS errors with cors package
 app.use(cors());
 
-app.use('/v1/products', productRoutes);
-app.use('/v1/categories', categoryRoutes);
-app.use('/v1/users', userRoutes);
+// versioning routes
+require('./api/v1/router')(app, express); // v1 API
 
 // Error 404 specific handling
 app.use((req, res, next) => {
