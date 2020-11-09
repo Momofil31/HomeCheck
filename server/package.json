@@ -1,0 +1,27 @@
+{
+  "name": "homecheck",
+  "version": "1.0.0",
+  "description": "RESTful API for HomeCheck App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Lechthaler Marco, Momesso Filippo, Rossi Daniele",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.13",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2"
+  }
+}
