@@ -17,10 +17,6 @@ app.use(express.json()); // Parses JSON
 // Handling CORS errors with cors package
 app.use(cors());
 
-app.get('/', (req, res) => {
-  if (mongoose.con) res.status(200).json({ message: 'ok' });
-});
-
 // Error 404 specific handling
 app.use((req, res, next) => {
   const error = new Error('Not Found');
