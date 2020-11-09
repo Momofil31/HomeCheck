@@ -17,7 +17,7 @@ produces:
 security:
   - bearerAuth: [ ]
 paths:
-  /login:
+  /users/login:
     x-summary: Login
     post:
       security: [ ]
@@ -35,7 +35,7 @@ paths:
           description: Logged in correctly
         401:
           description: User not logged in correctly
-  /register:
+  /users/register:
     x-summary: Register
     post:
       security: [ ]
@@ -51,7 +51,7 @@ paths:
       responses:
         200:
           description: Register successful
-  /logout:
+  /users/logout:
     x-summary: Logout
     get:
       summary: Logout current user
