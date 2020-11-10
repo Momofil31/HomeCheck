@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 const app = express();
+
+dotenv.config();
 
 mongoose.connect(`mongodb+srv://filippo:${process.env.MONGO_ATLAS_PW}@api.iknun.mongodb.net/API?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
   if (err) console.log(err);
