@@ -88,7 +88,7 @@ exports.register = (req, res, next) => {
 
       bcrypt.hash(user.password, 10, (err, hash) => {
         user.password = hash;
-        var userModel = new User(user);
+        const userModel = new User(user);
 
         userModel.save((error) => {
           if (error) {
