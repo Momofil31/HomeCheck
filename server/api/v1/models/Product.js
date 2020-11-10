@@ -10,7 +10,11 @@ const productSchema = mongoose.Schema({
     ref: 'Category',
     required: true,
   },
-  group: { type: String, required: true },
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Group',
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Product', productSchema);
