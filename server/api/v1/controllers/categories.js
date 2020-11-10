@@ -73,19 +73,18 @@ exports.deleteOne = (req, res, next) => {
           message: `User not authorized to delete category ${category.name}`,
         });
       }
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message: 'Category deletion failed',
-      });
-    });
-
-  Category.findByIdAndDelete(categoryId)
-    .exec()
-    .then((result) => {
-      res.status(200).json({
-        message: `Category ${result.name} deleted`,
-      });
+      Category.findByIdAndDelete(categoryId)
+        .exec()
+        .then((result) => {
+          res.status(200).json({
+            message: `Category ${result.name} deleted`,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            message: 'Category deletion failed',
+          });
+        });
     })
     .catch((err) => {
       res.status(500).json({
