@@ -1,4 +1,4 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: '1.0'
   title: "HomeCheck"
@@ -6,400 +6,443 @@ info:
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
-host: homecheck.apiblueprint.org
-basePath: /v1
-schemes:
-  - https
-consumes:
-  - application/json
-produces:
-  - application/json
+
 security:
   - bearerAuth: [ ]
 paths:
   /users/login:
-    x-summary: Login
+    summary: Login
     post:
       security: [ ]
       summary: Send login data
       tags:
         - Users
-      parameters:
-        - name: user
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/LoginForm'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
       responses:
-        200:
+        '200':
           description: Logged in correctly
-        401:
+        '401':
           description: User not logged in correctly
   /users/register:
-    x-summary: Register
+    summary: Register
     post:
       security: [ ]
       summary: Send register data
       tags:
         - Users
-      parameters:
-        - name: user
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/RegisterForm'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterForm'
       responses:
-        200:
+        '200':
           description: Register successful
-  /users/logout:
-    x-summary: Logout
-    get:
-      summary: Logout current user
-      tags:
-        - Users
-      responses:
-        200:
-          description: Logout successful
   /products/:
-    x-summary: Products Collection
+    summary: Products Collection
     get:
       summary: Get list of products
       tags:
         - Products
       responses:
-        200:
+        '200':
           description: 'Successful response'
-          examples:
+          content:
             application/json:
-              - name: "Tomato Sauce"
-                quantity: 7
-                expiryDate: 25/12/2020
-                category:
-                    name: "Sauce"
-                    icon: "/path/to/icon"
-                group:
-                    name: "Pantry"
-        401:
+              schema:
+                $ref: '#/components/schemas/ArrayOfProducts' 
+        '401':
           description: 'User not logged in'
+    post:
+      summary: Insert a new product
+      tags:
+        - Products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the product'
+                quantity:
+                  type: "integer"
+                  description: 'Product quantity'
+                expiryDate:
+                  type: string
+                  description: 'Expiry date of product'
+                category:
+                  type: integer
+                  description: 'Category id of product'
+                group:
+                  type: integer
+                  description: 'Group id of product'
+      responses:
+        '200':
+          description: 'Successful insert'
+        '401':
+          description: 'User not logged in'
+        '403':
+          description: 'Not authorized to do this action'
   /products/{productId}:
-    x-summary: Product
+    summary: Product
     parameters:
       - name: "productId"
         in: "path"
         description: "Id of the product"
         required: true
-        type: "integer"
-        format: "int64"
     get:
       summary: Get product by id
       tags:
         - Products
       responses:
-        200:
+        '200':
           description: 'Successful response'
-          schema: 
-            $ref: '#/definitions/Product'
-          examples:
+          content:
             application/json:
-                id: "123456"
-                name: "Tomato Sauce"
-                quantity: 7
-                expiryDate: 25/12/2020
-                category:
-                  name: "Sauce"
-                  icon: "/path/to/icon"
-                group:
-                  name: "Pantry"
-        401:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                1:
+                  value:
+                    id: 1
+                    name: "Tomato Sauce"
+                    quantity: 7
+                    expiryDate: 25/12/2020
+                    category:
+                      id: 1  
+                      name: "Sauce"
+                      icon: "/path/to/icon"
+                    group:
+                      id: 1  
+                      name: "Pantry"
+        '401':
           description: 'User not logged in'
     put:
       summary: Update a product info
       tags:
         - Products
-      parameters:
-        - in: body
-          name: product
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 'Name of the product'
-              quantity:
-                type: "integer"
-                format: "int64"
-                description: 'Product quantity'
-              expiryDate:
-                type: string
-                description: 'Expiry date of product'
-              category:
-                type: string
-                description: 'Category of product such as pasta, sauce..'
-              group:
-                type: string
-                description: 'Group of product such as fridge, pantry, freezer..'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the product'
+                quantity:
+                  type: "integer"
+                  description: 'Product quantity'
+                expiryDate:
+                  type: string
+                  description: 'Expiry date of product'
+                category:
+                  type: integer
+                  description: 'Category id of product'
+                group:
+                  type: integer
+                  description: 'Group id of product'
       responses:
-        200:
+        '200':
           description: 'Successful update'
-        401:
+        '401':
           description: 'User not logged in'
-        403:
-          description: 'Not authorized to do this action'
-    post:
-      summary: Insert a new product
-      tags:
-        - Products
-      parameters:
-        - in: body
-          name: product
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 'Name of the product'
-              quantity:
-                type: "integer"
-                format: "int64"
-                description: 'Product quantity'
-              expiryDate:
-                type: string
-                description: 'Expiry date of product'
-              category:
-                type: string
-                description: 'Category of product such as pasta, sauce..'
-              group:
-                type: string
-                description: 'Group of product such as fridge, pantry, freezer..'
-      responses:
-        200:
-          description: 'Successful insert'
-        401:
-          description: 'User not logged in'
-        403:
+        '403':
           description: 'Not authorized to do this action'
     delete:
       summary: Delete a product
       tags:
         - Products
       responses:
-        200:
+        '200':
           description: Successful response
-        401:
+        '401':
           description: User not logged in
-        403:
+        '403':
           description: Not authorized to do this action
   /categories/:
-    x-summary: Categories Collection
+    summary: Categories Collection
     get:
       summary: Get list of categories
       tags:
         - Categories
       responses:
-        200:
+        '200':
           description: 'Successful response'
-          examples:
+          content:
             application/json:
-              - name: "Bread"
-                icon: "/path/to/icon"
-        401:
+              schema:
+                $ref: '#/components/schemas/ArrayOfCategories' 
+        '401':
           description: 'User not logged in'
-        404:
-          description: 'Category not found'
+    post:
+      summary: Insert a new category
+      tags:
+        - Categories
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the category'
+                icon:
+                  type: string
+                  description: 'Path of the category icon'
+      responses:
+        '200':
+          description: 'Successful update'
+        '401':
+          description: 'User not logged in'
+        '403':
+          description: 'Not authorized to do this action'
   /categories/{categoryId}:
-    x-summary: Category
+    summary: Category
     parameters:
       - name: "categoryId"
         in: "path"
         description: "Id of the category"
         required: true
-        type: "integer"
-        format: "int64"
     get:
       summary: Get category by id
       tags:
         - Categories
       responses:
-        200:
+        '200':
           description: 'Successful response'
-          schema:
-            $ref: '#/definitions/Category'
-          examples:
+          content:
             application/json:
-                name: "Bread"
-                icon: "/path/to/icon"
-        401:
+              schema:
+                $ref: '#/components/schemas/Category' 
+              examples:
+                1:
+                  value:
+                    id: 1
+                    name: "Bread"
+                    icon: "/path/to/icon"
+        '401':
           description: 'User not logged in'
-        404:
+        '404':
           description: 'Category not found'
     put:
       summary: Update category info
       tags:
         - Categories
-      parameters:
-        - in: body
-          name: category
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 'Name of the category'
-              icon:
-                type: string
-                description: 'Path of the category icon'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the category'
+                icon:
+                  type: string
+                  description: 'Path of the category icon'
       responses:
-        200:
+        '200':
           description: 'Successful update'
-        401:
+        '401':
           description: 'User not logged in'
-        403:
+        '403':
           description: 'Not authorized to do this action'
-        404:
-          description: 'Category not found'
-    post:
-      summary: Insert a new category
-      tags:
-        - Categories
-      parameters:
-        - in: body
-          name: category
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                description: 'Name of the category'
-              icon:
-                type: string
-                description: 'Path of the category icon'
-      responses:
-        200:
-          description: 'Successful update'
-        401:
-          description: 'User not logged in'
-        403:
-          description: 'Not authorized to do this action'
-        404:
+        '404':
           description: 'Category not found'
     delete:
       summary: Delete a category
       tags:
         - Categories
       responses:
-        200:
+        '200':
           description: Successful response
-        401:
+        '401':
           description: User not logged in
-        403:
+        '403':
           description: Not authorized to do this action
-        404:
+        '404':
           description: 'Category not found'
           
-definitions:
-  LoginForm:
-    type: object
-    required:
-      - email
-      - password
-    properties:
-      email:
-        type: string
-        description: 'Email address of the user'
-      password:
-        type: string
-        description: 'Password of the user'
-        
-  RegisterForm:
-    type: object
-    required:
-      - email
-      - password
-      - firstname
-      - lastname
-    properties:
-      email:
-        type: string
-        description: 'Email address of the user'
-      password:
-        type: string
-        description: 'Password of the user'
-      firstname:
-        type: string
-        description: 'Firstname of the user'
-      lastname:
-        type: string
-        description: 'Lastname of the user'
-  User:
-    type: object
-    required:
-      - id
-      - email
-      - password
-      - firstname
-      - lastname
-    properties:
-      id:
-        type: string
-        description: 'Id of the user'
-      email:
-        type: string
-        description: 'Email address of the user'
-      password:
-        type: string
-        description: 'Password of the user'
-      firstname:
-        type: string
-        description: 'Firstname of the user'
-      lastname:
-        type: string
-        description: 'Lastname of the user'
-  Product:
-    type: object
-    required:
-      - id
-      - name
-      - quantity
-      - expiryDate
-      - category
-      - group
-    properties:
-      id:
-        type: string
-        description: 'Id of the product'
-      name:
-        type: string
-        description: 'Name of the product'
-      quantity:
-        type: "integer"
-        format: "int64"
-        description: 'Product quantity'
-      expiryDate:
-        type: string
-        description: 'Expiry date of product'
-      category:
-        type: string
-        description: 'Category of product such as pasta, sauce..'
-      group:
-        type: string
-        description: 'Group of product such as fridge, pantry, freezer..'
-  Category:
-    type : object
-    required:
-      - id
-      - name
-      - icon
-    properties:
-      id:
-        type: string
-        description: 'Id of the category'
-      name:
-        type: string
-        description: 'Name of the category'
-      icon:
-        type: string
-        description: 'Path of the category icon'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    LoginForm:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: 'Email address of the user'
+        password:
+          type: string
+          description: 'Password of the user'
+
+    RegisterForm:
+      type: object
+      required:
+        - email
+        - password
+        - firstname
+        - lastname
+      properties:
+        email:
+          type: string
+          description: 'Email address of the user'
+        password:
+          type: string
+          description: 'Password of the user'
+        firstname:
+          type: string
+          description: 'Firstname of the user'
+        lastname:
+          type: string
+          description: 'Lastname of the user'
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - password
+        - firstname
+        - lastname
+      properties:
+        id:
+          type: integer
+          description: 'Id of the user'
+        email:
+          type: string
+          description: 'Email address of the user'
+        password:
+          type: string
+          description: 'Password of the user'
+        firstname:
+          type: string
+          description: 'Firstname of the user'
+        lastname:
+          type: string
+          description: 'Lastname of the user'
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - quantity
+        - expiryDate
+        - category
+        - group
+      properties:
+        id:
+          type: integer
+          description: 'Id of the product'
+        name:
+          type: string
+          description: 'Name of the product'
+        quantity:
+          type: "integer"
+          description: 'Product quantity'
+        expiryDate:
+          type: string
+          description: 'Expiry date of product'
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: 'Id of the category'
+            name:
+              type: string
+              description: 'Name of the category'
+            icon:
+              type: string
+              description: 'Path of the category icon'
+        group:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: 'Id of the group'
+            name:
+              type: string
+              description: 'Name of the group'
+    Category:
+      type : object
+      required:
+        - id
+        - name
+        - icon
+      properties:
+        id:
+          type: integer
+          description: 'Id of the category'
+        name:
+          type: string
+          description: 'Name of the category'
+        icon:
+          type: string
+          description: 'Path of the category icon'
+    ArrayOfProducts:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: 'Id of the product'
+          name:
+            type: string
+            description: 'Name of the product'
+          quantity:
+            type: "integer"
+            description: 'Product quantity'
+          expiryDate:
+            type: string
+            description: 'Expiry date of product'
+          category:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 'Id of the category'
+              name:
+                type: string
+                description: 'Name of the category'
+              icon:
+                type: string
+                description: 'Path of the category icon'
+          group:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 'Id of the group'
+              name:
+                type: string
+                description: 'Name of the group'
+    ArrayOfCategories:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: 'Id of the category'
+          name:
+            type: string
+            description: 'Name of the category'
+          icon:
+            type: string
+            description: 'Path of the category icon'
