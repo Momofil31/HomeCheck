@@ -11,5 +11,4 @@ module.exports = (req, res, next) => {
       message: 'Authentication failed',
     });
   }
-  next();
 };
