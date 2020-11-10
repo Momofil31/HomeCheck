@@ -15,6 +15,8 @@ exports.createOne = (req, res, next) => {
   const category = {
     name: req.body.name ? req.body.name : '',
     icon: req.body.icon ? req.body.icon : '',
+    user: req.userData.userId,
+    default: req.userData.userId === process.env.ADMIN_USER_ID,
   };
 
   if (category.name === '' || category.icon === '') {
@@ -62,6 +64,21 @@ exports.deleteOne = (req, res, next) => {
       message: 'No category provided',
     });
   }
+
+  Category.findById(categoryId)
+    .exec()
+    .then((category) => {
+      if (category.user !== req.userData.userId) {
+        return res.status(401).json({
+          message: `User not authorized to delete category ${category.name}`,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: 'Category deletion failed',
+      });
+    });
 
   Category.findByIdAndDelete(categoryId)
     .exec()
