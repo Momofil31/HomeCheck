@@ -63,7 +63,7 @@ exports.getOne = (req, res, next) => {
         category.user.toString() !== req.userData.userId &&
         category.user.toString() !== process.env.ADMIN_USER_ID
       ) {
-        return res.status(401).json({
+        return res.status(403).json({
           error: {
             message: 'Get category failed',
             description: `User not authorized to view category ${category.name}`,
@@ -196,7 +196,7 @@ exports.deleteOne = (req, res, next) => {
         });
       }
       if (category.user !== req.userData.userId) {
-        return res.status(401).json({
+        return res.status(403).json({
           error: {
             message: 'Deletion failed.',
             description: `User not authorized to delete category ${category.name}.`,
