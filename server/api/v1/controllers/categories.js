@@ -51,6 +51,14 @@ exports.getOne = (req, res, next) => {
   Category.findById(id)
     .exec()
     .then((category) => {
+      if (!category) {
+        return res.status(404).json({
+          error: {
+            message: 'Get category failed',
+            description: 'Category not found',
+          },
+        });
+      }
       if (
         category.user.toString() !== req.userData.userId &&
         category.user.toString() !== process.env.ADMIN_USER_ID
@@ -179,6 +187,14 @@ exports.deleteOne = (req, res, next) => {
   Category.findById(categoryId)
     .exec()
     .then((category) => {
+      if (!category) {
+        return res.status(404).json({
+          error: {
+            message: 'Deletion failed',
+            description: 'Category not found',
+          },
+        });
+      }
       if (category.user !== req.userData.userId) {
         return res.status(401).json({
           error: {
