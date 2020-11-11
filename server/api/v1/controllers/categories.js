@@ -8,12 +8,22 @@ exports.getList = (req, res, next) => {
 
   Category.find(where)
     .exec()
-    .then((categories) => 
+    .then((categories) => {
       res.status(200).json({
         data: {
-        message: 'Get categories successful.',
-        categories,
-      }
+          message: 'Get categories successful.',
+          categories: categories.map((category) => ({
+            id: category._id,
+            name: category.name,
+            icon: category.icon,
+            default: category.default,
+            request: {
+              type: 'GET',
+              url: `${req.headers.host}/categories/${category._id}`,
+            },
+          })),
+        },
+      });
     })
     .catch((err) => {
       res.status(500).json({
@@ -41,7 +51,10 @@ exports.getOne = (req, res, next) => {
   Category.findById(id)
     .exec()
     .then((category) => {
-      if (category.user !== req.userData.userId && category.user !== process.env.ADMIN_USER_ID) {
+      if (
+        category.user.toString() !== req.userData.userId &&
+        category.user.toString() !== process.env.ADMIN_USER_ID
+      ) {
         return res.status(401).json({
           error: {
             message: 'Get category failed',
@@ -53,7 +66,16 @@ exports.getOne = (req, res, next) => {
       return res.status(200).json({
         data: {
           message: 'Get category successfull',
-          category,
+          category: {
+            id: category._id,
+            name: category.name,
+            icon: category.icon,
+            default: category.default,
+            request: {
+              type: 'GET',
+              url: `${req.headers.host}/categories`,
+            },
+          },
         },
       });
     })
@@ -120,6 +142,7 @@ exports.createOne = (req, res, next) => {
               id: categoryModel._id,
               name: categoryModel.name,
               icon: categoryModel.icon,
+              default: categoryModel.default,
               request: {
                 type: 'GET',
                 url: `${req.headers.host}/categories/${categoryModel._id}`,
@@ -174,6 +197,7 @@ exports.deleteOne = (req, res, next) => {
                 id: category.id,
                 name: category.name,
                 icon: category.icon,
+                default: category.default,
               },
             },
           });
