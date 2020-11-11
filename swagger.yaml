@@ -174,13 +174,17 @@ paths:
         - Categories
       responses:
         '200':
-          description: 'Successful response'
+          description: Get categories successful
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArrayOfCategories' 
+        '400':
+          description: No category provided
         '401':
-          description: 'User not logged in'
+          description: Authentication failed.
+        '500':
+          description: Something went wrong when retrieving categories.
     post:
       summary: Insert a new category
       tags:
@@ -198,12 +202,22 @@ paths:
                   type: string
                   description: 'Path of the category icon'
       responses:
-        '200':
-          description: 'Successful update'
+        '201':
+          description: Creation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category' 
+        '400':
+          description: Name or icon are not filled in with the corresponding data.
         '401':
-          description: 'User not logged in'
-        '403':
-          description: 'Not authorized to do this action'
+          description: Authentication failed.
+        '409':
+          description: Category already exists.
+        '500':
+          description: Something went wrong during creation.
+        '500':
+          description: Error in saving new category.
   /categories/{categoryId}:
     summary: Category
     parameters:
@@ -217,7 +231,7 @@ paths:
         - Categories
       responses:
         '200':
-          description: 'Successful response'
+          description: Get category successful
           content:
             application/json:
               schema:
@@ -228,10 +242,17 @@ paths:
                     id: 1
                     name: "Bread"
                     icon: "/path/to/icon"
+                    default: false
+        '400':
+          description: No category provided
         '401':
-          description: 'User not logged in'
+          description: Authentication failedc
+        '403':
+          description: User not authorized to get category
         '404':
-          description: 'Category not found'
+          description: Category not found
+        '500':
+          description: Something went wrong when retrieving category
     put:
       summary: Update category info
       tags:
@@ -263,13 +284,21 @@ paths:
         - Categories
       responses:
         '200':
-          description: Successful response
+          description: Deletion successful
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: No category provided
         '401':
-          description: User not logged in
+          description: Authentication failed
         '403':
-          description: Not authorized to do this action
+          description: User not authorized to delete category
         '404':
-          description: 'Category not found'
+          description: Category not found
+        '500':
+          description: Something went wrong during deletion
           
 components:
   securitySchemes:
@@ -384,6 +413,8 @@ components:
         - id
         - name
         - icon
+        - default
+        - user
       properties:
         id:
           type: integer
@@ -394,6 +425,12 @@ components:
         icon:
           type: string
           description: 'Path of the category icon'
+        default:
+          type: boolean
+          description: 'Whether is a default category or not'
+        user: 
+          type: string
+          description: 'Id of the user to whom this category belongs'
     ArrayOfProducts:
       type: array
       items:
