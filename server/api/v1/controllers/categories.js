@@ -1,10 +1,49 @@
 const mongoose = require('mongoose');
 const Category = require('../models/Category');
 
-exports.getList = (req, res, next) => {};
+exports.getList = (req, res, next) => {
+  const where = {
+    $or: [
+      { user: process.env.ADMIN_USER_ID },
+      { user: req.userData.userId },
+    ],
+  };
+
+  Category.find(where)
+    .exec()
+    .then((categories) => res.status(200).json(categories))
+    .catch((err) => {
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
 
 exports.getOne = (req, res, next) => {
-  const id = req.params.categoryId;
+  const id = req.params.categoryId ? req.params.categoryId : '';
+
+  if (id === '') {
+    return res.status(400).json({
+      message: 'No category provided',
+    });
+  }
+
+  Category.findById(id)
+    .exec()
+    .then((category) => {
+      if (category.user != req.userData.userId && category.user != process.env.ADMIN_USER_ID) {
+        return res.status(401).json({
+          message: `User not authorized to view category ${category.name}`,
+        });
+      }
+
+      return res.status(200).json(category);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: 'Get category failed',
+      });
+    });
 };
 
 exports.updateOne = (req, res, next) => {
