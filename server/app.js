@@ -25,7 +25,7 @@ require('./api/v1/router')(app, express); // v1 API
 
 // Error 404 specific handling
 app.use((req, res, next) => {
-  const error = new Error('Not Found');
+  const error = new Error('404 Not Found!');
   error.status = 404;
   next(error);
 });
@@ -36,6 +36,7 @@ app.use((error, req, res, next) => {
   res.json({
     error: {
       message: error.message,
+      description: error.status === 404 ? 'Cannot find the resource you are looking for.' : '',
     },
   });
 });

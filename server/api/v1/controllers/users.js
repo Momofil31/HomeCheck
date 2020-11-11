@@ -10,13 +10,19 @@ exports.login = (req, res, next) => {
     .then((user) => {
       if (user.length < 1) {
         return res.status(401).json({
-          message: 'Authentication failed',
+          error: {
+            message: 'Authentication failed.',
+            description: 'Cannot find a user with the requested email.',
+          },
         });
       }
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
           return res.status(401).json({
-            message: 'Authentication failed',
+            error: {
+              message: 'Authentication failed.',
+              description: 'Password is incorrect.',
+            },
           });
         }
         if (result) {
@@ -31,19 +37,34 @@ exports.login = (req, res, next) => {
             },
           );
           return res.status(200).json({
-            message: 'Authentication successful',
-            token,
+            data: {
+              message: 'Authentication successful.',
+              token,
+              user: {
+                id: user[0]._id,
+                email: user[0].email,
+                firstname: user[0].firstname,
+                lastname: user[0].lastname,
+              },
+            },
           });
         }
         return res.status(401).json({
-          message: 'Authentication failed',
+          error: {
+            message: 'Authentication failed',
+            description: 'Something went wrong when checking password.',
+          },
         });
       });
     })
     .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err,
+        error: {
+          message: err.message || 'Something went wrong.',
+          description: '',
+          ...err,
+        },
       });
     });
 };
@@ -61,28 +82,40 @@ exports.register = (req, res, next) => {
 
   if (user.email === '' || user.firstname === '' || user.lastname === '' || user.password === '') {
     return res.status(400).json({
-      message: 'Empty data',
+      error: {
+        message: 'Registration failed.',
+        description: 'Email or password are not filled in with the corresponding data.',
+      },
     });
   }
 
   if (!emailRegex.test(user.email)) {
     return res.status(400).json({
-      message: 'Email is not valid',
+      error: {
+        message: 'Registration failed.',
+        description: 'Email is not valid.',
+      },
     });
   }
 
   if (!passwordRegex.test(user.password)) {
     return res.status(400).json({
-      message: 'Password not valid',
+      error: {
+        message: 'Registration failed.',
+        description: 'Password not valid',
+      },
     });
   }
 
   User.find({ email: user.email })
     .exec()
-    .then((response) => {
-      if (response.length >= 1) {
+    .then((result) => {
+      if (result.length >= 1) {
         return res.status(409).json({
-          message: 'Email already exists',
+          error: {
+            message: 'Registration failed.',
+            description: 'Email already exists.',
+          },
         });
       }
 
@@ -94,12 +127,22 @@ exports.register = (req, res, next) => {
           if (error) {
             console.log(error);
             return res.status(500).json({
-              error: 'Error with registration',
+              error: {
+                message: 'Registration failed.',
+                description: 'Something went wrong when creating your user.',
+              },
             });
           }
-
           return res.status(201).json({
-            message: 'User registered successfully',
+            data: {
+              message: 'Registration successful.',
+              user: {
+                id: userModel._id,
+                email: userModel.email,
+                firstname: userModel.firstname,
+                lastname: userModel.lastname,
+              },
+            },
           });
         });
       });
@@ -107,7 +150,11 @@ exports.register = (req, res, next) => {
     .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err,
+        error: {
+          message: 'Registration failed.',
+          descrition: 'Something went wrong during registration.',
+          ...err,
+        },
       });
     });
 };

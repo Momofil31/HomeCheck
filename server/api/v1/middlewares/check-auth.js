@@ -8,7 +8,10 @@ module.exports = (req, res, next) => {
     next();
   } catch (error) {
     return res.status(401).json({
-      message: 'Authentication failed',
+      error: {
+        message: 'Authentication failed.',
+        description: 'JWT token is not a valid token.',
+      },
     });
   }
 };

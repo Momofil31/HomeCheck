@@ -3,18 +3,25 @@ const Category = require('../models/Category');
 
 exports.getList = (req, res, next) => {
   const where = {
-    $or: [
-      { user: process.env.ADMIN_USER_ID },
-      { user: req.userData.userId },
-    ],
+    $or: [{ user: process.env.ADMIN_USER_ID }, { user: req.userData.userId }],
   };
 
   Category.find(where)
     .exec()
-    .then((categories) => res.status(200).json(categories))
+    .then((categories) => 
+      res.status(200).json({
+        data: {
+        message: 'Get categories successful.',
+        categories,
+      }
+    })
     .catch((err) => {
       res.status(500).json({
-        error: err,
+        error: {
+          message: 'Get categories failed.',
+          description: 'Something went wrong when retrieving categories.',
+          ...err,
+        },
       });
     });
 };
@@ -24,24 +31,39 @@ exports.getOne = (req, res, next) => {
 
   if (id === '') {
     return res.status(400).json({
-      message: 'No category provided',
+      error: {
+        message: 'Get category failed',
+        description: 'No category provided',
+      },
     });
   }
 
   Category.findById(id)
     .exec()
     .then((category) => {
-      if (category.user != req.userData.userId && category.user != process.env.ADMIN_USER_ID) {
+      if (category.user !== req.userData.userId && category.user !== process.env.ADMIN_USER_ID) {
         return res.status(401).json({
-          message: `User not authorized to view category ${category.name}`,
+          error: {
+            message: 'Get category failed',
+            description: `User not authorized to view category ${category.name}`,
+          },
         });
       }
 
-      return res.status(200).json(category);
+      return res.status(200).json({
+        data: {
+          message: 'Get category successfull',
+          category,
+        },
+      });
     })
     .catch((err) => {
       res.status(500).json({
-        message: 'Get category failed',
+        error: {
+          message: 'Get category failed',
+          description: 'Something went wrong when getting category',
+          ...err,
+        },
       });
     });
 };
@@ -60,7 +82,10 @@ exports.createOne = (req, res, next) => {
 
   if (category.name === '' || category.icon === '') {
     return res.status(400).json({
-      message: 'Empty data',
+      error: {
+        message: 'Creation failed.',
+        description: 'Name or icon are not filled in with the corresponding data.',
+      },
     });
   }
 
@@ -71,7 +96,10 @@ exports.createOne = (req, res, next) => {
     .then((response) => {
       if (response.length >= 1) {
         return res.status(409).json({
-          message: 'Category already exists',
+          error: {
+            message: 'Creation failed.',
+            description: 'Category already exists.',
+          },
         });
       }
       const categoryModel = new Category(category);
@@ -79,18 +107,36 @@ exports.createOne = (req, res, next) => {
         if (error) {
           console.log(error);
           return res.status(500).json({
-            error: 'Error in saving new category',
+            error: {
+              message: 'Creation failed.',
+              description: 'Error in saving new category.',
+            },
           });
         }
         return res.status(201).json({
-          message: 'Category created successfully',
+          data: {
+            message: 'Creation successful.',
+            category: {
+              id: categoryModel._id,
+              name: categoryModel.name,
+              icon: categoryModel.icon,
+              request: {
+                type: 'GET',
+                url: `${req.headers.host}/categories/${categoryModel._id}`,
+              },
+            },
+          },
         });
       });
     })
     .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err,
+        error: {
+          message: 'Creation failed.',
+          description: 'Something went wrong during creation.',
+          ...err,
+        },
       });
     });
 };
@@ -100,7 +146,10 @@ exports.deleteOne = (req, res, next) => {
 
   if (categoryId === '') {
     return res.status(400).json({
-      message: 'No category provided',
+      error: {
+        message: 'Deletion failed.',
+        description: 'No category provided.',
+      },
     });
   }
 
@@ -109,25 +158,43 @@ exports.deleteOne = (req, res, next) => {
     .then((category) => {
       if (category.user !== req.userData.userId) {
         return res.status(401).json({
-          message: `User not authorized to delete category ${category.name}`,
+          error: {
+            message: 'Deletion failed.',
+            description: `User not authorized to delete category ${category.name}.`,
+          },
         });
       }
       Category.findByIdAndDelete(categoryId)
         .exec()
         .then((result) => {
           res.status(200).json({
-            message: `Category ${result.name} deleted`,
+            data: {
+              message: 'Deletion successful.',
+              category: {
+                id: category.id,
+                name: category.name,
+                icon: category.icon,
+              },
+            },
           });
         })
         .catch((err) => {
           res.status(500).json({
-            message: 'Category deletion failed',
+            error: {
+              message: 'Deletion failed.',
+              descrition: 'Something went wrong during deletion.',
+              ...err,
+            },
           });
         });
     })
     .catch((err) => {
       res.status(500).json({
-        message: 'Category deletion failed',
+        error: {
+          message: 'Deletion failed.',
+          descrition: 'Something went wrong during deletion.',
+          ...err,
+        },
       });
     });
 };
