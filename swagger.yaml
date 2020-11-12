@@ -54,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfProducts' 
+                $ref: '#/components/schemas/ArrayOfProducts'
         '401':
           description: 'User not logged in'
     post:
@@ -115,11 +115,11 @@ paths:
                     quantity: 7
                     expiryDate: 25/12/2020
                     category:
-                      id: 1  
+                      id: 1
                       name: "Sauce"
                       icon: "/path/to/icon"
                     group:
-                      id: 1  
+                      id: 1
                       name: "Pantry"
         '401':
           description: 'User not logged in'
@@ -178,7 +178,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfCategories' 
+                $ref: '#/components/schemas/ArrayOfCategories'
         '400':
           description: No category provided
         '401':
@@ -207,7 +207,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category' 
+                $ref: '#/components/schemas/Category'
         '400':
           description: Name or icon are not filled in with the corresponding data.
         '401':
@@ -235,7 +235,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category' 
+                $ref: '#/components/schemas/Category'
               examples:
                 1:
                   value:
@@ -246,7 +246,7 @@ paths:
         '400':
           description: No category provided
         '401':
-          description: Authentication failedc
+          description: Authentication failed
         '403':
           description: User not authorized to get category
         '404':
@@ -285,7 +285,7 @@ paths:
       responses:
         '200':
           description: Deletion successful
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
@@ -549,7 +549,7 @@ components:
         default:
           type: boolean
           description: 'Whether is a default category or not'
-        user: 
+        user:
           type: string
           description: 'Id of the user to whom this category belongs'
     Group:
