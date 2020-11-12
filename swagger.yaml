@@ -299,7 +299,128 @@ paths:
           description: Category not found
         '500':
           description: Something went wrong during deletion
-          
+  /groups/:
+    summary: Groups Collection
+    get:
+      summary: Get list of groups
+      tags:
+        - Groups
+      responses:
+        '200':
+          description: Get groups successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfGroups'
+        '401':
+          description: Authentication failed.
+        '500':
+          description: Something went wrong when retrieving groups.
+    post:
+      summary: Insert a new group
+      tags:
+        - Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the group'
+      responses:
+        '201':
+          description: Creation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: Name not filled in with the corresponding data.
+        '401':
+          description: Authentication failed.
+        '409':
+          description: Group already exists.
+        '500':
+          description: Something went wrong during creation.
+  /groups/{groupId}:
+    summary: Group
+    parameters:
+      - name: "groupId"
+        in: "path"
+        description: "Id of the group"
+        required: true
+    get:
+      summary: Get group by id
+      tags:
+        - Groups
+      responses:
+        '200':
+          description: Get group successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+              examples:
+                1:
+                  value:
+                    id: 1
+                    name: "Pantry"
+        '400':
+          description: No group provided
+        '401':
+          description: Authentication failed
+        '403':
+          description: User not authorized to get group
+        '404':
+          description: Group not found
+        '500':
+          description: Something went wrong when retrieving group
+    put:
+      summary: Update group info
+      tags:
+        - Groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Name of the group'
+      responses:
+        '200':
+          description: 'Successful update'
+        '401':
+          description: 'User not logged in'
+        '403':
+          description: 'Not authorized to do this action'
+        '404':
+          description: 'Group not found'
+    delete:
+      summary: Delete a group
+      tags:
+        - Groups
+      responses:
+        '200':
+          description: Deletion successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          description: No group provided
+        '401':
+          description: Authentication failed
+        '403':
+          description: User not authorized to delete group
+        '404':
+          description: Group not found
+        '500':
+          description: Something went wrong during deletion
+
 components:
   securitySchemes:
     bearerAuth:
@@ -431,6 +552,22 @@ components:
         user: 
           type: string
           description: 'Id of the user to whom this category belongs'
+    Group:
+      type: object
+      required:
+        - id
+        - name
+        - user
+      properties:
+        id:
+          type: integer
+          description: 'Id of the group'
+        name:
+          type: string
+          description: 'Name of the group'
+        user:
+          type: string
+          description: 'Id of the user to whom this group belongs'
     ArrayOfProducts:
       type: array
       items:
@@ -483,3 +620,14 @@ components:
           icon:
             type: string
             description: 'Path of the category icon'
+    ArrayOfGroups:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: 'Id of the group'
+          name:
+            type: string
+            description: 'Name of the group'
