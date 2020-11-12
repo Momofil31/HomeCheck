@@ -216,8 +216,6 @@ paths:
           description: Category already exists.
         '500':
           description: Something went wrong during creation.
-        '500':
-          description: Error in saving new category.
   /categories/{categoryId}:
     summary: Category
     parameters:
