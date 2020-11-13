@@ -8,10 +8,4 @@ router.get('/', checkAuth, GroupsController.getList);
 
 router.get('/:groupId', checkAuth, GroupsController.getOne);
 
-router.put('/:groupId', checkAuth, GroupsController.updateOne);
-
-router.post('/', checkAuth, GroupsController.createOne);
-
-router.delete('/:groupId', checkAuth, GroupsController.deleteOne);
-
 module.exports = router;
