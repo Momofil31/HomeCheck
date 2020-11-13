@@ -4,6 +4,8 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 
+import './styles/all.less';
+
 Vue.config.productionTip = false;
 
 window.$apiBaseUrl = 'http://localhost:3000/';
