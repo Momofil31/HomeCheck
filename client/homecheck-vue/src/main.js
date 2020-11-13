@@ -6,6 +6,8 @@ import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
+window.$apiBaseUrl = 'http://localhost:3000/';
+
 new Vue({
   router,
   store,

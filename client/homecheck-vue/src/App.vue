@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <Navigation />
+    <Toast />
+    <Navigation v-if="isLoggedIn"/>
 
     <!-- Sizes your content based upon application components -->
     <v-main>
@@ -18,16 +19,20 @@
 <script>
 
   import Navigation from "@/components/navigation/Navigation.vue";
+  import Toast from "@/components/Toast.vue";
     
   export default {
     name: 'App',
 
     components: {
-      Navigation
+      Navigation,
+      Toast
     },
 
-    data: () => ({
-      //
-    }),
+    computed: {
+      isLoggedIn() {
+        return this.$store.getters.isLoggedIn;
+      }
+    }
   };
 </script>

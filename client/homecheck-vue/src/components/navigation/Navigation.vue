@@ -45,7 +45,7 @@
         { title: 'Products', icon: 'mdi-cart', action: '/products' },
         { title: 'Categories', icon: 'mdi-store', action: '/categories' },
         { title: 'Share', icon: 'mdi-share', action: '/' },
-        { title: 'Logout', icon: 'mdi-exit-to-app', action: '/' },
+        { title: 'Logout', icon: 'mdi-exit-to-app', action: '/logout' },
       ],
       mini: true,
     }),

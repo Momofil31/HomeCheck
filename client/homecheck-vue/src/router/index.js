@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '@/views/Home.vue';
+import store from "@/store/index.js";
 
 Vue.use(VueRouter);
 
@@ -20,12 +21,29 @@ const routes = [
     name: 'Categories',
     component: () => import('@/views/Categories.vue'),
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'),
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: () => import('@/views/Logout.vue'),
+  },
 ];
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: '/',
   routes,
 });
+
+router.beforeEach((to, from, next) => {  
+  var isLoggedIn = store.getters.isLoggedIn
+    
+  if (to.name !== 'Login' && !isLoggedIn) next({ name: 'Login' })
+  else next()
+})
 
 export default router;
