@@ -71,7 +71,6 @@
       
       changePasswordVisibility: function(){
         this.showPassword = !this.showPassword;
-        console.log("qui")
       }
     },
 
