@@ -30,7 +30,7 @@
               <td>0</td>
               <td>
                 <v-icon>mdi-pencil</v-icon>
-                <v-icon v-if='!item.default'>mdi-delete</v-icon>
+                <v-icon v-if='!item.default' @click="deleteCategory(item)">mdi-delete</v-icon>
               </td>
             </tr>
           </tbody>
@@ -61,6 +61,18 @@
           Instance.categories = data.result.categories;
         }).catch(function(data){
           Instance.categories = [];
+        });
+      },
+      
+      deleteCategory: function(category){
+        
+        let Instance = this;
+
+        this.$store.dispatch("api/categories/DeleteOne", {id: category.id})
+        .then(function(data){
+          Instance.loadCategories();
+        }).catch(function(data){
+          
         });
       }
     },
