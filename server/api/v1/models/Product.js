@@ -5,13 +5,18 @@ const productSchema = mongoose.Schema({
   quantity: { type: Number, required: true },
   expiryDate: { type: Date },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'Category',
     required: true,
   },
   group: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.ObjectId,
     ref: 'Group',
+    required: true,
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
     required: true,
   },
 });
