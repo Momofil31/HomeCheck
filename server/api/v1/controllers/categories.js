@@ -195,7 +195,7 @@ exports.deleteOne = (req, res, next) => {
           },
         });
       }
-      if (category.user !== req.userData.userId) {
+      if (category.user.toString() !== req.userData.userId) {
         return res.status(403).json({
           error: {
             message: 'Deletion failed.',
