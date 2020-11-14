@@ -43,6 +43,7 @@ router.beforeEach((to, from, next) => {
   var isLoggedIn = store.getters.isLoggedIn
     
   if (to.name !== 'Login' && !isLoggedIn) next({ name: 'Login' })
+  else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' })
   else next()
 })
 

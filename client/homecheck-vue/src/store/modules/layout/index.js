@@ -14,4 +14,10 @@ export default {
       state.loadingContent = loading;
     }
   },
+  
+  getters: {
+    isLoading: function(state){
+      return state.loadingContent
+    }
+  }
 }

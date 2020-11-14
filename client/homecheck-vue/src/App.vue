@@ -1,5 +1,13 @@
 <template>
   <v-app>
+    
+    <div id="loader" v-show="isLoading">
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
+    </div>
+    
     <Toast />
     <Navigation v-if="isLoggedIn"/>
 
@@ -32,6 +40,10 @@
     computed: {
       isLoggedIn() {
         return this.$store.getters.isLoggedIn;
+      },
+      
+      isLoading() {
+        return this.$store.getters['layout/isLoading'];
       }
     }
   };
