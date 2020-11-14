@@ -6,6 +6,6 @@ const GroupsController = require('../controllers/groups');
 
 router.get('/', checkAuth, GroupsController.getList);
 
-router.get('/:groupId', checkAuth, GroupsController.getOne);
+router.get('/:groupId', checkAuth, GroupsController.validationChainParam, GroupsController.validate, GroupsController.getOne);
 
 module.exports = router;

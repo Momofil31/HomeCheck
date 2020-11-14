@@ -1,7 +1,7 @@
-// const mongoose = require('mongoose');
+const { param, validationResult } = require('express-validator');
 const Group = require('../models/Group');
 
-exports.getList = (req, res, next) => {
+exports.getList = (req, res) => {
   Group.find({})
     .exec()
     .then((groups) => {
@@ -30,19 +30,8 @@ exports.getList = (req, res, next) => {
     });
 };
 
-exports.getOne = (req, res, next) => {
-  const id = req.params.groupId ? req.params.groupId : '';
-  // TODO move this object id check in a function for all controllers
-  const checkForHexRegExp = new RegExp('^[0-9a-fA-F]{24}$');
-
-  if (!checkForHexRegExp.test(id)) {
-    return res.status(400).json({
-      error: {
-        message: 'Get group failed',
-        description: 'No group provided',
-      },
-    });
-  }
+exports.getOne = (req, res) => {
+  const id = req.params.groupId;
 
   Group.findById(id)
     .exec()
@@ -50,15 +39,14 @@ exports.getOne = (req, res, next) => {
       if (!group) {
         return res.status(404).json({
           error: {
-            message: 'Get group failed',
-            description: 'Group not found',
+            message: 'Group not found',
           },
         });
       }
 
       return res.status(200).json({
         data: {
-          message: 'Get group successful',
+          message: 'Group found',
           group: {
             id: group._id,
             name: group.name,
@@ -71,12 +59,33 @@ exports.getOne = (req, res, next) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         error: {
-          message: 'Get group failed',
-          description: 'Something went wrong when getting group',
-          ...err,
+          message: 'Get group failed due to a server error. Try again later',
         },
       });
     });
 };
+
+exports.validate = (req, res, next) => {
+  // Finds the validation errors in this request and wraps them in an object with handy functions
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      error: {
+        message: 'Validation failed',
+        errors: errors.array(),
+      },
+    });
+  }
+  next();
+};
+
+exports.validationChainParam = [
+  param('groupId')
+    .isString()
+    .withMessage('Id not a string')
+    .isMongoId()
+    .withMessage('Invalid id'),
+];
