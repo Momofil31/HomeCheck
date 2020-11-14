@@ -1,6 +1,9 @@
 <template>
   <div id="login">
     <v-card>
+      <v-card-title >
+        <h3>Login</h3>
+      </v-card-title>
       <v-card-text class="pt-4">
         <v-form ref="form"
           v-model="valid">
@@ -11,6 +14,7 @@
             :rules="emailRules"
             prepend-inner-icon="mdi-email"
             required
+            autofocus
           ></v-text-field>
           <v-text-field
             label="Enter your password"
