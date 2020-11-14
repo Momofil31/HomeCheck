@@ -1,35 +1,63 @@
 import users from './users';
+import categories from './categories';
 
 import axios from 'axios'
 
 export default {
   namespaced: true,
   modules: {
-    users
+    users,
+    categories
   },
   actions: {
     get: function(context, request) {
+      let Instance = this;
       return new Promise(function(resolve, reject) {
         try {
-          axios.get(window.$apiBaseUrl + request.endpoint, request.data)
+          var config = {};
+          if(Instance.getters.isLoggedIn){
+            var token = localStorage.getItem("token");
+            config = {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Headers': true
+              }
+            };
+          }
+          
+          axios.get(window.$apiBaseUrl + request.endpoint, config)
             .then(function(response){
             resolve(response.data)
-          }).catch(function(response){
-            reject(response.data)
+          }).catch(function(error){
+            reject(error.response.data)
           });
         } catch (exception) {
+          console.log(exception)
           reject('error in api get function');
         }
       }) 
     },
     post: function(context, request) {
+      let Instance = this;
       return new Promise(function(resolve, reject) {
         try {
-          axios.post(window.$apiBaseUrl + request.endpoint, request.data)
+          
+          var config = {};
+          if(Instance.getters.isLoggedIn){
+            var token = localStorage.getItem("token");
+            config = {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Headers': true
+              }
+            };
+          }
+          
+          axios.post(window.$apiBaseUrl + request.endpoint, request.data, config)
             .then(function(response){
             resolve(response.data)
-          }).catch(function(response){
-            reject(response.data)
+          }).catch(function(error){
+            reject(error.response.data)
           });
         } catch (exception) {
           reject('error in api post function');
@@ -37,13 +65,26 @@ export default {
       }) 
     },
     put: function(context, request) {
+      let Instance = this;
       return new Promise(function(resolve, reject) {
         try {
-          axios.put(window.$apiBaseUrl + request.endpoint, request.data)
+          
+          var config = {};
+          if(Instance.getters.isLoggedIn){
+            var token = localStorage.getItem("token");
+            config = {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Headers': true
+              }
+            };
+          }
+          
+          axios.put(window.$apiBaseUrl + request.endpoint, request.data, config)
             .then(function(response){
             resolve(response.data)
-          }).catch(function(response){
-            reject(response.data)
+          }).catch(function(error){
+            reject(error.response.data)
           });
         } catch (exception) {
           reject('error in api post function');
@@ -51,39 +92,31 @@ export default {
       }) 
     },
     delete: function(context, request) {
+      let Instance = this;
       return new Promise(function(resolve, reject) {
         try {
-          axios.delete(window.$apiBaseUrl + request.endpoint, request.data)
+          
+          var config = {};
+          if(Instance.getters.isLoggedIn){
+            var token = localStorage.getItem("token");
+            config = {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Headers': true
+              }
+            };
+          }
+          
+          axios.delete(window.$apiBaseUrl + request.endpoint, config)
             .then(function(response){
             resolve(response.data)
-          }).catch(function(response){
-            reject(response.data)
+          }).catch(function(error){
+            reject(error.response.data)
           });
         } catch (exception) {
           reject('error in api delete function');
         }
       }) 
     },
-    postFiles: function(context, request){
-      return new Promise(function (resolve, reject) {
-        try {
-          jQuery.ajax({
-            method: 'POST',
-            data: request.data,
-            contentType: false, 
-            processData: false,
-            url: window.$apiBaseUrl + request.endpoint,
-            error: function($xhr) {
-              reject($xhr.responseJSON)
-            },
-            success: function(data) {
-              resolve(data)
-            }
-          });
-        } catch (exception) {
-          reject('error in api post function');
-        }
-      }) 
-    }
   }
 }
