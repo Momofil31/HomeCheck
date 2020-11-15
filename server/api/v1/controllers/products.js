@@ -7,6 +7,8 @@ exports.getList = (req, res) => {
   };
 
   Product.find(where)
+    .populate('category')
+    .populate('group')
     .exec()
     .then((products) => {
       res.status(200).json({
@@ -49,6 +51,8 @@ exports.getOne = (req, res) => {
   const id = req.params.productId;
 
   Product.findById(id)
+    .populate('category')
+    .populate('group')
     .exec()
     .then((product) => {
       if (!product) {
@@ -117,6 +121,8 @@ exports.createOne = (req, res) => {
   };
 
   Product.find({ name: product.name })
+    .populate('category')
+    .populate('group')
     .exec()
     .then((response) => {
       if (response.length >= 1) {
