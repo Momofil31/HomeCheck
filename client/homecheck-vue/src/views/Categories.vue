@@ -1,5 +1,5 @@
 <template>
-  <div id="catgeories">
+  <div id="categories">
     <v-card class="card-action">
       <v-col class="text-right">
         <v-btn color="primary">Create new category</v-btn>  
