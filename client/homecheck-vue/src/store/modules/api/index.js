@@ -29,7 +29,9 @@ export default {
             .then(function(response){
             resolve(response.data)
           }).catch(function(error){
-            reject(error.response.data)
+            if(error.response)
+              reject(error.response.data)
+            reject({})
           });
         } catch (exception) {
           console.log(exception)
@@ -57,7 +59,9 @@ export default {
             .then(function(response){
             resolve(response.data)
           }).catch(function(error){
-            reject(error.response.data)
+            if(error.response)
+              reject(error.response.data)
+            reject({})
           });
         } catch (exception) {
           reject('error in api post function');
@@ -84,7 +88,9 @@ export default {
             .then(function(response){
             resolve(response.data)
           }).catch(function(error){
-            reject(error.response.data)
+            if(error.response)
+              reject(error.response.data)
+            reject({})
           });
         } catch (exception) {
           reject('error in api post function');
@@ -111,7 +117,9 @@ export default {
             .then(function(response){
             resolve(response.data)
           }).catch(function(error){
-            reject(error.response.data)
+            if(error.response)
+              reject(error.response.data)
+            reject({})
           });
         } catch (exception) {
           reject('error in api delete function');
