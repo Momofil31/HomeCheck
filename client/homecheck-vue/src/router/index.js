@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '@/views/Home.vue';
-import store from "@/store/index.js";
+import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 
@@ -27,6 +27,11 @@ const routes = [
     component: () => import('@/views/Login.vue'),
   },
   {
+    path: '/register',
+    name: 'Register',
+    component: () => import('@/views/Register.vue'),
+  },
+  {
     path: '/logout',
     name: 'Logout',
     component: () => import('@/views/Logout.vue'),
@@ -39,12 +44,15 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {  
-  var isLoggedIn = store.getters.isLoggedIn
-    
-  if (to.name !== 'Login' && !isLoggedIn) next({ name: 'Login' })
-  else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' })
-  else next()
-})
+router.beforeEach((to, from, next) => {
+  var isLoggedIn = store.getters.isLoggedIn;
+
+  if (to.name !== 'Login' && !isLoggedIn) {
+    if (to.name === 'Register') next();
+    else next({ name: 'Login' });
+  } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
+  else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });
+  else next();
+});
 
 export default router;
