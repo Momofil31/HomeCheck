@@ -1,13 +1,11 @@
-const getDefaultState = () => {
-  return {};
-};
+const getDefaultState = () => ({});
 
 const state = getDefaultState();
 export default {
   namespaced: true,
-  name: "toast",
+  name: 'toast',
   state: {
-    snack: {}
+    snack: {},
   },
   mutations: {
     setSnack(state, showSnack) {
@@ -15,6 +13,6 @@ export default {
     },
     resetState(state) {
       Object.assign(state, getDefaultState());
-    }
-  }
+    },
+  },
 };

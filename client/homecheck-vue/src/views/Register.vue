@@ -106,7 +106,7 @@ export default {
   },
 
   methods: {
-    register: function() {
+    register() {
       if (this.$refs.form.validate()) {
         this.$store
           .dispatch('api/users/Register', {
@@ -121,7 +121,7 @@ export default {
       }
     },
 
-    changePasswordVisibility: function() {
+    changePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
     sendToLogin() {

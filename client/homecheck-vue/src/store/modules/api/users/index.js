@@ -1,20 +1,20 @@
 export default {
   namespaced: true,
   actions: {
-    Login: function(context, filters) {
+    Login(context, filters) {
       this.commit('layout/UpdateLoadingStatus', true);
-      let Instance = this;
-      return new Promise(function(resolve, reject) {
+      const Instance = this;
+      return new Promise((resolve, reject) => {
         Instance.dispatch('api/post', {
           endpoint: 'v1/users/login',
           data: filters,
         })
-          .then(function(data) {
+          .then((data) => {
             if (data.error) {
               Instance.commit('layout/UpdateLoadingStatus', false);
-              let message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message: message, color: 'red' });
-              //reject(message)
+              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
+              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+              // reject(message)
             } else {
               Instance.commit('layout/UpdateLoadingStatus', false);
               resolve({
@@ -22,44 +22,44 @@ export default {
               });
             }
           })
-          .catch(function(data) {
+          .catch((data) => {
             Instance.commit('layout/UpdateLoadingStatus', false);
-            let message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message: message, color: 'red' });
-            //reject(message)
+            const message = data.error ? data.error.message : 'Generic Error';
+            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+            // reject(message)
           });
       });
     },
-    Register: function(context, filters) {
+    Register(context, filters) {
       this.commit('layout/UpdateLoadingStatus', true);
-      let Instance = this;
-      return new Promise(function(resolve, reject) {
+      const Instance = this;
+      return new Promise((resolve, reject) => {
         Instance.dispatch('api/post', {
           endpoint: 'v1/users/register',
           data: filters,
         })
-          .then(function(data) {
+          .then((data) => {
             if (data.error) {
               Instance.commit('layout/UpdateLoadingStatus', false);
-              let message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message: message, color: 'red' });
-              //reject(message)
+              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
+              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+              // reject(message)
             } else {
               Instance.commit('layout/UpdateLoadingStatus', false);
-              let message = data.data.message !== undefined ? data.data.message : '';
+              const message = data.data.message !== undefined ? data.data.message : '';
               if (message !== '') {
-                Instance.commit('layout/toast/setSnack', { message: message, color: 'green' });
+                Instance.commit('layout/toast/setSnack', { message, color: 'green' });
               }
               resolve({
                 result: data.data,
               });
             }
           })
-          .catch(function(data) {
+          .catch((data) => {
             Instance.commit('layout/UpdateLoadingStatus', false);
-            let message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message: message, color: 'red' });
-            //reject(message)
+            const message = data.error ? data.error.message : 'Generic Error';
+            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+            // reject(message)
           });
       });
     },

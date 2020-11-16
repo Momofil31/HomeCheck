@@ -1,23 +1,23 @@
-import toast from './Toasts'
+import toast from './Toasts';
 
 export default {
   namespaced: true,
   modules: {
-    toast
+    toast,
   },
   state: {
     loadingContent: false,
   },
   mutations: {
-    UpdateLoadingStatus: function(state, loading) {
-      loading = loading ? true : false;
+    UpdateLoadingStatus(state, loading) {
+      loading = !!loading;
       state.loadingContent = loading;
-    }
+    },
   },
-  
+
   getters: {
-    isLoading: function(state){
-      return state.loadingContent
-    }
-  }
-}
+    isLoading(state) {
+      return state.loadingContent;
+    },
+  },
+};

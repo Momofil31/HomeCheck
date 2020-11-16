@@ -3,24 +3,24 @@
 
 <script>
 
-  export default {
-    name: 'Logout',
+export default {
+  name: 'Logout',
 
-    data() {
-      return {}
+  data() {
+    return {};
+  },
+
+  methods: {
+    logout() {
+      this.$store.dispatch('logout').then((response) => {
+        this.$router.push('/login');
+      });
     },
+  },
 
-    methods: {
-      logout() {
-        this.$store.dispatch('logout').then((response) => {
-          this.$router.push('/login');
-        });
-      }
-    },
-    
-    created() {
-      this.logout();
-    }
+  created() {
+    this.logout();
+  },
 
-  };
+};
 </script>

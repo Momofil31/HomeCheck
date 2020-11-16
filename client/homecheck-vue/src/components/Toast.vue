@@ -14,30 +14,30 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        show: false,
-        top: true,
-        message: "",
-        color: "",
-        timeout: 5000
-      };
-    },
-    created: function() {
-      this.$store.watch(
-        state => state.layout.toast.snack,
-        () => {
-          const message = this.$store.state.layout.toast.snack.message;
-          if (message) {
-            this.show = true;
-            this.message = message;
+export default {
+  data() {
+    return {
+      show: false,
+      top: true,
+      message: '',
+      color: '',
+      timeout: 5000,
+    };
+  },
+  created() {
+    this.$store.watch(
+      (state) => state.layout.toast.snack,
+      () => {
+        const { message } = this.$store.state.layout.toast.snack;
+        if (message) {
+          this.show = true;
+          this.message = message;
 
-            this.color = this.$store.state.layout.toast.snack.color;
-            this.$store.commit("layout/toast/setSnack", {});
-          }
+          this.color = this.$store.state.layout.toast.snack.color;
+          this.$store.commit('layout/toast/setSnack', {});
         }
-      );
-    }
-  };
+      },
+    );
+  },
+};
 </script>

@@ -1,47 +1,45 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import api from "./modules/api";
-import layout from "./modules/layout";
+import api from './modules/api';
+import layout from './modules/layout';
 
 Vue.use(Vuex);
 
-const LOGIN = "LOGIN";
-const LOGOUT = "LOGOUT";
+const LOGIN = 'LOGIN';
+const LOGOUT = 'LOGOUT';
 
 export default new Vuex.Store({
   state: {
-    isLoggedIn: !!localStorage.getItem("token")
+    isLoggedIn: !!localStorage.getItem('token'),
   },
   mutations: {
-    [LOGIN] (state) {
+    [LOGIN](state) {
       state.isLoggedIn = true;
     },
     [LOGOUT](state) {
       state.isLoggedIn = false;
-    }
+    },
   },
   actions: {
     login({ commit }, data) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(() => {
-          localStorage.setItem("token", data.token);
-          commit(LOGIN)
+          localStorage.setItem('token', data.token);
+          commit(LOGIN);
           resolve();
         }, 1000);
       });
     },
     logout({ commit }) {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
       commit(LOGOUT);
-    }
+    },
   },
   getters: {
-    isLoggedIn: state => {
-      return state.isLoggedIn;
-    }
+    isLoggedIn: (state) => state.isLoggedIn,
   },
   modules: {
-    api, 
-    layout
+    api,
+    layout,
   },
 });

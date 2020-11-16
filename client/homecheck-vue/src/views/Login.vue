@@ -63,7 +63,7 @@ export default {
   },
 
   methods: {
-    login: function() {
+    login() {
       if (this.$refs.form.validate()) {
         this.$store
           .dispatch('api/users/Login', {
@@ -78,7 +78,7 @@ export default {
       }
     },
 
-    changePasswordVisibility: function() {
+    changePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
 

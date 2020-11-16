@@ -1,13 +1,13 @@
 <template>
   <v-app>
-    
+
     <div id="loader" v-show="isLoading">
       <v-progress-circular
         indeterminate
         color="primary"
       ></v-progress-circular>
     </div>
-    
+
     <Toast />
     <Navigation v-if="isLoggedIn"/>
 
@@ -26,25 +26,25 @@
 
 <script>
 
-  import Navigation from "@/components/navigation/Navigation.vue";
-  import Toast from "@/components/Toast.vue";
-    
-  export default {
-    name: 'App',
+import Navigation from '@/components/navigation/Navigation.vue';
+import Toast from '@/components/Toast.vue';
 
-    components: {
-      Navigation,
-      Toast
+export default {
+  name: 'App',
+
+  components: {
+    Navigation,
+    Toast,
+  },
+
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
     },
 
-    computed: {
-      isLoggedIn() {
-        return this.$store.getters.isLoggedIn;
-      },
-      
-      isLoading() {
-        return this.$store.getters['layout/isLoading'];
-      }
-    }
-  };
+    isLoading() {
+      return this.$store.getters['layout/isLoading'];
+    },
+  },
+};
 </script>

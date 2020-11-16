@@ -11,24 +11,24 @@
 </template>
 
 <script>
-  
-  export default {
-    name: 'NavigationItem', 
 
-    components: {
-      
-    },
+export default {
+  name: 'NavigationItem',
 
-    props: {
-      action: "",
-      icon: "",
-      title: "",
+  components: {
+
+  },
+
+  props: {
+    action: '',
+    icon: '',
+    title: '',
+  },
+
+  methods: {
+    itemClicked() {
+      if (this.$route.path !== this.action) this.$router.push(this.action);
     },
-    
-    methods: {
-      itemClicked: function(){
-        if (this.$route.path !== this.action) this.$router.push(this.action);
-      }
-    }
-  };
+  },
+};
 </script>
