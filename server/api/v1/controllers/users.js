@@ -33,7 +33,7 @@ exports.login = (req, res, next) => {
             },
             process.env.JWT_KEY,
             {
-              expiresIn: '1h',
+              expiresIn: '1d',
             },
           );
           return res.status(200).json({
@@ -77,7 +77,9 @@ exports.register = (req, res, next) => {
     password: req.body.password ? req.body.password : '',
   };
 
-  const passwordRegex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})');
+  const passwordRegex = new RegExp(
+    '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})',
+  );
   const emailRegex = new RegExp('^[\\w-.]+@([\\w-]+.)+[\\w-]{2,4}$');
 
   if (user.email === '' || user.firstname === '' || user.lastname === '' || user.password === '') {
