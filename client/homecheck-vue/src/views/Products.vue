@@ -18,7 +18,7 @@
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
         <ProductForm
           action="Update"
-          :product="selectedProduct"
+          :product-id="selectedProduct.id"
           :dialog="dialogUpdate"
           @close-dialog="closeDialog()"
         />
@@ -60,8 +60,8 @@ export default {
     },
     
     viewProduct(product){
-      this.dialogUpdate = true;
       this.selectedProduct = product;
+      this.dialogUpdate = true;
     },
 
     deleteProduct(product) {

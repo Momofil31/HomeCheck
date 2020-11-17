@@ -8,7 +8,7 @@
             <v-col cols="12">
               <v-text-field
                 label="Product name*"
-                v-model="name"
+                v-model="product.name"
                 :rules="nameRules"
                 required
               ></v-text-field>
@@ -16,7 +16,7 @@
             <v-col cols="12">
               <v-text-field
                 label="Quantity*"
-                v-model="quantity"
+                v-model="product.quantity"
                 type="number"
                 min=0
                 :rules="quantityRules"
@@ -26,7 +26,7 @@
             <v-col cols="12">
               <v-text-field
                 label="Expiry date*"
-                v-model="expiryDate"
+                v-model="product.expiryDate"
                 :rules="expiryDateRules"
                 type='date'
                 required
@@ -35,7 +35,7 @@
             <v-col cols="12">
               <v-select
                 label="Group*"
-                v-model="group"
+                v-model="product.group"
                 :items="groups"
                 item-text="name"
                 item-value="id"
@@ -46,7 +46,7 @@
             <v-col cols="12">
               <v-select
                 label="Category*"
-                v-model="category"
+                v-model="product.category"
                 :items="categories"
                 item-text="name"
                 item-value="id"
@@ -75,15 +75,27 @@
 <script>
   
 export default {
-  props: ['action', 'product'],
+   props: {
+    productId: {
+      type: String,
+      default: ''
+    },
+    action: {
+      type: String,
+      default: ""
+    } 
+  },
+  
   data() {
     return {
       valid: false,
-      name: this.$props.product ? this.$props.product.name : '',
-      expiryDate: this.$props.product ? this.$props.product.expiryDate : '',
-      quantity: this.$props.product ? this.$props.product.quantity : '',
-      category: this.$props.product ? this.$props.product.category.id : '',
-      group: this.$props.product ? this.$props.product.group.id : '',
+      product: {
+        name: '',
+        expiryDate: '',
+        quantity: '',
+        category: '',
+        group: ''
+      },
       nameRules: [
         (v) => !!v || 'Product name is required',
         (v) => /^[a-zA-Z ]*$/.test(v) || 'Product name must be valid',
@@ -101,13 +113,7 @@ export default {
       if (this.$props.action === 'Create') {
         if (this.$refs.form.validate()) {
           this.$store
-            .dispatch('api/products/CreateOne', {
-              name: this.name,
-              expiryDate: this.expiryDate,
-              quantity: this.quantity,
-              category: this.category,
-              group: this.group,
-            })
+            .dispatch('api/products/CreateOne', )
             .then((response) => {
               this.$emit('close-dialog');
               this.name = '';
@@ -133,6 +139,42 @@ export default {
               this.$emit('close-dialog');
             });
         }
+      }
+    },
+    
+    addZero(value) {
+      if(value < 10)
+        return `0${value}`;
+      return value;
+    },
+    
+    loadProduct() {
+      const Instance = this;
+      
+      if(this.productId != ''){
+        this.$store
+          .dispatch('api/products/GetOne', { id: this.productId })
+          .then((data) => {
+            Instance.product = data.result.product;
+            delete Instance.product.id;
+          
+            if(Instance.product.expiryDate !== ''){
+              var date = new Date(Instance.product.expiryDate);
+              var year = date.getFullYear();
+              var month = Instance.addZero(date.getMonth()+1);
+              var date = Instance.addZero(date.getDate());
+              Instance.product.expiryDate = `${year}-${month}-${date}`;
+            }
+          })
+          .catch((data) => {
+            Instance.product = {
+              name: '',
+              expiryDate: '',
+              quantity: '',
+              category: '',
+              group: ''
+            };
+          });
       }
     },
     
@@ -163,17 +205,18 @@ export default {
     },
   },
   
+  watch: {
+    productId: function(){
+      this.loadProduct();
+      this.loadCategories();
+      this.loadGroups();
+    }
+  },
+  
   mounted(){
+    this.loadProduct();
     this.loadCategories();
     this.loadGroups();
-    
-    if(this.expiryDate !== ''){
-      var date = new Date(this.expiryDate);
-      var year = date.getFullYear();
-      var month = date.getMonth()+1;
-      var date = date.getDate();
-      this.expiryDate = `${year}-${month}-${date}`;
-    }
   }
 };
 </script>
