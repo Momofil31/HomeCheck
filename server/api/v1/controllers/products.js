@@ -192,7 +192,27 @@ exports.createOne = (req, res) => {
 };
 
 exports.deleteOne = (req, res) => {
-  const id = req.params.productId;
+  const { productId } = req.params;
+  const { userId } = req.userData.userId;
+
+  Product.findOneAndDelete({ _id: productId, user: userId })
+    .exec()
+    .then((response) => {
+      if (response) {
+        return res.status(200).json({
+          data: {
+            message: 'Delete product successful',
+            product: response,
+          },
+        });
+      }
+
+      return res.status(404).json({
+        error: {
+          message: 'Product not found',
+        },
+      });
+    });
 };
 
 exports.validate = (req, res, next) => {
