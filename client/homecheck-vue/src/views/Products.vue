@@ -13,7 +13,11 @@
       </v-col>
     </v-card>
 
-    <ProductsCard :products=products title="test" @view="viewProduct"/>
+    <ProductsCard v-for="group in groups"
+      :key="group.id"
+      :products="group.products" 
+      :title="group.name" 
+      @view="viewProduct"/>
 
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
         <ProductForm
@@ -38,7 +42,7 @@ export default {
   },
   data() {
     return {
-      products: [],
+      groups: [],
       dialogCreate: false,
       dialogUpdate: false,
       selectedProduct: {},
@@ -48,14 +52,25 @@ export default {
   methods: {
     loadProducts() {
       const Instance = this;
-
+      Instance.groups = [];
       this.$store
-        .dispatch('api/products/GetList', {})
+        .dispatch('api/groups/GetList', {})
         .then((data) => {
-          Instance.products = data.result.products;
+          var groups = data.result.groups;
+          groups.forEach(function(group){
+            Instance.$store
+              .dispatch('api/products/GetList', { group: group.id })
+              .then((data) => {
+                group.products = data.result.products;
+                Instance.groups.push(group);
+              })
+              .catch((data) => {
+                Instance.groups = [];
+              });
+          })
         })
         .catch((data) => {
-          Instance.products = [];
+          Instance.groups = [];
         });
     },
     

@@ -27,6 +27,8 @@ export default {
               },
             };
           }
+          
+          config.params = request.data;
 
           axios.get(window.$apiBaseUrl + request.endpoint, config)
             .then((response) => {
