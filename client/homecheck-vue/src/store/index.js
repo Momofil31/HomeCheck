@@ -25,6 +25,9 @@ export default new Vuex.Store({
       return new Promise((resolve) => {
         setTimeout(() => {
           localStorage.setItem('token', data.token);
+          var tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          localStorage.setItem('expiryToken', tomorrow.getTime());
           commit(LOGIN);
           resolve();
         }, 1000);

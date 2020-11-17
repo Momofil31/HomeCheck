@@ -46,6 +46,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const { isLoggedIn } = store.getters;
+  
+  if(isLoggedIn && to.name !== 'Logout'){
+    var expiry = localStorage.getItem('expiryToken');
+    var today = (new Date()).getTime();
+    
+    if(today >= expiry) next({ name: 'Logout' });
+  }
 
   if (to.name !== 'Login' && !isLoggedIn) {
     if (to.name === 'Register') next();
