@@ -6,6 +6,7 @@ const ProductsController = require('../controllers/products');
 
 router.get('/',
   checkAuth,
+  ProductsController.validationChainQuery, ProductsController.validate,
   ProductsController.getList);
 
 router.get('/:productId',

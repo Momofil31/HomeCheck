@@ -1,10 +1,22 @@
-const { param, body, validationResult } = require('express-validator');
+const {
+  param, body, query, validationResult,
+} = require('express-validator');
 const Product = require('../models/Product');
 
 exports.getList = (req, res) => {
+  const { category, group } = req.query;
+
   const where = {
-    $or: [{ user: req.userData.userId }],
+    user: req.userData.userId,
   };
+
+  if (category) {
+    where.category = category;
+  }
+
+  if (group) {
+    where.group = group;
+  }
 
   Product.find(where)
     .populate('category')
@@ -200,6 +212,17 @@ exports.validationChainParam = [
   param('productId')
     .isMongoId()
     .withMessage('Invalid id'),
+];
+
+exports.validationChainQuery = [
+  query('group')
+    .optional()
+    .isMongoId()
+    .withMessage('Invalid group id'),
+  query('category')
+    .optional()
+    .isMongoId()
+    .withMessage('Invalid category id'),
 ];
 
 exports.validationChainBody = [
