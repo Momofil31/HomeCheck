@@ -17,7 +17,7 @@ exports.getList = (req, res) => {
           products: products.map((product) => ({
             id: product._id,
             name: product.name,
-            quantity: product.icon,
+            quantity: product.quantity,
             expiryDate: product.expiryDate,
             category: {
               id: product.category._id,
@@ -76,7 +76,7 @@ exports.getOne = (req, res) => {
           product: {
             id: product._id,
             name: product.name,
-            quantity: product.icon,
+            quantity: product.quantity,
             expiryDate: product.expiryDate,
             category: {
               id: product.category._id,
@@ -148,7 +148,7 @@ exports.createOne = (req, res) => {
             category: {
               id: product._id,
               name: product.name,
-              quantity: product.icon,
+              quantity: product.quantity,
               expiryDate: product.expiryDate,
               category: {
                 id: product.category._id,
