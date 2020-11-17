@@ -16,10 +16,10 @@
             <v-col cols="12">
               <v-select
                 label="Icon*"
-                v-model="icon"
+                v-model="selectIcon"
                 :items="categoryIcons"
                 item-text="name"
-                item-field="icon"
+                item-value="icon"
                 :rules="iconRules"
                 required
               ></v-select>
@@ -49,7 +49,6 @@ export default {
     return {
       valid: false,
       name: this.$props.category ? this.$props.category.name : '',
-      icon: this.$props.category ? this.$props.category.icon : '',
       categoryIcons: [
         { name: 'Bread and Cereals', icon: 'bread.jpg' },
         { name: 'Beverages', icon: 'beverages.jpg' },
@@ -58,6 +57,7 @@ export default {
         { name: 'Pasta', icon: 'pasta.jpg' },
         { name: 'Vegetables', icon: 'vegetables.jpg' },
       ],
+      selectIcon: this.$props.category ? this.$props.category.icon : '',
       nameRules: [
         (v) => !!v || 'Category name is required',
         (v) => /^[a-zA-Z ]*$/.test(v) || 'Category name must be valid',
@@ -72,7 +72,7 @@ export default {
           this.$store
             .dispatch('api/categories/CreateOne', {
               name: this.name,
-              icon: this.icon,
+              icon: this.selectIcon,
             })
             .then((response) => {
               this.$emit('close-dialog');
@@ -84,7 +84,7 @@ export default {
           this.$store
             .dispatch('api/categories/UpdateOne', {
               name: this.name,
-              icon: this.icon,
+              icon: this.select.icon,
               id: this.$props.category.id,
             })
             .then((response) => {
