@@ -84,7 +84,7 @@ export default {
           this.$store
             .dispatch('api/categories/UpdateOne', {
               name: this.name,
-              icon: this.select.icon,
+              icon: this.selectIcon,
               id: this.$props.category.id,
             })
             .then((response) => {

@@ -1,12 +1,16 @@
 import axios from 'axios';
 import users from './users';
 import categories from './categories';
+import products from './products';
+import groups from './groups';
 
 export default {
   namespaced: true,
   modules: {
     users,
     categories,
+    products,
+    groups
   },
   actions: {
     get(context, request) {
