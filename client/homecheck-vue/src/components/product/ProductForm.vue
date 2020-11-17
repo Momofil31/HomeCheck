@@ -113,7 +113,7 @@ export default {
       if (this.$props.action === 'Create') {
         if (this.$refs.form.validate()) {
           this.$store
-            .dispatch('api/products/CreateOne', )
+            .dispatch('api/products/CreateOne', this.product )
             .then((response) => {
               this.$emit('close-dialog');
               this.name = '';
@@ -128,11 +128,11 @@ export default {
         if (this.$refs.form.validate()) {
           this.$store
             .dispatch('api/products/UpdateOne', {
-              name: this.name,
-              expiryDate: this.expiryDate,
-              quantity: this.quantity,
-              category: this.category,
-              group: this.group,
+              name: this.product.name,
+              expiryDate: this.product.expiryDate,
+              quantity: this.product.quantity,
+              category: this.product.category,
+              group: this.product.group,
               id: this.$props.product.id,
             })
             .then((response) => {
