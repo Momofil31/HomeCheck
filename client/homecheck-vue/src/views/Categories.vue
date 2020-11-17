@@ -33,7 +33,7 @@
               <td>{{ item.name }}</td>
               <td>0</td>
               <td>
-                <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
+                <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px" v-if="!item.default">
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon v-bind="attrs" v-on="on">mdi-pencil</v-icon>
                   </template>
