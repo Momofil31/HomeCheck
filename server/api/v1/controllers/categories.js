@@ -99,7 +99,82 @@ exports.getOne = (req, res, next) => {
 };
 
 exports.updateOne = (req, res, next) => {
-  const id = req.params.categoryId;
+  const newCategory = {
+    _id: req.body.id ? req.body.id : '',
+    name: req.body.name ? req.body.name : '',
+    icon: req.body.icon ? req.body.icon : '',
+  };
+
+  if (newCategory._id === '') {
+    return res.status(400).json({
+      error: {
+        message: 'Update category failed',
+        description: 'No category provided',
+      },
+    });
+  }
+  if (newCategory.name === '' || newCategory.icon === '') {
+    return res.status(400).json({
+      error: {
+        message: 'Update failed.',
+        description: 'Name or icon are not filled in with the corresponding data.',
+      },
+    });
+  }
+
+  Category.findById(newCategory._id)
+    .exec()
+    .then((category) => {
+      if (!category) {
+        return res.status(404).json({
+          error: {
+            message: 'Update failed',
+            description: 'Category not found',
+          },
+        });
+      }
+      if (category.user.toString() !== req.userData.userId) {
+        return res.status(403).json({
+          error: {
+            message: 'Update failed.',
+            description: `User not authorized to update category ${category.name}.`,
+          },
+        });
+      }
+      Category.findByIdAndUpdate(newCategory._id, newCategory)
+        .exec()
+        .then((result) => {
+          res.status(200).json({
+            data: {
+              message: 'Update successful.',
+              category: {
+                id: result.id,
+                name: result.name,
+                icon: result.icon,
+                default: result.default,
+              },
+            },
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            error: {
+              message: 'Update failed.',
+              descrition: 'Something went wrong during update.',
+              ...err,
+            },
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: {
+          message: 'Update failed.',
+          descrition: 'Something went wrong during update.',
+          ...err,
+        },
+      });
+    });
 };
 
 exports.createOne = (req, res, next) => {
