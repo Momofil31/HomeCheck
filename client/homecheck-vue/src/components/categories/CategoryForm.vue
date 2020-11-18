@@ -22,7 +22,26 @@
                 item-value="icon"
                 :rules="iconRules"
                 required
-              ></v-select>
+              >
+                <template v-slot:selection="{ item }">
+                  <v-avatar>
+                    <img :src="require(`@/assets/icons/${item.icon}`)" />
+                  </v-avatar>
+                  <div>{{ item.name }}</div>
+                </template>
+                <template v-slot:item="{ item }">
+                  <v-list-tile-avatar>
+                    <img
+                      :src="require(`@/assets/icons/${item.icon}`)"
+                      :class="['mr-2']"
+                      width="25px"
+                    />
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title> {{ item.name }} </v-list-tile-title>
+                  </v-list-tile-content>
+                </template>
+              </v-select>
             </v-col>
           </v-row>
         </v-container>
