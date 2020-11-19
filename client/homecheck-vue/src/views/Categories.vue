@@ -8,7 +8,12 @@
               Create new category
             </v-btn>
           </template>
-          <CategoryForm action="Create" :dialog="dialogCreate" @close-dialog="closeDialog()" />
+          <CategoryForm
+            v-if="dialogCreate"
+            action="Create"
+            :dialog="dialogCreate"
+            @close-dialog="closeDialog()"
+          />
         </v-dialog>
       </v-col>
     </v-card>
@@ -33,7 +38,12 @@
               <td>{{ item.name }}</td>
               <td>0</td>
               <td>
-                <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px" v-if="!item.default">
+                <v-dialog
+                  v-model="dialogUpdate"
+                  :retain-focus="false"
+                  max-width="600px"
+                  v-if="!item.default"
+                >
                   <template v-slot:activator="{ on, attrs }">
                     <v-icon v-bind="attrs" v-on="on">mdi-pencil</v-icon>
                   </template>
@@ -98,6 +108,7 @@ export default {
     closeDialog() {
       this.dialogCreate = false;
       this.dialogUpdate = false;
+
       this.loadCategories();
     },
   },
