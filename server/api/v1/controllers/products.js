@@ -3,6 +3,45 @@ const {
 } = require('express-validator');
 const Product = require('../models/Product');
 
+function getProductFromEntity(product, req) {
+  const toRtn = {};
+  toRtn.id = product._id;
+  toRtn.name = product.name;
+  toRtn.quantity = product.quantity;
+  toRtn.expiryDate = product.expiryDate;
+
+  if (product.category != null) {
+    toRtn.category = {};
+    toRtn.category.id = product.category._id;
+    toRtn.category.name = product.category.name;
+    toRtn.category.icon = product.category.icon;
+  }
+
+  if (product.group != null) {
+    toRtn.group = {};
+    toRtn.group.id = product.group._id;
+    toRtn.group.name = product.group.name;
+  }
+
+  toRtn.request = {};
+  toRtn.request.type = 'GET';
+  toRtn.request.url = `${req.headers.host}/products/${product._id}`;
+
+  return toRtn;
+}
+
+function getProductFromBody(request) {
+  const product = {};
+  product.name = request.body.name;
+  product.quantity = request.body.quantity;
+  product.expiryDate = request.body.expiryDate;
+  product.category = request.body.category;
+  product.group = request.body.group;
+  product.user = request.userData.userId;
+
+  return product;
+}
+
 exports.getList = (req, res) => {
   const { category, group } = req.query;
 
@@ -26,25 +65,7 @@ exports.getList = (req, res) => {
       res.status(200).json({
         data: {
           message: 'Get products successful.',
-          products: products.map((product) => ({
-            id: product._id,
-            name: product.name,
-            quantity: product.quantity,
-            expiryDate: product.expiryDate,
-            category: {
-              id: product.category._id,
-              name: product.category.name,
-              icon: product.category.icon,
-            },
-            group: {
-              id: product.group._id,
-              name: product.group.name,
-            },
-            request: {
-              type: 'GET',
-              url: `${req.headers.host}/products/${product._id}`,
-            },
-          })),
+          products: products.map((product) => getProductFromEntity(product, req)),
         },
       });
     })
@@ -85,25 +106,7 @@ exports.getOne = (req, res) => {
       return res.status(200).json({
         data: {
           message: 'Get product successful',
-          product: {
-            id: product._id,
-            name: product.name,
-            quantity: product.quantity,
-            expiryDate: product.expiryDate,
-            category: {
-              id: product.category._id,
-              name: product.category.name,
-              icon: product.category.icon,
-            },
-            group: {
-              id: product.group ? product.group._id : null,
-              name: product.group ? product.group.name : null,
-            },
-            request: {
-              type: 'GET',
-              url: `${req.headers.host}/products/${product._id}`,
-            },
-          },
+          product: getProductFromEntity(product, req),
         },
       });
     })
@@ -123,14 +126,7 @@ exports.updateOne = (req, res) => {
 };
 
 exports.createOne = (req, res) => {
-  const product = {
-    name: req.body.name,
-    quantity: req.body.quantity,
-    expiryDate: req.body.expiryDate,
-    category: req.body.category,
-    group: req.body.group,
-    user: req.userData.userId,
-  };
+  const product = getProductFromBody(req);
 
   Product.find({ name: product.name })
     .populate('category')
@@ -157,25 +153,7 @@ exports.createOne = (req, res) => {
         return res.status(201).json({
           data: {
             message: 'Creation successful.',
-            category: {
-              id: product._id,
-              name: product.name,
-              quantity: product.quantity,
-              expiryDate: product.expiryDate,
-              category: {
-                id: product.category._id,
-                name: product.category.name,
-                icon: product.category.icon,
-              },
-              group: {
-                id: product.group._id,
-                name: product.group.name,
-              },
-              request: {
-                type: 'GET',
-                url: `${req.headers.host}/products/${product._id}`,
-              },
-            },
+            product: getProductFromEntity(product, req),
           },
         });
       });
@@ -202,7 +180,7 @@ exports.deleteOne = (req, res) => {
         return res.status(200).json({
           data: {
             message: 'Delete product successful',
-            product: response,
+            product: getProductFromEntity(response, req),
           },
         });
       }
