@@ -8,14 +8,27 @@ const app = express();
 
 dotenv.config();
 
-mongoose.connect(
-  process.env.DATABASE,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err) => {
-    if (err) console.log(err);
-    else console.log('Database connection successful');
-  },
-);
+if (process.env.JEST_WORKER_ID) {
+  // test
+  mongoose.connect(
+    process.env.DATABASE_TEST,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    (err) => {
+      if (err) console.log(err);
+      else console.log('Database connection successful');
+    },
+  );
+} else {
+  // production
+  mongoose.connect(
+    process.env.DATABASE,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    (err) => {
+      if (err) console.log(err);
+      else console.log('Database connection successful');
+    },
+  );
+}
 
 app.use(morgan('dev')); // Logs HTTP requests in node shell
 app.use(express.urlencoded({ extended: false })); // Parses URLs
