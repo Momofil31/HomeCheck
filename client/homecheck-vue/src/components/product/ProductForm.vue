@@ -125,15 +125,17 @@ export default {
         }
       }
       if (this.$props.action === 'Update') {
-        if (this.$refs.form.validate()) {
+        if (this.$refs.form.validate()) {          
           this.$store
             .dispatch('api/products/UpdateOne', {
-              name: this.product.name,
-              expiryDate: this.product.expiryDate,
-              quantity: this.product.quantity,
-              category: this.product.category,
-              group: this.product.group,
-              id: this.$props.product.id,
+              product: {
+                name: this.product.name,
+                expiryDate: this.product.expiryDate,
+                quantity: this.product.quantity,
+                category: this.product.category.id ? this.product.category.id : this.product.category,
+                group: this.product.group.id ? this.product.group.id : this.product.group,
+              },
+              id: this.$props.productId,
             })
             .then((response) => {
               this.$emit('close-dialog');

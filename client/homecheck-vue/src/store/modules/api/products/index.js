@@ -101,7 +101,7 @@ export default {
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/put', {
           endpoint: `v1/products/${filters.id}`,
-          data: filters,
+          data: filters.product,
         })
           .then((data) => {
             if (data.error) {
