@@ -132,8 +132,8 @@ export default {
                 name: this.product.name,
                 expiryDate: this.product.expiryDate,
                 quantity: this.product.quantity,
-                category: this.product.category.id ? this.product.category.id : this.product.category,
-                group: this.product.group.id ? this.product.group.id : this.product.group,
+                category: typeof this.product.category === 'object' ? this.product.category.id : this.product.category,
+                group: typeof this.product.group === 'object' ? this.product.group.id : this.product.group,
               },
               id: this.$props.productId,
             })
