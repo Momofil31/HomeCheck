@@ -39,7 +39,7 @@ export default {
       { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/' },
       { title: 'Products', icon: 'mdi-cart', action: '/products' },
       { title: 'Categories', icon: 'mdi-store', action: '/categories' },
-      { title: 'Share', icon: 'mdi-share', action: '/' },
+      { title: 'Share', icon: 'mdi-share', action: '/share' },
       { title: 'Logout', icon: 'mdi-exit-to-app', action: '/logout' },
     ],
     mini: true,
