@@ -100,7 +100,7 @@ export default {
         (v) => !!v || 'Product name is required',
         (v) => /^[a-zA-Z ]*$/.test(v) || 'Product name must be valid',
       ],
-      quantityRules: [(v) => !!v || 'Quantity is required'],
+      quantityRules: [(v) => !!(v+"") || 'Quantity is required'],
       expiryDateRules: [(v) => !!v || 'Expiry date is required'],
       groupRules: [(v) => !!v || 'Group is required'],
       categoryRules: [(v) => !!v || 'Category is required'],
