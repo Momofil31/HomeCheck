@@ -24,22 +24,20 @@
                 required
               >
                 <template v-slot:selection="{ item }">
-                  <v-avatar width="32px" height="32px" class="m-1">
+                  <v-avatar width="32px" height="32px" min-width="32px" class="ma-1">
                     <img :src="require(`@/assets/icons/${item.icon}`)" />
                   </v-avatar>
                   <div>{{ item.name }}</div>
                 </template>
                 <template v-slot:item="{ item }">
-                  <v-list-avatar>
+                  <v-list-item-avatar width="32px" height="32px" min-width="32px">
                     <img
                       :src="require(`@/assets/icons/${item.icon}`)"
-                      :class="['mr-2']"
-                      width="25px"
                     />
-                  </v-list-avatar>
-                  <v-list-content>
-                    <v-list-title> {{ item.name }} </v-list-title>
-                  </v-list-content>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title> {{ item.name }} </v-list-item-title>
+                  </v-list-item-content>
                 </template>
               </v-select>
             </v-col>
