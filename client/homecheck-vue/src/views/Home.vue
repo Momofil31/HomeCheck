@@ -1,7 +1,7 @@
 <template>
   <div id="home">
-    <ProductsCard :products=expiryProducts title="Expiring products" @view="viewProduct"/>
-    <ProductsCard :products=outStockProducts title="Out of stock products" @view="viewProduct"/>
+    <ProductsCard :products=expiryProducts title="Expiring products" @view="viewProduct" @delete="deleteProduct"/>
+    <ProductsCard :products=outStockProducts title="Out of stock products" @view="viewProduct" @delete="deleteProduct"/>
 
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
         <ProductForm
@@ -38,6 +38,9 @@ export default {
     loadProducts() {
       const Instance = this;
 
+      Instance.expiryProducts = [];
+      Instance.outStockProducts = [];
+      
       this.$store
         .dispatch('api/products/GetList', {})
         .then((data) => {
@@ -62,11 +65,11 @@ export default {
       this.dialogUpdate = true;
     },
 
-    deleteProduct(product) {
+    deleteProduct(productId) {
       const Instance = this;
 
       this.$store
-        .dispatch('api/products/DeleteOne', { id: product.id })
+        .dispatch('api/products/DeleteOne', { id: productId })
         .then((data) => {
           Instance.loadProducts();
         })

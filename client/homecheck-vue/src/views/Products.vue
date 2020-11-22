@@ -17,7 +17,8 @@
       :key="group.id"
       :products="group.products" 
       :title="group.name" 
-      @view="viewProduct"/>
+      @view="viewProduct"
+      @delete="deleteProduct"/>
 
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
         <ProductForm
@@ -79,11 +80,11 @@ export default {
       this.dialogUpdate = true;
     },
 
-    deleteProduct(product) {
+    deleteProduct(productId) {
       const Instance = this;
 
       this.$store
-        .dispatch('api/products/DeleteOne', { id: product.id })
+        .dispatch('api/products/DeleteOne', { id: productId })
         .then((data) => {
           Instance.loadProducts();
         })

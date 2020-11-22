@@ -7,7 +7,8 @@
         v-for="product in products"
         :key="product.id"
         :product=product
-        @view=viewProduct />
+        @view=viewProduct
+        @delete=deleteProduct />
     </div>
     
   </v-card>
@@ -41,6 +42,10 @@ export default {
   methods: {
     viewProduct(product){
       this.$emit('view', product);
+    },
+    
+    deleteProduct(productId){
+      this.$emit('delete', productId);
     },
   },
 };

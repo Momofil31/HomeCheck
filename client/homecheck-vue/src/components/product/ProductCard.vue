@@ -1,5 +1,10 @@
 <template>
   <v-card class="product-card" @click=viewProduct>
+    
+    <div class="delete-product" @click.prevent.stop=deleteProduct>
+      <v-icon>mdi-delete</v-icon>
+    </div>
+    
     <v-img
       width=96 height=96
       :src="iconPath" />
@@ -20,6 +25,10 @@ export default {
   methods: {
     viewProduct(){
       this.$emit('view', this.$props.product);
+    },
+    
+    deleteProduct(){
+      this.$emit('delete', this.$props.product.id);
     }
   },
   
