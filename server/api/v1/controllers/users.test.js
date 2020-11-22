@@ -20,8 +20,30 @@ const clearUserTable = () => {
   });
 };
 
+const registerUser = async () => {
+  const user = await request.post(`${basePath}/register`).send({
+    email: 'Test@email.it',
+    password: 'Password!234',
+    firstname: 'A',
+    lastname: 'B',
+  });
+  if (!user) return {};
+
+  return user;
+};
+
+const loginUser = async () => {
+  const response = await request.post(`${basePath}/login`).send({
+    email: 'Test@email.it',
+    password: 'Password!234',
+  });
+  if (!response.data.token) return '';
+
+  return response.data.token;
+};
+
 describe('Test users controller', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     clearUserTable();
   });
 
@@ -117,6 +139,8 @@ describe('Test users controller', () => {
 
   // TODO: Make it independent form order of execution
   test('Creation should fail because email is already taken', async () => {
+    await registerUser();
+
     const response = await request.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
@@ -137,6 +161,8 @@ describe('Test users controller', () => {
   });
 
   test('Login should fail because password is wrong', async () => {
+    await registerUser();
+
     const response = await request.post(`${basePath}/login`).send({
       email: 'Test@email.it',
       password: 'Password',
@@ -146,6 +172,8 @@ describe('Test users controller', () => {
   });
 
   test('Login should succeed', async () => {
+    await registerUser();
+
     const response = await request.post(`${basePath}/login`).send({
       email: 'Test@email.it',
       password: 'Password!234',
@@ -187,3 +215,5 @@ describe('Test users controller', () => {
     done();
   });
 });
+
+module.exports = { clearUserTable, registerUser, loginUser };
