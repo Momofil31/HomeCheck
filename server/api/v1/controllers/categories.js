@@ -60,8 +60,8 @@ exports.getOne = (req, res, next) => {
         });
       }
       if (
-        category.user.toString() !== req.userData.userId &&
-        category.user.toString() !== process.env.ADMIN_USER_ID
+        category.user.toString() !== req.userData.userId
+        && category.user.toString() !== process.env.ADMIN_USER_ID
       ) {
         return res.status(403).json({
           error: {

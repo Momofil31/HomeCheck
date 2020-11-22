@@ -203,7 +203,7 @@ exports.createOne = (req, res) => {
 exports.deleteOne = (req, res) => {
   const { productId } = req.params;
   const { userId } = req.userData;
-    
+
   Product.findOneAndDelete({ _id: productId, user: userId })
     .exec()
     .then((response) => {
@@ -215,7 +215,7 @@ exports.deleteOne = (req, res) => {
           },
         });
       }
-    
+
       return res.status(404).json({
         error: {
           message: 'Product not found',
