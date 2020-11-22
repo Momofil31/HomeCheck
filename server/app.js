@@ -8,10 +8,14 @@ const app = express();
 
 dotenv.config();
 
-mongoose.connect(`mongodb+srv://filippo:${process.env.MONGO_ATLAS_PW}@api.iknun.mongodb.net/API?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-  if (err) console.log(err);
-  else console.log('Database connection successful');
-});
+mongoose.connect(
+  process.env.DATABASE,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (err) console.log(err);
+    else console.log('Database connection successful');
+  },
+);
 
 app.use(morgan('dev')); // Logs HTTP requests in node shell
 app.use(express.urlencoded({ extended: false })); // Parses URLs
