@@ -1,4 +1,7 @@
 const User = require('../models/User');
+const Category = require('../models/Category');
+const Group = require('../models/Group');
+const Product = require('../models/Product');
 
 const basePath = '/v1/users';
 
@@ -38,4 +41,34 @@ exports.getTestUserAuthToken = async (supertestServer) => {
   clearUserTable();
   await registerUser(supertestServer);
   return loginUser(supertestServer);
+};
+
+exports.clearGroupTable = () => {
+  Group.deleteMany({}, (err) => {
+    if (err) {
+      console.log('collection not removed');
+    } else {
+      console.log('collection removed');
+    }
+  });
+};
+
+exports.clearCategoryTable = () => {
+  Category.deleteMany({}, (err) => {
+    if (err) {
+      console.log('collection not removed');
+    } else {
+      console.log('collection removed');
+    }
+  });
+};
+
+exports.clearProductTable = () => {
+  Product.deleteMany({}, (err) => {
+    if (err) {
+      console.log('collection not removed');
+    } else {
+      console.log('collection removed');
+    }
+  });
 };
