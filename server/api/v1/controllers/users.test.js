@@ -37,9 +37,10 @@ const loginUser = async () => {
     email: 'Test@email.it',
     password: 'Password!234',
   });
-  if (!response.data.token) return '';
 
-  return response.data.token;
+  if (!response.body.data.token) return '';
+
+  return response.body.data.token;
 };
 
 describe('Test users controller', () => {
