@@ -216,5 +216,3 @@ describe('Test users controller', () => {
     done();
   });
 });
-
-module.exports = { clearUserTable, registerUser, loginUser };

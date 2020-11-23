@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
-const user = require('./users.test');
+const util = require('./testUtil');
 const app = require('../../../app');
 const Group = require('../models/Group');
 
@@ -11,9 +11,7 @@ let token = '';
 
 describe('Test category controller', () => {
   beforeAll(async () => {
-    await user.clearUserTable();
-    await user.registerUser();
-    token = await user.loginUser();
+    token = await util.getTestUserAuthToken(request);
   });
 
   beforeEach(async () => {
@@ -45,7 +43,10 @@ describe('Test category controller', () => {
     const groupModel = new Group({
       name: 'Test',
     });
-    await groupModel.save();
+    let groupId = '';
+    await groupModel.save((err, res) => {
+      groupId = res.id;
+    });
     const response = await request
       .get(`${basePath}?${groupId}`)
       .set('Authorization', `Bearer ${token}`);

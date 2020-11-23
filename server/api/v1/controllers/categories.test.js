@@ -1,19 +1,17 @@
 const supertest = require('supertest');
 const mongoose = require('mongoose');
-const user = require('./users.test');
+const util = require('./testUtil');
 const app = require('../../../app');
 const Category = require('../models/Category');
 
-const request = supertest(app);
+const server = supertest(app);
 
 const basePath = '/v1/categories';
 let token = '';
 
 describe('Test category controller', () => {
   beforeAll(async () => {
-    user.clearUserTable();
-    await user.registerUser();
-    token = await user.loginUser();
+    token = await util.getTestUserAuthToken(server);
   });
 
   beforeEach(async () => {
@@ -33,7 +31,7 @@ describe('Test category controller', () => {
   });
 
   test('POST create a category ', async () => {
-    const response = await request
+    const response = await server
       .post(`${basePath}`)
       .set('Authorization', `Bearer ${token}`)
       .send({
