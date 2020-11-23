@@ -46,7 +46,7 @@ describe('Test category controller', () => {
       }),
     ];
 
-    Category.insertMany(categories);
+    await Category.insertMany(categories);
 
     const response = await server
       .get(`${basePath}`)
