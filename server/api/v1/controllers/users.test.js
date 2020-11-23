@@ -11,7 +11,7 @@ const request = supertest(app);
 // Utility functions
 
 const clearUserTable = () => {
-  User.remove({}, (err) => {
+  User.deleteMany({}, (err) => {
     if (err) {
       console.log('collection not removed');
     } else {
