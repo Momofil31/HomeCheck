@@ -31,26 +31,75 @@ describe('Test category controller', () => {
   });
 
   test('GetList should return list of groups', async () => {
+    const groups = [
+      new Group({
+        name: 'Test1',
+      }),
+      new Group({
+        name: 'Test2',
+      }),
+      new Group({
+        name: 'Test3',
+      }),
+    ];
+
+    await Group.insertMany(groups);
+
     const response = await request
       .get(`${basePath}`)
       .set('Authorization', `Bearer ${token}`)
       .send();
-
+    console.log(response.body);
     expect(response.status).toBe(200);
   });
 
   test('GetOne should return one group', async () => {
+    const groupId = mongoose.Types.ObjectId();
+
     const groupModel = new Group({
+      _id: groupId,
       name: 'Test',
     });
-    let groupId = '';
-    await groupModel.save((err, res) => {
-      groupId = res.id;
-    });
+
+    await groupModel.save();
+
     const response = await request
-      .get(`${basePath}?${groupId}`)
+      .get(`${basePath}/${groupId}`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(response.status).toBe(200);
+  });
+
+  test("GetOne should fail because requested group doesn't exist", async () => {
+    const groupId = mongoose.Types.ObjectId();
+
+    const groupModel = new Group({
+      _id: groupId,
+      name: 'Test',
+    });
+
+    await groupModel.save();
+
+    const response = await request
+      .get(`${basePath}/${mongoose.Types.ObjectId()}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(404);
+  });
+  test('GetOne should fail because groupId is not valid', async () => {
+    const groupId = mongoose.Types.ObjectId();
+
+    const groupModel = new Group({
+      _id: groupId,
+      name: 'Test',
+    });
+
+    await groupModel.save();
+
+    const response = await request
+      .get(`${basePath}/${'jkhgfgdfsaetyr6u7565wrsdgf'}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
   });
 });
