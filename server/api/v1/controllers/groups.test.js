@@ -11,7 +11,8 @@ let token = '';
 
 describe('Test category controller', () => {
   beforeAll(async () => {
-    token = await util.getTestUserAuthToken(request);
+    const testUser = await util.getTestUserAuthToken(request);
+    token = testUser.token;
   });
 
   beforeEach(async () => {

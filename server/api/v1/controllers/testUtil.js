@@ -31,7 +31,7 @@ async function loginUser(supertestServer) {
 
   if (!response.body.data.token) return '';
 
-  return response.body.data.token;
+  return response.body.data;
 }
 
 exports.getTestUserAuthToken = async (supertestServer) => {

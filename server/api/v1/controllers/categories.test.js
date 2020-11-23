@@ -7,11 +7,11 @@ const Category = require('../models/Category');
 const server = supertest(app);
 
 const basePath = '/v1/categories';
-let token = '';
+let testUser;
 
 describe('Test category controller', () => {
   beforeAll(async () => {
-    token = await util.getTestUserAuthToken(server);
+    testUser = await util.getTestUserAuthToken(server);
   });
 
   beforeEach(async () => {
@@ -33,7 +33,7 @@ describe('Test category controller', () => {
   test('POST create a category ', async () => {
     const response = await server
       .post(`${basePath}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         name: 'Category',
         icon: 'category.png',
