@@ -1,4 +1,4 @@
-# HomeCheck
+# HomeCheck [![Build Status](https://travis-ci.com/Momofil31/HomeCheck.svg?token=v4JAMQm2FEcxyRNfpHAb&branch=master)](https://travis-ci.com/Momofil31/HomeCheck)
 Repository contentente il progetto per il corso di Ingegneria del Software 2 @Unitn.
 
 Questo progetto consiste in un API RestFul scritta in linguaggio Javascript con il framework Express e di un applicazione web scritta in Javascript con il framework Vue.
