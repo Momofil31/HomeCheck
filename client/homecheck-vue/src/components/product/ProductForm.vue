@@ -18,7 +18,7 @@
                 label="Quantity*"
                 v-model="product.quantity"
                 type="number"
-                min=0
+                min="0"
                 :rules="quantityRules"
                 required
               ></v-text-field>
@@ -28,7 +28,7 @@
                 label="Expiry date*"
                 v-model="product.expiryDate"
                 :rules="expiryDateRules"
-                type='date'
+                type="date"
                 required
               ></v-text-field>
             </v-col>
@@ -73,19 +73,18 @@
 </template>
 
 <script>
-  
 export default {
-   props: {
+  props: {
     productId: {
       type: String,
-      default: ''
+      default: '',
     },
     action: {
       type: String,
-      default: ""
-    } 
+      default: '',
+    },
   },
-  
+
   data() {
     return {
       valid: false,
@@ -94,13 +93,10 @@ export default {
         expiryDate: '',
         quantity: '',
         category: '',
-        group: ''
+        group: '',
       },
-      nameRules: [
-        (v) => !!v || 'Product name is required',
-        (v) => /^[a-zA-Z ]*$/.test(v) || 'Product name must be valid',
-      ],
-      quantityRules: [(v) => !!(v+"") || 'Quantity is required'],
+      nameRules: [(v) => !!v || 'Product name is required'],
+      quantityRules: [(v) => !!`${v}` || 'Quantity is required'],
       expiryDateRules: [(v) => !!v || 'Expiry date is required'],
       groupRules: [(v) => !!v || 'Group is required'],
       categoryRules: [(v) => !!v || 'Category is required'],
@@ -109,31 +105,35 @@ export default {
     };
   },
   methods: {
-    save() {      
+    save() {
       if (this.$props.action === 'Create') {
         if (this.$refs.form.validate()) {
-          this.$store
-            .dispatch('api/products/CreateOne', this.product )
-            .then((response) => {
-              this.$emit('close-dialog');
-              this.name = '';
-              this.expiryDate = '';
-              this.quantity = '';
-              this.category = '';
-              this.group = '';
-            });
+          this.$store.dispatch('api/products/CreateOne', this.product).then((response) => {
+            this.$emit('close-dialog');
+            this.name = '';
+            this.expiryDate = '';
+            this.quantity = '';
+            this.category = '';
+            this.group = '';
+          });
         }
       }
       if (this.$props.action === 'Update') {
-        if (this.$refs.form.validate()) {          
+        if (this.$refs.form.validate()) {
           this.$store
             .dispatch('api/products/UpdateOne', {
               product: {
                 name: this.product.name,
                 expiryDate: this.product.expiryDate,
                 quantity: this.product.quantity,
-                category: typeof this.product.category === 'object' ? this.product.category.id : this.product.category,
-                group: typeof this.product.group === 'object' ? this.product.group.id : this.product.group,
+                category:
+                  typeof this.product.category === 'object'
+                    ? this.product.category.id
+                    : this.product.category,
+                group:
+                  typeof this.product.group === 'object'
+                    ? this.product.group.id
+                    : this.product.group,
               },
               id: this.$props.productId,
             })
@@ -143,27 +143,26 @@ export default {
         }
       }
     },
-    
+
     addZero(value) {
-      if(value < 10)
-        return `0${value}`;
+      if (value < 10) return `0${value}`;
       return value;
     },
-    
+
     loadProduct() {
       const Instance = this;
-      
-      if(this.productId != ''){
+
+      if (this.productId != '') {
         this.$store
           .dispatch('api/products/GetOne', { id: this.productId })
           .then((data) => {
             Instance.product = data.result.product;
             delete Instance.product.id;
-          
-            if(Instance.product.expiryDate !== ''){
+
+            if (Instance.product.expiryDate !== '') {
               var date = new Date(Instance.product.expiryDate);
               var year = date.getFullYear();
-              var month = Instance.addZero(date.getMonth()+1);
+              var month = Instance.addZero(date.getMonth() + 1);
               var date = Instance.addZero(date.getDate());
               Instance.product.expiryDate = `${year}-${month}-${date}`;
             }
@@ -174,12 +173,12 @@ export default {
               expiryDate: '',
               quantity: '',
               category: '',
-              group: ''
+              group: '',
             };
           });
       }
     },
-    
+
     loadCategories() {
       const Instance = this;
 
@@ -192,7 +191,7 @@ export default {
           Instance.categories = [];
         });
     },
-    
+
     loadGroups() {
       const Instance = this;
 
@@ -206,20 +205,20 @@ export default {
         });
     },
   },
-  
+
   watch: {
-    productId: function(){
+    productId: function() {
       this.loadProduct();
       this.loadCategories();
       this.loadGroups();
-    }
+    },
   },
-  
-  mounted(){
+
+  mounted() {
     this.loadProduct();
     this.loadCategories();
     this.loadGroups();
-  }
+  },
 };
 </script>
 
