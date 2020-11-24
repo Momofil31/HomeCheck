@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+  - '15'
+sudo: true
+
+branches:
+  only:
+  - master
+
+deploy:
+  # deploy server api
+  - provider: heroku
+    skip_cleanup: true
+    api-key:
+      secure: $HEROKU_API_KEY
+    app: homecheck-api
+  # deploy vue app
+  - provider: heroku
+    skip_cleanup: true
+    api-key:
+      secure: $HEROKU_API_KEY
+    app: homecheck-vue
