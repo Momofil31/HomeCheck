@@ -1,0 +1,63 @@
+#app {
+  #loader {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #cccccc52;
+
+    > div {
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px !important;
+      height: 64px !important;
+    }
+  }
+
+  #login,
+  #register {
+    .v-card {
+      width: 50%;
+      margin: auto;
+      margin-top: 10rem;
+    }
+    .v-card-action {
+      text-align: center;
+    }
+  }
+
+  .card-content {
+    margin-top: 15px;
+  }
+
+  .products-cards {
+    padding: 0 5rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    .product-card {
+      flex: 0 0 23%; 
+      margin: 10px;
+
+      .delete-product {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+
+      .v-image {
+        margin: auto;
+        margin-top: 16px;
+      }
+
+      .product-name {
+        text-align: center;
+        width: 100%;
+      }
+    }
+  }
+}
