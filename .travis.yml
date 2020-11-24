@@ -10,16 +10,31 @@ branches:
 script:
   - npm test
 
-deploy:
-  # deploy server api
-  - provider: heroku
-    skip_cleanup: true
-    api-key:
-      secure: $HEROKU_API_KEY
-    app: homecheck-api
-  # deploy vue app
-  - provider: heroku
-    skip_cleanup: true
-    api-key:
-      secure: $HEROKU_API_KEY
-    app: homecheck-vue
+jobs:
+  include:
+    - stage: Api tests
+      script: cd server; npm test; cd ..
+    - stage: Deploy server
+      script: skip
+      before_deploy:
+      - cd server
+      deploy:
+        provider: heroku
+        skip_cleanup: true
+        api-key:
+          secure: $HEROKU_API_KEY
+        app: homecheck-api
+      after_deploy:
+      - cd ..
+    - stage: Deploy client
+      script: skip
+      before_deploy:
+      - cd client/homecheck-vue
+      deploy:
+        provider: heroku
+        skip_cleanup: true
+        api-key:
+          secure: $HEROKU_API_KEY
+        app: homecheck-vue
+      after_deploy:
+      - cd ../../
