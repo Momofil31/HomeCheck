@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { param, validationResult } = require('express-validator');
 const Category = require('../models/Category');
 
 exports.getList = (req, res, next) => {
@@ -60,8 +61,8 @@ exports.getOne = (req, res, next) => {
         });
       }
       if (
-        category.user.toString() !== req.userData.userId
-        && category.user.toString() !== process.env.ADMIN_USER_ID
+        category.user.toString() !== req.userData.userId &&
+        category.user.toString() !== process.env.ADMIN_USER_ID
       ) {
         return res.status(403).json({
           error: {
@@ -313,3 +314,25 @@ exports.deleteOne = (req, res, next) => {
       });
     });
 };
+
+exports.validate = (req, res, next) => {
+  // Finds the validation errors in this request and wraps them in an object with handy functions
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      error: {
+        message: 'Validation failed',
+        errors: errors.array(),
+      },
+    });
+  }
+  next();
+};
+
+exports.validationChainParam = [
+  param('categoryId')
+    .isString()
+    .withMessage('Id not a string')
+    .isMongoId()
+    .withMessage('Invalid id'),
+];
