@@ -7,6 +7,9 @@ branches:
   only:
   - master
 
+script:
+  - npm test
+
 deploy:
   # deploy server api
   - provider: heroku
