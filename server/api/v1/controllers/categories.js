@@ -1,8 +1,7 @@
-const mongoose = require('mongoose');
 const { param, validationResult } = require('express-validator');
 const Category = require('../models/Category');
 
-exports.getList = (req, res, next) => {
+exports.getList = (req, res) => {
   const where = {
     $or: [{ user: process.env.ADMIN_USER_ID }, { user: req.userData.userId }],
   };
@@ -37,7 +36,7 @@ exports.getList = (req, res, next) => {
     });
 };
 
-exports.getOne = (req, res, next) => {
+exports.getOne = (req, res) => {
   const id = req.params.categoryId ? req.params.categoryId : '';
 
   if (id === '') {
@@ -61,8 +60,8 @@ exports.getOne = (req, res, next) => {
         });
       }
       if (
-        category.user.toString() !== req.userData.userId &&
-        category.user.toString() !== process.env.ADMIN_USER_ID
+        category.user.toString() !== req.userData.userId
+        && category.user.toString() !== process.env.ADMIN_USER_ID
       ) {
         return res.status(403).json({
           error: {
@@ -99,7 +98,7 @@ exports.getOne = (req, res, next) => {
     });
 };
 
-exports.updateOne = (req, res, next) => {
+exports.updateOne = (req, res) => {
   const newCategory = {
     _id: req.body.id ? req.body.id : '',
     name: req.body.name ? req.body.name : '',
@@ -178,7 +177,7 @@ exports.updateOne = (req, res, next) => {
     });
 };
 
-exports.createOne = (req, res, next) => {
+exports.createOne = (req, res) => {
   const category = {
     name: req.body.name ? req.body.name : '',
     icon: req.body.icon ? req.body.icon : '',
@@ -248,7 +247,7 @@ exports.createOne = (req, res, next) => {
     });
 };
 
-exports.deleteOne = (req, res, next) => {
+exports.deleteOne = (req, res) => {
   const categoryId = req.params.categoryId ? req.params.categoryId : '';
 
   if (categoryId === '') {

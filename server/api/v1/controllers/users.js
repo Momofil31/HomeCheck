@@ -1,10 +1,9 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/User');
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   User.find({ email: req.body.email })
     .exec()
     .then((user) => {
@@ -69,7 +68,7 @@ exports.login = (req, res, next) => {
     });
 };
 
-exports.register = (req, res, next) => {
+exports.register = (req, res) => {
   const user = {
     email: req.body.email ? req.body.email : '',
     firstname: req.body.firstname ? req.body.firstname : '',

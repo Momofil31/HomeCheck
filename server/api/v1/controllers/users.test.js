@@ -32,17 +32,6 @@ const registerUser = async () => {
   return user;
 };
 
-const loginUser = async () => {
-  const response = await request.post(`${basePath}/login`).send({
-    email: 'Test@email.it',
-    password: 'Password!234',
-  });
-
-  if (!response.body.data.token) return '';
-
-  return response.body.data.token;
-};
-
 describe('Test users controller', () => {
   beforeEach(async () => {
     clearUserTable();

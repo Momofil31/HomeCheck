@@ -2,7 +2,6 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const util = require('./testUtil');
 const app = require('../../../app');
-const Product = require('../models/Product');
 const Category = require('../models/Category');
 const Group = require('../models/Group');
 
@@ -16,8 +15,8 @@ let group = {};
 describe('Test product controller', () => {
   beforeAll(async () => {
     testUser = await util.getTestUserAuthToken(server);
-    
-    util.clearCategoryTable();    
+
+    util.clearCategoryTable();
     util.clearGroupTable();
   });
 
@@ -31,7 +30,6 @@ describe('Test product controller', () => {
   });
 
   test('POST create a product ', async () => {
-    
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -39,16 +37,16 @@ describe('Test product controller', () => {
       user: testUser.user.id,
       default: false,
     });
-    
+
     await category.save();
-    
-    const group = new Group({
+
+    group = new Group({
       _id: mongoose.Types.ObjectId(),
       name: 'Test',
     });
 
     await group.save();
-    
+
     const response = await server
       .post(`${basePath}`)
       .set('Authorization', `Bearer ${testUser.token}`)
@@ -57,7 +55,7 @@ describe('Test product controller', () => {
         quantity: '4',
         expiryDate: '2020-12-25',
         category: category._id,
-        group: group._id
+        group: group._id,
       });
 
     expect(response.status).toBe(201);
@@ -69,10 +67,9 @@ describe('Test product controller', () => {
           quantity: '4',
           expiryDate: '2020-12-25',
           category: {},
-          group: {}
+          group: {},
         },
       },
     });
   });
 });
-

@@ -9,7 +9,7 @@ const request = supertest(app);
 const basePath = '/v1/groups';
 let token = '';
 
-describe('Test category controller', () => {
+describe('Test group controller', () => {
   beforeAll(async () => {
     const testUser = await util.getTestUserAuthToken(request);
     token = testUser.token;
