@@ -13,7 +13,7 @@ script:
 jobs:
   include:
     - stage: Api tests
-      script: cd server; npm test; cd ..
+      script: cd server; npm install; npm test; cd ..
     - stage: Deploy server
       script: skip
       before_deploy:
