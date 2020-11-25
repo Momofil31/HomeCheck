@@ -2,10 +2,12 @@ language: node_js
 node_js:
   - '15'
 sudo: true
+ignore:
+  - wiki-images/*
 
 branches:
   only:
-  - master
+    - master
 
 script:
   - npm test
@@ -17,22 +19,22 @@ jobs:
     - stage: Deploy server
       script: skip
       before_deploy:
-      - cd server
+        - cd server
       deploy:
         provider: heroku
         skip_cleanup: true
         api-key: $HEROKU_API_KEY
         app: homecheck-api
       after_deploy:
-      - cd ..
+        - cd ..
     - stage: Deploy client
       script: skip
       before_deploy:
-      - cd client/homecheck-vue
+        - cd client/homecheck-vue
       deploy:
         provider: heroku
         skip_cleanup: true
         api-key: $HEROKU_API_KEY
         app: homecheck-vue
       after_deploy:
-      - cd ../../
+        - cd ../../
