@@ -38,7 +38,7 @@ app.use(express.json()); // Parses JSON
 app.use(cors());
 
 // versioning routes
-require('./api/v1/router')(app, express); // v1 API
+require('./api/router')(app, express);
 
 // Error 404 specific handling
 app.use((req, res, next) => {
