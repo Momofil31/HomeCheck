@@ -178,7 +178,7 @@ exports.resetPassword = (req, res) => {
     .exec()
     .then(async (user) => {
       if (user.length < 1) {
-        return res.status(401).json({
+        return res.status(404).json({
           error: {
             message: 'Reset password failed.',
             description: 'Cannot find a user with the requested email.',
@@ -198,7 +198,7 @@ exports.resetPassword = (req, res) => {
         .then((result) => {
           res.status(200).json({
             data: {
-              message: 'New password sent.',
+              message: 'New password sent',
               user: {
                 id: user[0]._id,
                 email: user[0].email,
