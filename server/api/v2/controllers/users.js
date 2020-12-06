@@ -176,7 +176,7 @@ exports.resetPassword = (req, res) => {
 
   User.find({ email })
     .exec()
-    .then((user) => {
+    .then(async (user) => {
       if (user.length < 1) {
         return res.status(401).json({
           error: {
@@ -192,8 +192,10 @@ exports.resetPassword = (req, res) => {
 
       console.log(newPassword);
 
-      bcrypt.hash(newPassword, 10, (err, hash) => {
-        User.findByIdAndUpdate(user[0]._id, { password: hash }).then((result) => {
+      const hashNewPassword = await bcrypt.hash(newPassword, 10);
+
+      User.findByIdAndUpdate(user[0]._id, { password: hashNewPassword })
+        .then((result) => {
           res.status(200).json({
             data: {
               message: 'New password sent.',
@@ -205,8 +207,17 @@ exports.resetPassword = (req, res) => {
               },
             },
           });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json({
+            error: {
+              message: 'Reset password failed.',
+              descrition: 'Something went wrong during rest password.',
+              ...error,
+            },
+          });
         });
-      });
     });
 };
 
