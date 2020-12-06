@@ -2,7 +2,7 @@
   <div id="login">
     <v-card>
       <v-card-title>
-        <h3>Login</h3>
+        <h3>Forgot password</h3>
       </v-card-title>
       <v-card-text class="pt-4">
         <v-form ref="form" v-model="valid">
@@ -14,23 +14,12 @@
             required
             autofocus
           ></v-text-field>
-          <v-text-field
-            label="Enter your password"
-            v-model="password"
-            min="8"
-            prepend-inner-icon="mdi-lock"
-            :append-icon="!showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            @click:append="changePasswordVisibility"
-            :type="showPassword ? 'text' : 'password'"
-            :rules="passwordRules"
-            counter
-            required
-          ></v-text-field>
           <v-layout justify-space-between>
             <v-spacer></v-spacer>
-            <div @click="sendToResetPassword">Forgot password?</div>
-            <v-btn @click="login" :class="{ 'blue darken-4 white--text': valid, disabled: !valid }"
-              >Login</v-btn
+            <v-btn
+              @click="resetPassword"
+              :class="{ 'blue darken-4 white--text': valid, disabled: !valid }"
+              >Send me a new password</v-btn
             >
           </v-layout>
         </v-form>
@@ -47,14 +36,10 @@
 
 <script>
 export default {
-  name: 'Login',
-
+  name: 'ResetPassword',
   data() {
     return {
       valid: false,
-      showPassword: false,
-      password: '',
-      passwordRules: [(v) => !!v || 'Password is required'],
       email: '',
       emailRules: [
         (v) => !!v || 'E-mail is required',
@@ -62,34 +47,24 @@ export default {
       ],
     };
   },
-
   methods: {
-    login() {
+    resetPassword() {
       if (this.$refs.form.validate()) {
         this.$store
-          .dispatch('api/users/Login', {
+          .dispatch('api/users/ResetPassword', {
             email: this.email,
-            password: this.password,
           })
           .then((response) => {
-            this.$store.dispatch('login', response.result).then((response) => {
-              this.$router.push('/');
-            });
+            this.$router.push('/login');
           });
       }
-    },
-
-    changePasswordVisibility() {
-      this.showPassword = !this.showPassword;
     },
 
     sendToRegister() {
       if (this.$route.path !== '/register') this.$router.push('/register');
     },
-
-    sendToResetPassword() {
-      if (this.$route.path !== '/resetPassword') this.$router.push('/resetPassword');
-    },
   },
 };
 </script>
+
+<style></style>

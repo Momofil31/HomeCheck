@@ -41,6 +41,11 @@ const routes = [
     name: 'Logout',
     component: () => import('@/views/Logout.vue'),
   },
+  {
+    path: '/resetPassword',
+    name: 'ResetPassword',
+    component: () => import('@/views/ResetPassword.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -51,19 +56,21 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const { isLoggedIn } = store.getters;
-  
-  if(isLoggedIn && to.name !== 'Logout'){
+
+  if (isLoggedIn && to.name !== 'Logout') {
     var expiry = localStorage.getItem('expiryToken');
-    var today = (new Date()).getTime();
-    
-    if(today >= expiry) next({ name: 'Logout' });
+    var today = new Date().getTime();
+
+    if (today >= expiry) next({ name: 'Logout' });
   }
 
   if (to.name !== 'Login' && !isLoggedIn) {
     if (to.name === 'Register') next();
+    if (to.name === 'ResetPassword') next();
     else next({ name: 'Login' });
   } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });
+  else if (to.name === 'ResetPassword' && isLoggedIn) next({ name: 'Home' });
   else next();
 });
 
