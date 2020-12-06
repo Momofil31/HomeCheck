@@ -1,7 +1,18 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mail = require('./mailUtil');
 
 const User = require('../../../models/User');
+
+function generatePassword() {
+  const length = 8;
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let retVal = '';
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+}
 
 exports.login = (req, res) => {
   User.find({ email: req.body.email })
@@ -156,6 +167,45 @@ exports.register = (req, res) => {
           descrition: 'Something went wrong during registration.',
           ...err,
         },
+      });
+    });
+};
+
+exports.resetPassword = (req, res) => {
+  const { email } = req.body;
+
+  User.find({ email })
+    .exec()
+    .then((user) => {
+      if (user.length < 1) {
+        return res.status(401).json({
+          error: {
+            message: 'Reset password failed.',
+            description: 'Cannot find a user with the requested email.',
+          },
+        });
+      }
+
+      const newPassword = generatePassword();
+      // send email with new password
+      mail.resetPasswordMail(email, newPassword);
+
+      console.log(newPassword);
+
+      bcrypt.hash(newPassword, 10, (err, hash) => {
+        User.findByIdAndUpdate(user[0]._id, { password: hash }).then((result) => {
+          res.status(200).json({
+            data: {
+              message: 'New password sent.',
+              user: {
+                id: user[0]._id,
+                email: user[0].email,
+                firstname: user[0].firstname,
+                lastname: user[0].lastname,
+              },
+            },
+          });
+        });
       });
     });
 };
