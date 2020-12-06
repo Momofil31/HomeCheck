@@ -77,14 +77,18 @@ paths:
                   type: string
                   description: 'Expiry date of product'
                 category:
-                  type: integer
+                  type: string
                   description: 'Category id of product'
                 group:
-                  type: integer
+                  type: string
                   description: 'Group id of product'
       responses:
         '200':
           description: 'Successful insert'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
         '401':
           description: 'User not logged in'
         '403':
@@ -110,17 +114,20 @@ paths:
               examples:
                 1:
                   value:
-                    id: 1
-                    name: "Tomato Sauce"
-                    quantity: 7
-                    expiryDate: 25/12/2020
-                    category:
-                      id: 1
-                      name: "Sauce"
-                      icon: "/path/to/icon"
-                    group:
-                      id: 1
-                      name: "Pantry"
+                    data:
+                      message: "Get product successful"
+                      product:
+                        id: "1"
+                        name: "Tomato Sauce"
+                        quantity: 7
+                        expiryDate: 25/12/2020
+                        category:
+                          id: "1"
+                          name: "Sauce"
+                          icon: "/path/to/icon"
+                        group:
+                          id: "1"
+                          name: "Pantry"
         '401':
           description: 'User not logged in'
     put:
@@ -143,14 +150,18 @@ paths:
                   type: string
                   description: 'Expiry date of product'
                 category:
-                  type: integer
+                  type: string
                   description: 'Category id of product'
                 group:
-                  type: integer
+                  type: string
                   description: 'Group id of product'
       responses:
         '200':
           description: 'Successful update'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
         '401':
           description: 'User not logged in'
         '403':
@@ -162,6 +173,10 @@ paths:
       responses:
         '200':
           description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
         '401':
           description: User not logged in
         '403':
@@ -237,7 +252,7 @@ paths:
               examples:
                 1:
                   value:
-                    id: 1
+                    id: "1"
                     name: "Bread"
                     icon: "/path/to/icon"
                     default: false
@@ -335,7 +350,7 @@ paths:
               examples:
                 1:
                   value:
-                    id: 1
+                    id: "1"
                     name: "Pantry"
         '400':
           description: No group provided
@@ -396,7 +411,7 @@ components:
         - lastname
       properties:
         id:
-          type: integer
+          type: string
           description: 'Id of the user'
         email:
           type: string
@@ -412,47 +427,65 @@ components:
           description: 'Lastname of the user'
     Product:
       type: object
-      required:
-        - id
-        - name
-        - quantity
-        - expiryDate
-        - category
-        - group
       properties:
-        id:
-          type: integer
-          description: 'Id of the product'
-        name:
-          type: string
-          description: 'Name of the product'
-        quantity:
-          type: "integer"
-          description: 'Product quantity'
-        expiryDate:
-          type: string
-          description: 'Expiry date of product'
-        category:
+        data:
           type: object
           properties:
-            id:
-              type: integer
-              description: 'Id of the category'
-            name:
+            message:
               type: string
-              description: 'Name of the category'
-            icon:
-              type: string
-              description: 'Path of the category icon'
-        group:
-          type: object
-          properties:
-            id:
-              type: integer
-              description: 'Id of the group'
-            name:
-              type: string
-              description: 'Name of the group'
+              description: 'Response status description'
+            product:
+              type: object
+              required:
+                - id
+                - name
+                - quantity
+                - expiryDate
+                - category
+                - group
+              properties:
+                id:
+                  type: string
+                  description: 'Id of the product'
+                name:
+                  type: string
+                  description: 'Name of the product'
+                quantity:
+                  type: "integer"
+                  description: 'Product quantity'
+                expiryDate:
+                  type: string
+                  description: 'Expiry date of product'
+                category:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: 'Id of the category'
+                    name:
+                      type: string
+                      description: 'Name of the category'
+                    icon:
+                      type: string
+                      description: 'Path of the category icon'
+                group:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: 'Id of the group'
+                    name:
+                      type: string
+                      description: 'Name of the group'
+                request:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: 'Request method'
+                    url:
+                      type: string
+                      description: 'Request url'
     Category:
       type : object
       required:
@@ -463,7 +496,7 @@ components:
         - user
       properties:
         id:
-          type: integer
+          type: string
           description: 'Id of the category'
         name:
           type: string
@@ -484,56 +517,72 @@ components:
         - name
       properties:
         id:
-          type: integer
+          type: string
           description: 'Id of the group'
         name:
           type: string
           description: 'Name of the group'
     ArrayOfProducts:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: integer
-            description: 'Id of the product'
-          name:
-            type: string
-            description: 'Name of the product'
-          quantity:
-            type: "integer"
-            description: 'Product quantity'
-          expiryDate:
-            type: string
-            description: 'Expiry date of product'
-          category:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: 'Id of the category'
-              name:
-                type: string
-                description: 'Name of the category'
-              icon:
-                type: string
-                description: 'Path of the category icon'
-          group:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: 'Id of the group'
-              name:
-                type: string
-                description: 'Name of the group'
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Response status description'
+            products:
+              type: array
+              items:
+                type: object
+                required:
+                  - id
+                  - name
+                  - quantity
+                  - expiryDate
+                  - category
+                  - group
+                properties:
+                  id:
+                    type: string
+                    description: 'Id of the product'
+                  name:
+                    type: string
+                    description: 'Name of the product'
+                  quantity:
+                    type: "integer"
+                    description: 'Product quantity'
+                  expiryDate:
+                    type: string
+                    description: 'Expiry date of product'
+                  category:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: 'Id of the category'
+                      name:
+                        type: string
+                        description: 'Name of the category'
+                      icon:
+                        type: string
+                        description: 'Path of the category icon'
+                  group:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: 'Id of the group'
+                      name:
+                        type: string
+                        description: 'Name of the group'
     ArrayOfCategories:
       type: array
       items:
         type: object
         properties:
           id:
-            type: integer
+            type: string
             description: 'Id of the category'
           name:
             type: string
@@ -547,7 +596,7 @@ components:
         type: object
         properties:
           id:
-            type: integer
+            type: string
             description: 'Id of the group'
           name:
             type: string

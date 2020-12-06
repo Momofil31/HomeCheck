@@ -133,7 +133,7 @@ exports.updateOne = (req, res) => {
         return res.status(200).json({
           data: {
             message: 'Update product successful',
-            product: response,
+            product: getProductFromEntity(response, req),
           },
         });
       }
@@ -183,7 +183,7 @@ exports.createOne = (req, res) => {
         }
         return res.status(201).json({
           data: {
-            message: 'Creation successful.',
+            message: 'Creation successful',
             product: getProductFromEntity(product, req),
           },
         });
