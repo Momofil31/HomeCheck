@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const util = require('./testUtil');
 const app = require('../../../app');
-const Category = require('../models/Category');
+const Category = require('../../../models/Category');
 
 const server = supertest(app);
 

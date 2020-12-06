@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const util = require('./testUtil');
 const app = require('../../../app');
-const Group = require('../models/Group');
+const Group = require('../../../models/Group');
 
 const request = supertest(app);
 

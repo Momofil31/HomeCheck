@@ -1,7 +1,7 @@
 const {
   param, body, query, validationResult,
 } = require('express-validator');
-const Product = require('../models/Product');
+const Product = require('../../../models/Product');
 
 function getProductFromEntity(product, req) {
   const toRtn = {};

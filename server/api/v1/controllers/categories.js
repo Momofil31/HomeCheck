@@ -1,5 +1,5 @@
 const { param, validationResult } = require('express-validator');
-const Category = require('../models/Category');
+const Category = require('../../../models/Category');
 
 exports.getList = (req, res) => {
   const where = {

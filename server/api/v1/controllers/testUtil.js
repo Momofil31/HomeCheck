@@ -1,7 +1,7 @@
-const User = require('../models/User');
-const Category = require('../models/Category');
-const Group = require('../models/Group');
-const Product = require('../models/Product');
+const User = require('../../../models/User');
+const Category = require('../../../models/Category');
+const Group = require('../../../models/Group');
+const Product = require('../../../models/Product');
 
 const basePath = '/v1/users';
 

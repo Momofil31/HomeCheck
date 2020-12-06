@@ -1,5 +1,5 @@
 const { param, validationResult } = require('express-validator');
-const Group = require('../models/Group');
+const Group = require('../../../models/Group');
 
 exports.getList = (req, res) => {
   Group.find({})

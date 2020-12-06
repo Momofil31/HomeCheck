@@ -2,7 +2,7 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const app = require('../../../app');
-const User = require('../models/User');
+const User = require('../../../models/User');
 
 const basePath = '/v2/users';
 
