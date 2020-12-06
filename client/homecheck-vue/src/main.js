@@ -8,7 +8,8 @@ import './styles/all.less';
 
 Vue.config.productionTip = false;
 
-window.$apiBaseUrl = 'https://homecheck-api.herokuapp.com/';
+//window.$apiBaseUrl = 'https://homecheck-api.herokuapp.com/';
+window.$apiBaseUrl = 'http://localhost:3000/';
 
 new Vue({
   router,
