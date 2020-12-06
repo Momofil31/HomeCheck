@@ -209,3 +209,81 @@ exports.resetPassword = (req, res) => {
       });
     });
 };
+
+exports.updatePassword = async (req, res) => {
+  const password = {
+    old: req.body.oldPassword ? req.body.oldPassword : '',
+    new: req.body.newPassword ? req.body.newPassword : '',
+    confirm: req.body.confirmPassword ? req.body.confirmPassword : '',
+  };
+  const user = req.userData;
+
+  if (password.old === '' || password.new === '' || password.confirm === '') {
+    return res.status(400).json({
+      error: {
+        message: 'Update password failed',
+        description: 'Data not correctly provided',
+      },
+    });
+  }
+
+  if (password.new !== password.confirm) {
+    return res.status(400).json({
+      error: {
+        message: 'Update password failed',
+        description: "Passwords don't match",
+      },
+    });
+  }
+
+  const hashNewPassword = await bcrypt.hash(password.new, 10);
+
+  console.log(hashNewPassword);
+
+  User.findById(user.userId)
+    .exec()
+    .then((result) => {
+      if (result) {
+        const match = bcrypt.compare(password.old, result.password);
+
+        if (match) {
+          User.findByIdAndUpdate(user.userId, { password: hashNewPassword })
+            .exec()
+            // eslint-disable-next-line no-shadow
+            .then((result) => {
+              res.status(200).json({
+                data: {
+                  message: 'Update password successful',
+                  user: {
+                    id: result._id,
+                    email: result.email,
+                    firstname: result.firstname,
+                    lastname: result.lastname,
+                  },
+                },
+              });
+            })
+            .catch((error) => {
+              console.log(error);
+              res.status(500).json({
+                error: {
+                  message: 'Update password failed.',
+                  descrition: 'Something went wrong during update password.',
+                  ...error,
+                },
+              });
+            });
+        }
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        error: {
+          message: 'Update password failed.',
+          descrition: 'Something went wrong during update password.',
+          ...error,
+        },
+      });
+    });
+};
