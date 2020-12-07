@@ -66,7 +66,7 @@ router.beforeEach((to, from, next) => {
 
   if (to.name !== 'Login' && !isLoggedIn) {
     if (to.name === 'Register') next();
-    if (to.name === 'ResetPassword') next();
+    else if (to.name === 'ResetPassword') next();
     else next({ name: 'Login' });
   } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });
