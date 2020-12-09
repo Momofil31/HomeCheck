@@ -6,7 +6,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/get', {
-          endpoint: 'v1/products',
+          endpoint: 'v2/products',
           data: filters,
         })
           .then((data) => {
@@ -36,7 +36,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/get', {
-          endpoint: `v1/products/${filters.id}`,
+          endpoint: `v2/products/${filters.id}`,
           data: filters,
         })
           .then((data) => {
@@ -66,7 +66,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/delete', {
-          endpoint: `v1/products/${filters.id}`,
+          endpoint: `v2/products/${filters.id}`,
           data: filters,
         })
           .then((data) => {
@@ -100,7 +100,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/put', {
-          endpoint: `v1/products/${filters.id}`,
+          endpoint: `v2/products/${filters.id}`,
           data: filters.product,
         })
           .then((data) => {
@@ -134,7 +134,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/post', {
-          endpoint: 'v1/products/',
+          endpoint: 'v2/products/',
           data: filters,
         })
           .then((data) => {

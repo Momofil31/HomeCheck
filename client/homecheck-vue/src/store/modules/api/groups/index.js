@@ -6,7 +6,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/get', {
-          endpoint: 'v1/groups',
+          endpoint: 'v2/groups',
           data: filters,
         })
           .then((data) => {

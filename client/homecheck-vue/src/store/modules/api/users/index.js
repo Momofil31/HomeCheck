@@ -6,7 +6,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/post', {
-          endpoint: 'v1/users/login',
+          endpoint: 'v2/users/login',
           data: filters,
         })
           .then((data) => {
@@ -36,7 +36,7 @@ export default {
       const Instance = this;
       return new Promise((resolve, reject) => {
         Instance.dispatch('api/post', {
-          endpoint: 'v1/users/register',
+          endpoint: 'v2/users/register',
           data: filters,
         })
           .then((data) => {
