@@ -42,6 +42,22 @@ paths:
       responses:
         '200':
           description: Register successful
+  /users/confirm/{token}:
+    summary: Confirmation
+    get:
+      security: [ ]
+      summary: Confirm account
+      tags:
+        - Users
+      responses:
+        '201':
+          description: Confirmation successful
+        '400':
+          description: Token missing
+        '404':
+          description: Token not found
+        '500':
+          description: Error in confirmation
   /products/:
     summary: Products Collection
     get:
