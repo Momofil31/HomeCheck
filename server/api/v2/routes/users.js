@@ -12,4 +12,6 @@ router.post('/passwordReset', UsersController.resetPassword);
 
 router.put('/password', checkAuth, UsersController.updatePassword);
 
+router.get('/confirm/:token', UsersController.confirm);
+
 module.exports = router;

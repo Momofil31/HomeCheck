@@ -145,6 +145,11 @@ exports.register = (req, res) => {
               },
             });
           }
+          
+          //registration succesful we need to send confirmation email
+          const link = `${process.env.FRONTEND_URL}/confirm?token=${userModel.token}`;
+          mail.confirmationEmail(userModel.email,`${userModel.firstname} ${userModel.lastname}`, link, userModel.token);
+          
           return res.status(201).json({
             data: {
               message: 'Registration successful.',
@@ -297,4 +302,69 @@ exports.updatePassword = async (req, res) => {
         },
       });
     });
+};
+           
+exports.confirm = async (req, res) => {
+            
+  const token = req.params.token ? req.params.token : '';
+            
+  if (token === '') {
+    return res.status(400).json({
+      error: {
+        message: 'Confirmation failed.',
+        description: 'Token missing',
+      },
+    });
+  }
+
+  User.find({ token: token })
+    .exec()
+    .then((result) => {
+      if (result.length <= 0) {
+        return res.status(404).json({
+          error: {
+            message: 'Confirmation failed.',
+            description: 'Token not found.',
+          },
+        });
+      }
+    
+      var user = result[0];
+      user.blocked = false;
+      user.token = '';
+      user.save((error) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({
+            error: {
+              message: 'Confirmation failed.',
+              description: 'Something went wrong when saving your user.',
+            },
+          });
+        }
+
+        return res.status(201).json({
+          data: {
+            message: 'Confirmation successful.',
+            user: {
+              id: user._id,
+              email: user.email,
+              firstname: user.firstname,
+              lastname: user.lastname,
+            },
+          },
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: {
+          message: 'Confirmation failed.',
+          descrition: 'Something went wrong during Confirmation.',
+          ...err,
+        },
+      });
+    });
+    
 };
