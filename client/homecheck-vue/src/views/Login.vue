@@ -27,8 +27,7 @@
             required
           ></v-text-field>
           <v-layout justify-space-between>
-            <v-spacer></v-spacer>
-            <div @click="sendToResetPassword">Forgot password?</div>
+            <a @click="sendToResetPassword">Forgot password?</a>
             <v-btn @click="login" :class="{ 'blue darken-4 white--text': valid, disabled: !valid }"
               >Login</v-btn
             >
