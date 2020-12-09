@@ -2,26 +2,27 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const app = require('../../../app');
+const util = require('./testUtil');
 const User = require('../../../models/User');
 
 const basePath = '/v2/users';
 
-const request = supertest(app);
+const server = supertest(app);
 
 // Utility functions
 
 const clearUserTable = () => {
   User.deleteMany({}, (err) => {
     if (err) {
-      console.log('collection not removed');
+      //console.log('collection not removed');
     } else {
-      console.log('collection removed');
+      //console.log('collection removed');
     }
   });
 };
 
 const registerUser = async () => {
-  const user = await request.post(`${basePath}/register`).send({
+  const user = await server.post(`${basePath}/register`).send({
     email: 'Test@email.it',
     password: 'Password!234',
     firstname: 'A',
@@ -37,8 +38,8 @@ describe('Test users controller', () => {
     clearUserTable();
   });
 
-  test('Creation should fail because no email was provided', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because no email was provided', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       password: 'Password!234',
       firstname: 'A',
       lastname: 'B',
@@ -47,8 +48,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation should fail because no password was provided', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because no password was provided', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       firstname: 'A',
       lastname: 'B',
@@ -57,8 +58,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation should fail because no firstname was provided', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because no firstname was provided', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
       lastname: 'B',
@@ -67,8 +68,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation should fail because no lastname was provided', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because no lastname was provided', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
       firstname: 'A',
@@ -77,8 +78,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation should fail because email is not a valid email (missing "@")', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because email is not a valid email (missing "@")', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Testemail.it',
       password: 'Password!234',
       firstname: 'A',
@@ -88,8 +89,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation should fail because password is not valid', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation should fail because password is not valid', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password234',
       firstname: 'A',
@@ -99,8 +100,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('Creation of a new user should succeed', async () => {
-    const response = await request.post(`${basePath}/register`).send({
+  test('POST Creation of a new user should succeed', async () => {
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
       firstname: 'A',
@@ -128,10 +129,10 @@ describe('Test users controller', () => {
   });
 
   // TODO: Make it independent form order of execution
-  test('Creation should fail because email is already taken', async () => {
-    await registerUser();
+  test('POST Creation should fail because email is already taken', async () => {
+    await util.registerUser(server);
 
-    const response = await request.post(`${basePath}/register`).send({
+    const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
       firstname: 'A',
@@ -141,8 +142,8 @@ describe('Test users controller', () => {
     expect(response.status).toBe(409);
   });
 
-  test("Login should fail because email doesn't exist", async () => {
-    const response = await request.post(`${basePath}/login`).send({
+  test("POST Login should fail because email doesn't exist", async () => {
+    const response = await server.post(`${basePath}/login`).send({
       email: 'Tes@email.it',
       password: 'Password!234',
     });
@@ -150,10 +151,10 @@ describe('Test users controller', () => {
     expect(response.status).toBe(401);
   });
 
-  test('Login should fail because password is wrong', async () => {
-    await registerUser();
+  test('POST Login should fail because password is wrong', async () => {
+    await util.registerUser(server);
 
-    const response = await request.post(`${basePath}/login`).send({
+    const response = await server.post(`${basePath}/login`).send({
       email: 'Test@email.it',
       password: 'Password',
     });
@@ -161,10 +162,11 @@ describe('Test users controller', () => {
     expect(response.status).toBe(401);
   });
 
-  test('Login should succeed', async () => {
-    await registerUser();
+  test('POST Login should succeed', async () => {
+    const res = await util.registerUser(server);
+    await util.confirmUser(res);
 
-    const response = await request.post(`${basePath}/login`).send({
+    const response = await server.post(`${basePath}/login`).send({
       email: 'Test@email.it',
       password: 'Password!234',
     });
@@ -197,6 +199,125 @@ describe('Test users controller', () => {
     };
 
     expect(decoded).toMatchObject(userData);
+  });
+
+  test('PUT Update password should fail because old password is wrong', async () => {
+    const testUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .put(`${basePath}/password`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        oldPassword: 'Password!23',
+        newPassword: 'Test123!',
+        confirmPassword: 'Test123!',
+      });
+
+    const desiredResponse = {
+      error: {
+        message: 'Update password failed',
+        description: 'Wrong password',
+      },
+    };
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test("PUT Update password should fail because newPassword and confirmPassword don't match", async () => {
+    const testUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .put(`${basePath}/password`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        oldPassword: 'Password!234',
+        newPassword: 'Test123',
+        confirmPassword: 'Test123!',
+      });
+
+    const desiredResponse = {
+      error: {
+        message: 'Update password failed',
+        description: "Passwords don't match",
+      },
+    };
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('PUT Update password should fail because request body is invalid', async () => {
+    const testUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .put(`${basePath}/password`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        newPassword: 'Test123',
+        confirmPassword: 'Test123!',
+      });
+
+    const desiredResponse = {
+      error: {
+        message: 'Update password failed',
+        description: 'Data not correctly provided',
+      },
+    };
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('PUT Update password should succeed', async () => {
+    const testUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .put(`${basePath}/password`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        oldPassword: 'Password!234',
+        newPassword: 'Test123!',
+        confirmPassword: 'Test123!',
+      });
+
+    const desiredResponse = {
+      data: {
+        message: 'Update password successful',
+        user: {
+          id: expect.stringMatching(/.*/),
+          email: 'Test@email.it',
+          firstname: 'A',
+          lastname: 'B',
+        },
+      },
+    };
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  afterAll((done) => {
+    // Closing the DB connection allows Jest to exit successfully.
+    mongoose.connection.close();
+    done();
+  });
+
+  test('POST Reset password should succeed', async () => {
+    await util.registerUser(server);
+    const response = await server.post(`${basePath}/passwordReset`).send({
+      email: 'Test@email.it',
+    });
+
+    const desiredResponse = {
+      data: {
+        message: 'New password sent',
+        user: {
+          id: expect.stringMatching(/.*/),
+          email: 'Test@email.it',
+          firstname: 'A',
+          lastname: 'B',
+        },
+      },
+    };
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(desiredResponse);
   });
 
   afterAll((done) => {

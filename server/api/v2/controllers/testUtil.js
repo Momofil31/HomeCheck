@@ -15,40 +15,49 @@ const userData = {
 function clearUserTable() {
   User.deleteMany({}, (err) => {
     if (err) {
-      console.log('collection not removed');
+      //console.log('collection not removed');
     } else {
-      console.log('collection removed');
+      //console.log('collection removed');
     }
   });
 }
 
 async function registerUser(supertestServer) {
-  const user = await supertestServer.post(`${basePath}/register`).send(userData);
-  if (!user) return {};
+  const response = await supertestServer.post(`${basePath}/register`).send(userData);
+  if (!response) return {};
 
-  return user;
+  return response;
 }
-
 async function loginUser(supertestServer) {
   const response = await supertestServer.post(`${basePath}/login`).send(userData);
+
+  console.log(response.body);
 
   if (!response.body.data.token) return '';
 
   return response.body.data;
 }
 
+async function confirmUser(user) {
+  await User.findByIdAndUpdate(user.body.data.user.id, { token: '', blocked: false }).exec();
+}
+
 exports.getTestUserAuthToken = async (supertestServer) => {
   clearUserTable();
-  await registerUser(supertestServer);
+  const response = await registerUser(supertestServer);
+  await confirmUser(response);
   return loginUser(supertestServer);
 };
 
+exports.registerUser = async (supertestServer) => registerUser(supertestServer);
+
+exports.confirmUser = async (user) => confirmUser(user);
 exports.clearGroupTable = () => {
   Group.deleteMany({}, (err) => {
     if (err) {
-      console.log('collection not removed');
+      //console.log('collection not removed');
     } else {
-      console.log('collection removed');
+      //console.log('collection removed');
     }
   });
 };
@@ -56,9 +65,9 @@ exports.clearGroupTable = () => {
 exports.clearCategoryTable = () => {
   Category.deleteMany({}, (err) => {
     if (err) {
-      console.log('collection not removed');
+      //console.log('collection not removed');
     } else {
-      console.log('collection removed');
+      //console.log('collection removed');
     }
   });
 };
@@ -66,9 +75,9 @@ exports.clearCategoryTable = () => {
 exports.clearProductTable = () => {
   Product.deleteMany({}, (err) => {
     if (err) {
-      console.log('collection not removed');
+      //console.log('collection not removed');
     } else {
-      console.log('collection removed');
+      //console.log('collection removed');
     }
   });
 };

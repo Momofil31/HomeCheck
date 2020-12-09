@@ -4,7 +4,7 @@
   "description": "RESTful API for HomeCheck App",
   "main": "index.js",
   "scripts": {
-    "test": "jest -i",
+    "test": "jest -i --silent",
     "start": "node server.js",
     "start:dev": "nodemon server.js"
   },
