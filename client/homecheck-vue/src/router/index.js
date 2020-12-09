@@ -46,6 +46,11 @@ const routes = [
     name: 'ResetPassword',
     component: () => import('@/views/ResetPassword.vue'),
   },
+  {
+    path: '/confirm',
+    name: 'ConfirmAccount',
+    component: () => import('@/views/ConfirmAccount.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -67,10 +72,12 @@ router.beforeEach((to, from, next) => {
   if (to.name !== 'Login' && !isLoggedIn) {
     if (to.name === 'Register') next();
     else if (to.name === 'ResetPassword') next();
+    else if (to.name === 'ConfirmAccount') next();
     else next({ name: 'Login' });
   } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'ResetPassword' && isLoggedIn) next({ name: 'Home' });
+  else if (to.name === 'ConfirmAccount' && isLoggedIn) next({ name: 'Home' });
   else next();
 });
 
