@@ -146,7 +146,7 @@ exports.register = (req, res) => {
             });
           }
 
-          //registration succesful we need to send confirmation email
+          // registration succesful we need to send confirmation email
           const link = `${process.env.FRONTEND_URL}/confirm?token=${userModel.token}`;
           mail.confirmationEmail(
             userModel.email,
@@ -327,7 +327,7 @@ exports.confirm = async (req, res) => {
     });
   }
 
-  User.find({ token: token })
+  User.find({ token })
     .exec()
     .then((result) => {
       if (result.length <= 0) {
@@ -339,7 +339,7 @@ exports.confirm = async (req, res) => {
         });
       }
 
-      var user = result[0];
+      const user = result[0];
       user.blocked = false;
       user.token = '';
       user.save((error) => {

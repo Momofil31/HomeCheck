@@ -14,23 +14,11 @@ const server = supertest(app);
 const clearUserTable = () => {
   User.deleteMany({}, (err) => {
     if (err) {
-      //console.log('collection not removed');
+      // console.log('collection not removed');
     } else {
-      //console.log('collection removed');
+      // console.log('collection removed');
     }
   });
-};
-
-const registerUser = async () => {
-  const user = await server.post(`${basePath}/register`).send({
-    email: 'Test@email.it',
-    password: 'Password!234',
-    firstname: 'A',
-    lastname: 'B',
-  });
-  if (!user) return {};
-
-  return user;
 };
 
 describe('Test users controller', () => {

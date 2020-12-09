@@ -57,7 +57,7 @@ exports.confirmationEmail = async (email, name, link, token) => {
                     <p>If you want to use the API instead here is the token: ${token}</p>`;
   const textMail = `Hello ${name}, to confirm your account and start using Homecheck go to this link: ${link}.
                     If you want to use the API instead here is the token: ${token}`;
-  
+
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: '"Homecheck" <no-reply@homecheck.com>', // sender address

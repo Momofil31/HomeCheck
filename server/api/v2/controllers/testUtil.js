@@ -15,9 +15,9 @@ const userData = {
 function clearUserTable() {
   User.deleteMany({}, (err) => {
     if (err) {
-      //console.log('collection not removed');
+      // console.log('collection not removed');
     } else {
-      //console.log('collection removed');
+      // console.log('collection removed');
     }
   });
 }
@@ -55,9 +55,9 @@ exports.confirmUser = async (user) => confirmUser(user);
 exports.clearGroupTable = () => {
   Group.deleteMany({}, (err) => {
     if (err) {
-      //console.log('collection not removed');
+      // console.log('collection not removed');
     } else {
-      //console.log('collection removed');
+      // console.log('collection removed');
     }
   });
 };
@@ -65,9 +65,9 @@ exports.clearGroupTable = () => {
 exports.clearCategoryTable = () => {
   Category.deleteMany({}, (err) => {
     if (err) {
-      //console.log('collection not removed');
+      // console.log('collection not removed');
     } else {
-      //console.log('collection removed');
+      // console.log('collection removed');
     }
   });
 };
@@ -75,9 +75,9 @@ exports.clearCategoryTable = () => {
 exports.clearProductTable = () => {
   Product.deleteMany({}, (err) => {
     if (err) {
-      //console.log('collection not removed');
+      // console.log('collection not removed');
     } else {
-      //console.log('collection removed');
+      // console.log('collection removed');
     }
   });
 };
