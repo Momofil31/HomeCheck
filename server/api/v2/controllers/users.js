@@ -145,11 +145,16 @@ exports.register = (req, res) => {
               },
             });
           }
-          
+
           //registration succesful we need to send confirmation email
           const link = `${process.env.FRONTEND_URL}/confirm?token=${userModel.token}`;
-          mail.confirmationEmail(userModel.email,`${userModel.firstname} ${userModel.lastname}`, link, userModel.token);
-          
+          mail.confirmationEmail(
+            userModel.email,
+            `${userModel.firstname} ${userModel.lastname}`,
+            link,
+            userModel.token,
+          );
+
           return res.status(201).json({
             data: {
               message: 'Registration successful.',
@@ -258,10 +263,9 @@ exports.updatePassword = async (req, res) => {
 
   User.findById(user.userId)
     .exec()
-    .then((result) => {
+    .then(async (result) => {
       if (result) {
-        const match = bcrypt.compare(password.old, result.password);
-
+        const match = await bcrypt.compare(password.old, result.password);
         if (match) {
           User.findByIdAndUpdate(user.userId, { password: hashNewPassword })
             .exec()
@@ -289,6 +293,13 @@ exports.updatePassword = async (req, res) => {
                 },
               });
             });
+        } else {
+          return res.status(400).json({
+            error: {
+              message: 'Update password failed',
+              description: 'Wrong password',
+            },
+          });
         }
       }
     })
@@ -303,11 +314,10 @@ exports.updatePassword = async (req, res) => {
       });
     });
 };
-           
+
 exports.confirm = async (req, res) => {
-            
   const token = req.params.token ? req.params.token : '';
-            
+
   if (token === '') {
     return res.status(400).json({
       error: {
@@ -328,7 +338,7 @@ exports.confirm = async (req, res) => {
           },
         });
       }
-    
+
       var user = result[0];
       user.blocked = false;
       user.token = '';
@@ -366,5 +376,4 @@ exports.confirm = async (req, res) => {
         },
       });
     });
-    
 };
