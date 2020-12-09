@@ -15,7 +15,7 @@ function generatePassword() {
 }
 
 exports.login = (req, res) => {
-  User.find({ email: req.body.email })
+  User.find({ email: req.body.email, blocked: false })
     .exec()
     .then((user) => {
       if (user.length < 1) {
