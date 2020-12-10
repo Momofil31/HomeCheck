@@ -376,6 +376,53 @@ paths:
           description: Group not found
         '500':
           description: Something went wrong when retrieving group
+  /share/token:
+    summary: Food storage share token
+    get:
+      summary: Get share token
+      tags:
+        - Share
+      responses:
+        '200':
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareToken'
+        '401':
+          description: 'User not logged in'
+        '404':
+          description: 'Token not found'
+    post:
+      summary: Generate a new token
+      tags:
+        - Share
+      responses:
+        '200':
+          description: 'Successful insert'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareToken'
+        '401':
+          description: 'User not logged in'
+        '409':
+          description: 'Token already exists'
+    delete:
+      summary: Delete/revoke current token
+      tags:
+        - Share
+      responses:
+        '200':
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareToken'
+        '401':
+          description: 'User not logged in'
+        '403':
+          description: 'Not authorized to do this action'
 
 components:
   securitySchemes:
@@ -441,6 +488,30 @@ components:
         lastname:
           type: string
           description: 'Lastname of the user'
+    ShareToken:
+      type: object
+      required:
+        - id
+        - share
+      properties:
+        message:
+          type: string
+          description: 'Response status description'
+        share:
+          type: object
+          properties:
+            token:
+              type: string
+              description: 'Share token'
+            request:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: 'Request method'
+                url:
+                  type: string
+                  description: 'Request url'
     Product:
       type: object
       properties:
@@ -503,7 +574,7 @@ components:
                       type: string
                       description: 'Request url'
     Category:
-      type : object
+      type: object
       required:
         - id
         - name
