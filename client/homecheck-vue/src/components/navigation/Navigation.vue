@@ -36,7 +36,7 @@ export default {
   data: () => ({
     drawer: true,
     items: [
-      { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/' },
+      { title: 'Dashboard', icon: 'mdi-view-dashboard', action: '/dashboard' },
       { title: 'Products', icon: 'mdi-cart', action: '/products' },
       { title: 'Categories', icon: 'mdi-store', action: '/categories' },
       { title: 'Share', icon: 'mdi-share', action: '/share' },

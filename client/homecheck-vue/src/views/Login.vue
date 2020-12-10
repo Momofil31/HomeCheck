@@ -72,7 +72,7 @@ export default {
           })
           .then((response) => {
             this.$store.dispatch('login', response.result).then((response) => {
-              this.$router.push('/');
+              this.$router.push('/dashboard');
             });
           });
       }

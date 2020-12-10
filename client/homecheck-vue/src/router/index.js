@@ -7,9 +7,14 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: '/dashboard',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/',
+    name: 'Landing',
+    component: () => import('@/views/Landing.vue'),
   },
   {
     path: '/products',
@@ -73,11 +78,13 @@ router.beforeEach((to, from, next) => {
     if (to.name === 'Register') next();
     else if (to.name === 'ResetPassword') next();
     else if (to.name === 'ConfirmAccount') next();
+    else if (to.name === 'Landing') next();
     else next({ name: 'Login' });
   } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'ResetPassword' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'ConfirmAccount' && isLoggedIn) next({ name: 'Home' });
+  else if (to.name === 'Landing' && isLoggedIn) next({ name: 'Home' });
   else next();
 });
 
