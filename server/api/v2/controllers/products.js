@@ -2,6 +2,7 @@ const {
   param, body, query, validationResult,
 } = require('express-validator');
 const Product = require('../../../models/Product');
+const Share = require('../../../models/Share');
 
 function getProductFromEntity(product, req) {
   const toRtn = {};
@@ -42,11 +43,45 @@ function getProductFromBody(request) {
   return product;
 }
 
-exports.getList = (req, res) => {
+async function getOwnerId(shareToken, request) {
+  let userId = null;
+  if (request.userData) {
+    userId = request.userData.userId;
+  }
+
+  if (shareToken) {
+    await Share.findById(shareToken)
+      .exec()
+      .then((owner) => {
+        if (owner) {
+          userId = owner.user;
+        } else {
+          userId = null;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        userId = null;
+      });
+  }
+
+  return userId;
+}
+
+exports.getList = async (req, res) => {
   const { category, group } = req.query;
 
+  const userId = await getOwnerId(req.params.token, req);
+  if (!userId) {
+    return res.status(403).json({
+      error: {
+        message: 'User not authorized to view this product',
+      },
+    });
+  }
+
   const where = {
-    user: req.userData.userId,
+    user: userId,
   };
 
   if (category) {
@@ -80,10 +115,20 @@ exports.getList = (req, res) => {
     });
 };
 
-exports.getOne = (req, res) => {
+exports.getOne = async (req, res) => {
   const id = req.params.productId;
+  const userId = await getOwnerId(req.params.token, req);
+  if (!userId) {
+    return res.status(403).json({
+      error: {
+        message: 'User not authorized to view this product',
+      },
+    });
+  }
 
-  Product.findById(id)
+  const where = { _id: id, user: userId };
+
+  Product.findOne(where)
     .populate('category')
     .populate('group')
     .exec()
@@ -92,13 +137,6 @@ exports.getOne = (req, res) => {
         return res.status(404).json({
           error: {
             message: 'Product not found',
-          },
-        });
-      }
-      if (product.user.toString() !== req.userData.userId) {
-        return res.status(403).json({
-          error: {
-            message: 'User not authorized to view this product',
           },
         });
       }
@@ -252,6 +290,12 @@ exports.validationChainQuery = [
     .optional()
     .isMongoId()
     .withMessage('Invalid category id'),
+];
+
+exports.sharedTokenValidationChainParam = [
+  param('token')
+    .isMongoId()
+    .withMessage('Invalid token'),
 ];
 
 exports.validationChainBody = [

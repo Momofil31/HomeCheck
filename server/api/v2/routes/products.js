@@ -30,4 +30,13 @@ router.delete('/:productId',
   ProductsController.validationChainParam, ProductsController.validate,
   ProductsController.deleteOne);
 
+router.get('/shared/:token',
+  ProductsController.sharedTokenValidationChainParam, ProductsController.validate,
+  ProductsController.getList);
+
+router.get('/:productId/shared/:token',
+  ProductsController.validationChainParam, ProductsController.validate,
+  ProductsController.sharedTokenValidationChainParam, ProductsController.validate,
+  ProductsController.getOne);
+
 module.exports = router;
