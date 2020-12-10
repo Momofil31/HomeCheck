@@ -287,6 +287,22 @@ describe('Test users controller', () => {
     done();
   });
 
+  test("POST Reset password should fail because email doens't exists", async () => {
+    await util.registerUser(server);
+    const response = await server.post(`${basePath}/passwordReset`).send({
+      email: 'Tes@email.it',
+    });
+
+    const desiredResponse = {
+      error: {
+        message: 'Reset password failed.',
+        description: 'Cannot find a user with the requested email.',
+      },
+    };
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
   test('POST Reset password should succeed', async () => {
     await util.registerUser(server);
     const response = await server.post(`${basePath}/passwordReset`).send({
@@ -305,6 +321,51 @@ describe('Test users controller', () => {
       },
     };
     expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test("GET Confirm token should fail because token doesn't match", async () => {
+    const regResponse = await util.registerUser(server);
+    const token = 'token1234&';
+
+    const response = await server.get(`${basePath}/confirm/${token}`);
+
+    const desiredResponse = {
+      error: {
+        message: 'Confirmation failed.',
+        description: 'Token not found.',
+      },
+    };
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('GET Confirm token should succeed', async () => {
+    const regResponse = await util.registerUser(server);
+    const token = 'token1234&';
+
+    // Dato che il token viene inviato per email lo cambio a mano nel database
+    // per non dover fare acrobazie per recuperarlo.
+    await User.findByIdAndUpdate(regResponse.body.data.user.id, {
+      token,
+    }).exec();
+
+    const response = await server.get(`${basePath}/confirm/${token}`);
+
+    const desiredResponse = {
+      data: {
+        message: 'Confirmation successful.',
+        user: {
+          id: expect.stringMatching(/.*/),
+          email: 'Test@email.it',
+          firstname: 'A',
+          lastname: 'B',
+        },
+      },
+    };
+
+    expect(response.status).toBe(201);
     expect(response.body).toMatchObject(desiredResponse);
   });
 
