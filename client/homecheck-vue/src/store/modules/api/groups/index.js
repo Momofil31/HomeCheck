@@ -1,3 +1,5 @@
+import util from '../util';
+
 export default {
   namespaced: true,
   actions: {
@@ -9,27 +11,10 @@ export default {
           endpoint: 'v2/groups',
           data: filters,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccess(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
-    }
+    },
   },
   mutations: {},
 };

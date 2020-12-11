@@ -1,3 +1,5 @@
+import util from '../util';
+
 export default {
   namespaced: true,
   actions: {
@@ -9,25 +11,8 @@ export default {
           endpoint: 'v2/products',
           data: filters,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccess(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
     },
 
@@ -39,25 +24,8 @@ export default {
           endpoint: `v2/products/${filters.id}`,
           data: filters,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccess(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
     },
 
@@ -69,29 +37,8 @@ export default {
           endpoint: `v2/products/${filters.id}`,
           data: filters,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.data.message !== undefined ? data.data.message : '';
-              if (message !== '') {
-                Instance.commit('layout/toast/setSnack', { message, color: 'green' });
-              }
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
     },
 
@@ -103,29 +50,8 @@ export default {
           endpoint: `v2/products/${filters.id}`,
           data: filters.product,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.data.message !== undefined ? data.data.message : '';
-              if (message !== '') {
-                Instance.commit('layout/toast/setSnack', { message, color: 'green' });
-              }
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
     },
 
@@ -137,29 +63,8 @@ export default {
           endpoint: 'v2/products/',
           data: filters,
         })
-          .then((data) => {
-            if (data.error) {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
-              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-              // reject(message)
-            } else {
-              Instance.commit('layout/UpdateLoadingStatus', false);
-              const message = data.data.message !== undefined ? data.data.message : '';
-              if (message !== '') {
-                Instance.commit('layout/toast/setSnack', { message, color: 'green' });
-              }
-              resolve({
-                result: data.data,
-              });
-            }
-          })
-          .catch((data) => {
-            Instance.commit('layout/UpdateLoadingStatus', false);
-            const message = data.error ? data.error.message : 'Generic Error';
-            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
-            // reject(message)
-          });
+          .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
+          .catch((data) => util.dispatchError(data, Instance));
       });
     },
   },
