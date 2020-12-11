@@ -35,8 +35,28 @@ export default {
           endpoint: `v2/users/confirm/${filters.token}`,
           data: [],
         })
-          .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
-          .catch((data) => util.dispatchError(data, Instance));
+          .then((data) => {
+            if (data.error) {
+              Instance.commit('layout/UpdateLoadingStatus', false);
+              const message =
+                data.error.description !== undefined ? data.error.description : 'Generic Error';
+              Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+              reject(data.error);
+            } else {
+              Instance.commit('layout/UpdateLoadingStatus', false);
+              const message = data.data.message !== undefined ? data.data.message : 'Success';
+              Instance.commit('layout/toast/setSnack', { message, color: 'green' });
+              resolve({
+                result: data.data,
+              });
+            }
+          })
+          .catch((data) => {
+            Instance.commit('layout/UpdateLoadingStatus', false);
+            const message = data.error ? data.error.description : 'Generic Error';
+            Instance.commit('layout/toast/setSnack', { message, color: 'red' });
+            reject(data.error);
+          });
       });
     },
     ResetPassword(context, filters) {

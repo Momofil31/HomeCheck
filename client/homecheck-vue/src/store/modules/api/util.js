@@ -15,7 +15,7 @@ exports.dispatchSuccess = (data, Instance, resolve) => {
 exports.dispatchSuccessWithMessage = (data, Instance, resolve) => {
   if (data.error) {
     Instance.commit('layout/UpdateLoadingStatus', false);
-    const message = data.error.message !== undefined ? data.error.message : 'Generic Error';
+    const message = data.error.description !== undefined ? data.error.description : 'Generic Error';
     Instance.commit('layout/toast/setSnack', { message, color: 'red' });
     // reject(message)
   } else {
