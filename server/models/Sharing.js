@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const shareSchema = mongoose.Schema({
+const sharingSchema = mongoose.Schema({
   // use _id as token value
   user: {
     type: mongoose.Schema.ObjectId,
@@ -9,4 +9,4 @@ const shareSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Share', shareSchema);
+module.exports = mongoose.model('Sharing', sharingSchema);

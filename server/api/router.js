@@ -7,7 +7,7 @@ const v2productRoutes = require('./v2/routes/products');
 const v2categoryRoutes = require('./v2/routes/categories');
 const v2groupRoutes = require('./v2/routes/groups');
 const v2userRoutes = require('./v2/routes/users');
-const v2shareRoutes = require('./v2/routes/share');
+const v2sharingRoutes = require('./v2/routes/sharing');
 
 module.exports = (app) => {
   app.use('/v1/products', v1productRoutes);
@@ -19,5 +19,5 @@ module.exports = (app) => {
   app.use('/v2/categories', v2categoryRoutes);
   app.use('/v2/groups', v2groupRoutes);
   app.use('/v2/users', v2userRoutes);
-  app.use('/v2/share', v2shareRoutes);
+  app.use('/v2/sharing', v2sharingRoutes);
 };

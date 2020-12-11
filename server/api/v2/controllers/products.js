@@ -2,7 +2,7 @@ const {
   param, body, query, validationResult,
 } = require('express-validator');
 const Product = require('../../../models/Product');
-const Share = require('../../../models/Share');
+const Sharing = require('../../../models/Sharing');
 
 function getProductFromEntity(product, req) {
   const toRtn = {};
@@ -43,14 +43,14 @@ function getProductFromBody(request) {
   return product;
 }
 
-async function getOwnerId(shareToken, request) {
+async function getOwnerId(sharingToken, request) {
   let userId = null;
   if (request.userData) {
     userId = request.userData.userId;
   }
 
-  if (shareToken) {
-    await Share.findById(shareToken)
+  if (sharingToken) {
+    await Sharing.findById(sharingToken)
       .exec()
       .then((owner) => {
         if (owner) {
@@ -292,7 +292,7 @@ exports.validationChainQuery = [
     .withMessage('Invalid category id'),
 ];
 
-exports.sharedTokenValidationChainParam = [
+exports.sharingTokenValidationChainParam = [
   param('token')
     .isMongoId()
     .withMessage('Invalid token'),

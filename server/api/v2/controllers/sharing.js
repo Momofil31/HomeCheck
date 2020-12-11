@@ -1,22 +1,22 @@
-const Share = require('../../../models/Share');
+const Sharing = require('../../../models/Sharing');
 
-function getShareFromEntity(share, req) {
+function getSharingFromEntity(sharing, req) {
   const toRtn = {};
-  toRtn.id = share._id;
+  toRtn.token = sharing._id;
 
   toRtn.request = {};
   toRtn.request.type = 'GET';
-  toRtn.request.url = `${req.headers.host}/v2/products/shared/${share._id}`;
+  toRtn.request.url = `${req.headers.host}/v2/sharing/${sharing._id}/products`;
 
   return toRtn;
 }
 
 exports.getOne = (req, res) => {
-  Share.find({ user: req.userData.userId })
+  Sharing.find({ user: req.userData.userId })
     .populate('User')
     .exec()
-    .then((share) => {
-      if (!share || share.length === 0) {
+    .then((sharing) => {
+      if (!sharing || sharing.length === 0) {
         return res.status(404).json({
           error: {
             message: 'Token not found',
@@ -27,14 +27,14 @@ exports.getOne = (req, res) => {
       return res.status(200).json({
         data: {
           message: 'Get token successful',
-          share: getShareFromEntity(share[0], req),
+          sharing: getSharingFromEntity(sharing[0], req),
         },
       });
     })
     .catch((err) => {
       res.status(500).json({
         error: {
-          message: 'Get share token failed due to a server error. Try again later',
+          message: 'Get sharing token failed due to a server error. Try again later',
           ...err,
         },
       });
@@ -42,7 +42,7 @@ exports.getOne = (req, res) => {
 };
 
 exports.createOne = (req, res) => {
-  Share.find({ user: req.userData.userId })
+  Sharing.find({ user: req.userData.userId })
     .exec()
     .then((response) => {
       if (response.length >= 1) {
@@ -53,8 +53,8 @@ exports.createOne = (req, res) => {
           },
         });
       }
-      const shareModel = new Share({ user: req.userData.userId });
-      shareModel.save((error) => {
+      const sharingModel = new Sharing({ user: req.userData.userId });
+      sharingModel.save((error) => {
         if (error) {
           return res.status(500).json({
             error: {
@@ -66,7 +66,7 @@ exports.createOne = (req, res) => {
         return res.status(201).json({
           data: {
             message: 'Get token successful',
-            share: getShareFromEntity(shareModel, req),
+            sharing: getSharingFromEntity(sharingModel, req),
           },
         });
       });
@@ -83,21 +83,21 @@ exports.createOne = (req, res) => {
 };
 
 exports.deleteOne = (req, res) => {
-  Share.findOneAndDelete({ user: req.userData.userId })
+  Sharing.findOneAndDelete({ user: req.userData.userId })
     .exec()
     .then((response) => {
       if (response) {
         return res.status(200).json({
           data: {
             message: 'Get token successful',
-            share: getShareFromEntity(response, req),
+            sharing: getSharingFromEntity(response, req),
           },
         });
       }
 
       return res.status(404).json({
         error: {
-          message: 'Share token not found',
+          message: 'Sharing token not found',
         },
       });
     });
