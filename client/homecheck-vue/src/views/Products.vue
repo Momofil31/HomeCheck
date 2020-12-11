@@ -5,28 +5,30 @@
         <v-dialog v-model="dialogCreate" max-width="600px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Create new product
+              Add product
             </v-btn>
           </template>
-          <ProductForm action="Create" :dialog="dialogCreate" @close-dialog="closeDialog()" />
+          <ProductForm action="Add" :dialog="dialogCreate" @close-dialog="closeDialog()" />
         </v-dialog>
       </v-col>
     </v-card>
 
-    <ProductsCard v-for="group in groups"
+    <ProductsCard
+      v-for="group in groups"
       :key="group.id"
-      :products="group.products" 
-      :title="group.name" 
+      :products="group.products"
+      :title="group.name"
       @view="viewProduct"
-      @delete="deleteProduct"/>
+      @delete="deleteProduct"
+    />
 
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
-        <ProductForm
-          action="Update"
-          :product-id="selectedProduct.id"
-          :dialog="dialogUpdate"
-          @close-dialog="closeDialog()"
-        />
+      <ProductForm
+        action="Update"
+        :product-id="selectedProduct.id"
+        :dialog="dialogUpdate"
+        @close-dialog="closeDialog()"
+      />
     </v-dialog>
   </div>
 </template>
@@ -39,7 +41,7 @@ export default {
   name: 'Products',
   components: {
     ProductForm,
-    ProductsCard
+    ProductsCard,
   },
   data() {
     return {
@@ -58,7 +60,7 @@ export default {
         .dispatch('api/groups/GetList', {})
         .then((data) => {
           var groups = data.result.groups;
-          groups.forEach(function(group){
+          groups.forEach(function(group) {
             Instance.$store
               .dispatch('api/products/GetList', { group: group.id })
               .then((data) => {
@@ -68,14 +70,14 @@ export default {
               .catch((data) => {
                 Instance.groups = [];
               });
-          })
+          });
         })
         .catch((data) => {
           Instance.groups = [];
         });
     },
-    
-    viewProduct(product){
+
+    viewProduct(product) {
       this.selectedProduct = product;
       this.dialogUpdate = true;
     },

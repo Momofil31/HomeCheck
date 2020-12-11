@@ -5,12 +5,12 @@
         <v-dialog v-model="dialogCreate" max-width="600px">
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Create new category
+              Add category
             </v-btn>
           </template>
           <CategoryForm
             v-if="dialogCreate"
-            action="Create"
+            action="Add"
             :dialog="dialogCreate"
             @close-dialog="closeDialog()"
           />

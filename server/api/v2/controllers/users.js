@@ -157,7 +157,7 @@ exports.register = (req, res) => {
 
           return res.status(201).json({
             data: {
-              message: 'Registration successful.',
+              message: 'Registration successful! Please, check your email to confirm your user.',
               user: {
                 id: userModel._id,
                 email: userModel.email,

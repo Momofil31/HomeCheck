@@ -19,7 +19,7 @@
             <v-btn
               @click="resetPassword"
               :class="{ 'blue darken-4 white--text': valid, disabled: !valid }"
-              >Send me a new password</v-btn
+              >Send a new password</v-btn
             >
           </v-layout>
         </v-form>
