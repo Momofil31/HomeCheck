@@ -56,6 +56,11 @@ const routes = [
     name: 'ConfirmAccount',
     component: () => import('@/views/ConfirmAccount.vue'),
   },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/Settings.vue'),
+  },
 ];
 
 const router = new VueRouter({
