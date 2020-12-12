@@ -58,7 +58,7 @@ paths:
           description: Token not found
         '500':
           description: Error in confirmation
-  /products/:
+  /products:
     summary: Products Collection
     get:
       summary: Get list of products
@@ -197,7 +197,7 @@ paths:
           description: User not logged in
         '403':
           description: Not authorized to do this action
-  /categories/:
+  /categories:
     summary: Categories Collection
     get:
       summary: Get list of categories
@@ -328,7 +328,7 @@ paths:
           description: Category not found
         '500':
           description: Something went wrong during deletion
-  /groups/:
+  /groups:
     summary: Groups Collection
     get:
       summary: Get list of groups
