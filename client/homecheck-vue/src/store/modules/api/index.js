@@ -3,6 +3,7 @@ import users from './users';
 import categories from './categories';
 import products from './products';
 import groups from './groups';
+import sharing from './sharing';
 
 export default {
   namespaced: true,
@@ -10,7 +11,8 @@ export default {
     users,
     categories,
     products,
-    groups
+    groups,
+    sharing,
   },
   actions: {
     get(context, request) {
@@ -27,7 +29,7 @@ export default {
               },
             };
           }
-          
+
           config.params = request.data;
 
           axios.get(window.$apiBaseUrl + request.endpoint, config)

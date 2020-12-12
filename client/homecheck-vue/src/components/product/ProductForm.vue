@@ -9,6 +9,7 @@
               <v-text-field
                 label="Product name*"
                 v-model="product.name"
+                :readonly="readOnly"
                 :rules="nameRules"
                 required
               ></v-text-field>
@@ -19,6 +20,7 @@
                 v-model="product.quantity"
                 type="number"
                 min="0"
+                :readonly="readOnly"
                 :rules="quantityRules"
                 required
               ></v-text-field>
@@ -27,6 +29,7 @@
               <v-text-field
                 label="Expiry date*"
                 v-model="product.expiryDate"
+                :readonly="readOnly"
                 :rules="expiryDateRules"
                 type="date"
                 required
@@ -39,6 +42,7 @@
                 :items="groups"
                 item-text="name"
                 item-value="id"
+                :readonly="readOnly"
                 :rules="groupRules"
                 required
               ></v-select>
@@ -50,6 +54,7 @@
                 :items="categories"
                 item-text="name"
                 item-value="id"
+                :readonly="readOnly"
                 :rules="categoryRules"
                 required
               ></v-select>
@@ -63,10 +68,19 @@
       <v-spacer></v-spacer>
       <v-btn
         primary
+        v-if="!readOnly"
         @click="save"
         :class="{ 'blue darken-4 white--text': valid, disabled: !valid }"
       >
         Save
+      </v-btn>
+      <v-btn
+        primary
+        v-if="readOnly"
+        @click="closeDialog"
+        class="blue darken-4 white--text"
+      >
+        Close
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -104,12 +118,17 @@ export default {
       groups: [],
     };
   },
+  computed: {
+    readOnly: function() {
+      return this.action === 'View';
+    },
+  },
   methods: {
     save() {
       if (this.$props.action === 'Create') {
         if (this.$refs.form.validate()) {
           this.$store.dispatch('api/products/CreateOne', this.product).then((response) => {
-            this.$emit('close-dialog');
+            this.closeDialog();
             this.name = '';
             this.expiryDate = '';
             this.quantity = '';
@@ -138,7 +157,7 @@ export default {
               id: this.$props.productId,
             })
             .then((response) => {
-              this.$emit('close-dialog');
+              this.closeDialog();
             });
         }
       }
@@ -203,6 +222,10 @@ export default {
         .catch((data) => {
           Instance.groups = [];
         });
+    },
+
+    closeDialog() {
+      this.$emit('close-dialog');
     },
   },
 

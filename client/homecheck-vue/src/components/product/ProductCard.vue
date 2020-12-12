@@ -1,7 +1,7 @@
 <template>
   <v-card class="product-card" @click=viewProduct>
     
-    <div class="delete-product" @click.prevent.stop=deleteProduct>
+    <div class="delete-product" v-if="enableDelete" @click.prevent.stop=deleteProduct>
       <v-icon>mdi-delete</v-icon>
     </div>
     
@@ -20,7 +20,7 @@
 export default {
   name: 'ProductCard',
   
-  props: ['product'],
+  props: ['product', 'enableDelete'],
   
   methods: {
     viewProduct(){

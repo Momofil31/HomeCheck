@@ -61,6 +61,11 @@ const routes = [
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
   },
+  {
+    path: '/sharing/:token',
+    name: 'Sharing',
+    component: () => import('@/views/Sharing.vue'),
+  },
 ];
 
 const router = new VueRouter({
@@ -84,6 +89,7 @@ router.beforeEach((to, from, next) => {
     else if (to.name === 'ResetPassword') next();
     else if (to.name === 'ConfirmAccount') next();
     else if (to.name === 'Landing') next();
+    else if (to.name === 'Sharing') next();
     else next({ name: 'Login' });
   } else if (to.name === 'Login' && isLoggedIn) next({ name: 'Home' });
   else if (to.name === 'Register' && isLoggedIn) next({ name: 'Home' });

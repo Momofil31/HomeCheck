@@ -7,6 +7,7 @@
         v-for="product in products"
         :key="product.id"
         :product=product
+        :enableDelete=enableDelete
         @view=viewProduct
         @delete=deleteProduct />
     </div>
@@ -33,7 +34,11 @@ export default {
     title: {
       type: String,
       default: ""
-    } 
+    },
+    enableDelete:{
+      type: Boolean,
+      default: true,
+    }
   },
   
   watch: {
