@@ -16,18 +16,11 @@ describe('Test group controller', () => {
   });
 
   beforeEach(async () => {
-    // clear table
-    Group.deleteMany({}, (err) => {
-      if (err) {
-        console.log('GROUP collection not removed');
-      } else {
-        console.log('GROUP collection removed');
-      }
-    });
+    await util.clearGroupTable();
   });
 
-  afterAll((done) => {
-    mongoose.connection.close();
+  afterAll(async (done) => {
+    await mongoose.disconnect();
     done();
   });
 
@@ -62,7 +55,7 @@ describe('Test group controller', () => {
       name: 'Test',
     });
 
-    await groupModel.save();
+    await Group.create(groupModel);
 
     const response = await request
       .get(`${basePath}/${groupId}`)
@@ -79,7 +72,7 @@ describe('Test group controller', () => {
       name: 'Test',
     });
 
-    await groupModel.save();
+    await Group.create(groupModel);
 
     const response = await request
       .get(`${basePath}/${mongoose.Types.ObjectId()}`)
@@ -95,7 +88,7 @@ describe('Test group controller', () => {
       name: 'Test',
     });
 
-    await groupModel.save();
+    await Group.create(groupModel);
 
     const response = await request
       .get(`${basePath}/${'jkhgfgdfsaetyr6u7565wrsdgf'}`)

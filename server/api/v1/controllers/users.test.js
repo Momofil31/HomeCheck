@@ -2,23 +2,12 @@ const supertest = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const app = require('../../../app');
+const util = require('./testUtil');
 const User = require('../../../models/User');
 
 const basePath = '/v1/users';
 
 const request = supertest(app);
-
-// Utility functions
-
-const clearUserTable = () => {
-  User.deleteMany({}, (err) => {
-    if (err) {
-      console.log('collection not removed');
-    } else {
-      console.log('collection removed');
-    }
-  });
-};
 
 const registerUser = async () => {
   const user = await request.post(`${basePath}/register`).send({
@@ -34,7 +23,12 @@ const registerUser = async () => {
 
 describe('Test users controller', () => {
   beforeEach(async () => {
-    clearUserTable();
+    await util.clearUserTable();
+  });
+
+  afterAll(async (done) => {
+    await mongoose.disconnect();
+    done();
   });
 
   test('Creation should fail because no email was provided', async () => {
@@ -127,7 +121,6 @@ describe('Test users controller', () => {
     expect(fetchedUser._id.toString()).toBe(response.body.data.user.id);
   });
 
-  // TODO: Make it independent form order of execution
   test('Creation should fail because email is already taken', async () => {
     await registerUser();
 
@@ -197,11 +190,5 @@ describe('Test users controller', () => {
     };
 
     expect(decoded).toMatchObject(userData);
-  });
-
-  afterAll((done) => {
-    // Closing the DB connection allows Jest to exit successfully.
-    mongoose.connection.close();
-    done();
   });
 });

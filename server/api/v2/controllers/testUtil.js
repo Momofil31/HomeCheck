@@ -2,6 +2,7 @@ const User = require('../../../models/User');
 const Category = require('../../../models/Category');
 const Group = require('../../../models/Group');
 const Product = require('../../../models/Product');
+const Sharing = require('../../../models/Sharing');
 
 const basePath = '/v2/users';
 
@@ -12,13 +13,8 @@ const userData = {
   lastname: 'B',
 };
 
-function clearUserTable() {
-  User.deleteMany({}, (err) => {
-    if (err) {
-      // console.log('collection not removed');
-    } else {
-      // console.log('collection removed');
-    }
+async function clearUserTable() {
+  await User.deleteMany({}, () => {
   });
 }
 
@@ -28,10 +24,9 @@ async function registerUser(supertestServer) {
 
   return response;
 }
+
 async function loginUser(supertestServer) {
   const response = await supertestServer.post(`${basePath}/login`).send(userData);
-
-  console.log(response.body);
 
   if (!response.body.data.token) return '';
 
@@ -43,7 +38,7 @@ async function confirmUser(user) {
 }
 
 exports.getTestUserAuthToken = async (supertestServer) => {
-  clearUserTable();
+  await clearUserTable();
   const response = await registerUser(supertestServer);
   await confirmUser(response);
   return loginUser(supertestServer);
@@ -52,32 +47,27 @@ exports.getTestUserAuthToken = async (supertestServer) => {
 exports.registerUser = async (supertestServer) => registerUser(supertestServer);
 
 exports.confirmUser = async (user) => confirmUser(user);
-exports.clearGroupTable = () => {
-  Group.deleteMany({}, (err) => {
-    if (err) {
-      // console.log('collection not removed');
-    } else {
-      // console.log('collection removed');
-    }
+
+exports.clearGroupTable = async () => {
+  await Group.deleteMany({}, () => {
   });
 };
 
-exports.clearCategoryTable = () => {
-  Category.deleteMany({}, (err) => {
-    if (err) {
-      // console.log('collection not removed');
-    } else {
-      // console.log('collection removed');
-    }
+exports.clearCategoryTable = async () => {
+  await Category.deleteMany({}, () => {
   });
 };
 
-exports.clearProductTable = () => {
-  Product.deleteMany({}, (err) => {
-    if (err) {
-      // console.log('collection not removed');
-    } else {
-      // console.log('collection removed');
-    }
+exports.clearProductTable = async () => {
+  await Product.deleteMany({}, () => {
   });
+};
+
+exports.clearSharingTable = async () => {
+  await Sharing.deleteMany({}, () => {
+  });
+};
+
+exports.clearUserTable = async () => {
+  await clearUserTable();
 };

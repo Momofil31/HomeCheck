@@ -16,18 +16,11 @@ describe('Test group controller', () => {
   });
 
   beforeEach(async () => {
-    // clear table
-    Group.deleteMany({}, (err) => {
-      if (err) {
-        console.log('GROUP collection not removed');
-      } else {
-        console.log('GROUP collection removed');
-      }
-    });
+    await util.clearGroupTable();
   });
 
-  afterAll((done) => {
-    mongoose.connection.close();
+  afterAll(async (done) => {
+    await mongoose.disconnect();
     done();
   });
 
@@ -87,6 +80,7 @@ describe('Test group controller', () => {
 
     expect(response.status).toBe(404);
   });
+
   test('GetOne should fail because groupId is not valid', async () => {
     const groupId = mongoose.Types.ObjectId();
 

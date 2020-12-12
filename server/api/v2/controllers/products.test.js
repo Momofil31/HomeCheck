@@ -16,16 +16,16 @@ describe('Test product controller', () => {
   beforeAll(async () => {
     testUser = await util.getTestUserAuthToken(server);
 
-    util.clearCategoryTable();
-    util.clearGroupTable();
+    await util.clearCategoryTable();
+    await util.clearGroupTable();
   });
 
   beforeEach(async () => {
-    util.clearProductTable();
+    await util.clearProductTable();
   });
 
-  afterAll((done) => {
-    mongoose.connection.close();
+  afterAll(async (done) => {
+    await mongoose.disconnect();
     done();
   });
 

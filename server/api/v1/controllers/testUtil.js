@@ -12,21 +12,16 @@ const userData = {
   lastname: 'B',
 };
 
-function clearUserTable() {
-  User.deleteMany({}, (err) => {
-    if (err) {
-      console.log('collection not removed');
-    } else {
-      console.log('collection removed');
-    }
+async function clearUserTable() {
+  await User.deleteMany({}, () => {
   });
 }
 
 async function registerUser(supertestServer) {
-  const user = await supertestServer.post(`${basePath}/register`).send(userData);
-  if (!user) return {};
+  const response = await supertestServer.post(`${basePath}/register`).send(userData);
+  if (!response) return {};
 
-  return user;
+  return response;
 }
 
 async function loginUser(supertestServer) {
@@ -38,37 +33,26 @@ async function loginUser(supertestServer) {
 }
 
 exports.getTestUserAuthToken = async (supertestServer) => {
-  clearUserTable();
+  await clearUserTable();
   await registerUser(supertestServer);
   return loginUser(supertestServer);
 };
 
-exports.clearGroupTable = () => {
-  Group.deleteMany({}, (err) => {
-    if (err) {
-      console.log('collection not removed');
-    } else {
-      console.log('collection removed');
-    }
+exports.clearGroupTable = async () => {
+  await Group.deleteMany({}, () => {
   });
 };
 
-exports.clearCategoryTable = () => {
-  Category.deleteMany({}, (err) => {
-    if (err) {
-      console.log('collection not removed');
-    } else {
-      console.log('collection removed');
-    }
+exports.clearCategoryTable = async () => {
+  await Category.deleteMany({}, () => {
   });
 };
 
-exports.clearProductTable = () => {
-  Product.deleteMany({}, (err) => {
-    if (err) {
-      console.log('collection not removed');
-    } else {
-      console.log('collection removed');
-    }
+exports.clearProductTable = async () => {
+  await Product.deleteMany({}, () => {
   });
+};
+
+exports.clearUserTable = async () => {
+  await clearUserTable();
 };

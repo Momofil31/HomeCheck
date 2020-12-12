@@ -16,17 +16,11 @@ describe('Test category controller', () => {
 
   beforeEach(async () => {
     // clear table
-    Category.deleteMany({}, (err) => {
-      if (err) {
-        console.log('collection not removed');
-      } else {
-        console.log('collection removed');
-      }
-    });
+    await util.clearCategoryTable();
   });
 
-  afterAll((done) => {
-    mongoose.connection.close();
+  afterAll(async (done) => {
+    await mongoose.disconnect();
     done();
   });
 

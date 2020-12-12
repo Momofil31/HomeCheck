@@ -9,21 +9,14 @@ const basePath = '/v2/users';
 
 const server = supertest(app);
 
-// Utility functions
-
-const clearUserTable = () => {
-  User.deleteMany({}, (err) => {
-    if (err) {
-      // console.log('collection not removed');
-    } else {
-      // console.log('collection removed');
-    }
-  });
-};
-
 describe('Test users controller', () => {
   beforeEach(async () => {
-    clearUserTable();
+    await util.clearUserTable();
+  });
+
+  afterAll(async (done) => {
+    await mongoose.disconnect();
+    done();
   });
 
   test('POST Creation should fail because no email was provided', async () => {
@@ -98,7 +91,7 @@ describe('Test users controller', () => {
 
     const desiredResponse = {
       data: {
-        message: 'Registration successful.',
+        message: expect.stringMatching(/.*/),
         user: {
           id: expect.stringMatching(/.*/),
           email: 'Test@email.it',
@@ -116,7 +109,6 @@ describe('Test users controller', () => {
     expect(fetchedUser._id.toString()).toBe(response.body.data.user.id);
   });
 
-  // TODO: Make it independent form order of execution
   test('POST Creation should fail because email is already taken', async () => {
     await util.registerUser(server);
 
@@ -281,12 +273,6 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  afterAll((done) => {
-    // Closing the DB connection allows Jest to exit successfully.
-    mongoose.connection.close();
-    done();
-  });
-
   test("POST Reset password should fail because email doens't exists", async () => {
     await util.registerUser(server);
     const response = await server.post(`${basePath}/passwordReset`).send({
@@ -367,11 +353,5 @@ describe('Test users controller', () => {
 
     expect(response.status).toBe(201);
     expect(response.body).toMatchObject(desiredResponse);
-  });
-
-  afterAll((done) => {
-    // Closing the DB connection allows Jest to exit successfully.
-    mongoose.connection.close();
-    done();
   });
 });
