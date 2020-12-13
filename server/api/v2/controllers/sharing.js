@@ -89,7 +89,7 @@ exports.deleteOne = (req, res) => {
       if (response) {
         return res.status(200).json({
           data: {
-            message: 'Get token successful',
+            message: 'Delete token successful',
             sharing: getSharingFromEntity(response, req),
           },
         });
