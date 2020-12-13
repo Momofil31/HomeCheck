@@ -84,7 +84,112 @@ describe('Test product controller', () => {
     done();
   });
 
-  test('POST create a product ', async () => {
+  test('POST CreateOne should fail because product already exists', async () => {
+    category = new Category({
+      _id: mongoose.Types.ObjectId(),
+      name: 'Test1',
+      icon: 'Test1.png',
+      user: testUser.user.id,
+      default: false,
+    });
+
+    await category.save();
+
+    group = new Group({
+      _id: mongoose.Types.ObjectId(),
+      name: 'Test',
+    });
+
+    await group.save();
+
+    const product = new Product({
+      name: 'Product1',
+      quantity: '4',
+      expiryDate: '2020-12-25',
+      user: testUser.user.id,
+      category: category._id,
+      group: group._id,
+    });
+
+    await product.save();
+
+    const response = await server
+      .post(`${basePath}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        name: 'Product1',
+        quantity: '4',
+        expiryDate: '2020-12-25',
+        category: category._id,
+        group: group._id,
+      });
+
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({
+      error: {
+        message: 'Product already exists.',
+      },
+    });
+  });
+
+  test('POST CreateOne should succeed because product already exists but belongs to a different user', async () => {
+    category = new Category({
+      _id: mongoose.Types.ObjectId(),
+      name: 'Test1',
+      icon: 'Test1.png',
+      user: testUser.user.id,
+      default: false,
+    });
+
+    await category.save();
+
+    group = new Group({
+      _id: mongoose.Types.ObjectId(),
+      name: 'Test',
+    });
+
+    await group.save();
+
+    const product = new Product({
+      name: 'Product1',
+      quantity: '4',
+      expiryDate: '2020-12-25',
+      user: testUser.user.id,
+      category: category._id,
+      group: group._id,
+    });
+
+    await product.save();
+
+    const differentTestUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .post(`${basePath}`)
+      .set('Authorization', `Bearer ${differentTestUser.token}`)
+      .send({
+        name: 'Product1',
+        quantity: '4',
+        expiryDate: '2020-12-25',
+        category: category._id,
+        group: group._id,
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toMatchObject({
+      data: {
+        message: expect.stringMatching(/.*/),
+        product: {
+          name: 'Product1',
+          quantity: '4',
+          expiryDate: '2020-12-25',
+          category: {},
+          group: {},
+        },
+      },
+    });
+  });
+
+  test('POST CreateOne should succeed', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -209,6 +314,7 @@ describe('Test product controller', () => {
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(desiredResponse);
   });
+
   test('GET GetList should succeed', async () => {
     await createProducts();
 
@@ -248,5 +354,155 @@ describe('Test product controller', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test("GET GetOne should fail because product doesn't exist", async () => {
+    await createProducts();
+
+    const notExistingProductId = mongoose.Types.ObjectId();
+
+    const response = await server
+      .get(`${basePath}/${notExistingProductId}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    const desiredResponse = {
+      error: {
+        message: 'Product not found',
+      },
+    };
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('GET GetOne should succeed', async () => {
+    await createProducts();
+    const productToFind = await Product.find()
+      .exec()
+      .then((products) => products[0]);
+
+    const response = await server
+      .get(`${basePath}/${productToFind._id.toString()}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    const desiredResponse = {
+      data: {
+        message: 'Get product successful',
+        product: {
+          name: 'Product1',
+          quantity: 4,
+          expiryDate: '2020-12-25T00:00:00.000Z',
+          category: { id: category._id.toString(), name: category.name, icon: category.icon },
+          group: { id: group._id.toString(), name: group.name },
+        },
+      },
+    };
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test("PUT UpdateOne should fail because product doesn't exist", async () => {
+    await createProducts();
+    const notExistingProductId = mongoose.Types.ObjectId();
+
+    const response = await server
+      .put(`${basePath}/${notExistingProductId}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        name: 'ProductUpdated',
+        quantity: '5',
+        expiryDate: '2020-12-26',
+        category: category._id,
+        group: group._id,
+      });
+
+    const desiredResponse = {
+      error: {
+        message: 'Product not found',
+      },
+    };
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('PUT UpdateOne should succeed', async () => {
+    await createProducts();
+    const productToUpdate = await Product.find()
+      .exec()
+      .then((products) => products[0]);
+
+    const response = await server
+      .put(`${basePath}/${productToUpdate._id.toString()}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send({
+        name: 'ProductUpdated',
+        quantity: '5',
+        expiryDate: '2020-12-26',
+        category: category._id,
+        group: group._id,
+      });
+
+    const desiredResponse = {
+      data: {
+        message: 'Update product successful',
+        product: {
+          name: 'ProductUpdated',
+          quantity: 5,
+          expiryDate: '2020-12-26T00:00:00.000Z',
+          category: { id: category._id.toString() },
+          group: { id: group._id.toString() },
+        },
+      },
+    };
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test("DELETE DeleteOne should fail because product doesn't exist", async () => {
+    await createProducts();
+    const notExistingProductId = mongoose.Types.ObjectId();
+
+    const response = await server
+      .delete(`${basePath}/${notExistingProductId}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    expect(response.status).toBe(404);
+    expect(response.body).toMatchObject({
+      error: {
+        message: 'Product not found',
+      },
+    });
+  });
+
+  test('DELETE DeleteOne should succeed', async () => {
+    await createProducts();
+    const productToDelete = await Product.find()
+      .exec()
+      .then((products) => products[0]);
+
+    const response = await server
+      .delete(`${basePath}/${productToDelete._id.toString()}`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      data: {
+        message: 'Delete product successful',
+        product: {
+          name: 'Product1',
+          quantity: 4,
+          expiryDate: '2020-12-25T00:00:00.000Z',
+          category: { id: category._id.toString() },
+          group: { id: group._id.toString() },
+        },
+      },
+    });
   });
 });
