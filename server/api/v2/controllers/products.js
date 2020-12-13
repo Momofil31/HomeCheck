@@ -1,6 +1,4 @@
-const {
-  param, body, query, validationResult,
-} = require('express-validator');
+const { param, body, query, validationResult } = require('express-validator');
 const Product = require('../../../models/Product');
 const Sharing = require('../../../models/Sharing');
 
@@ -164,7 +162,9 @@ exports.updateOne = (req, res) => {
 
   const product = getProductFromBody(req);
 
-  Product.findByIdAndUpdate(id, product)
+  Product.findByIdAndUpdate(id, product, {
+    new: true,
+  })
     .exec()
     .then((response) => {
       if (response) {
@@ -194,10 +194,10 @@ exports.updateOne = (req, res) => {
     });
 };
 
-exports.createOne = (req, res) => {
+exports.createOne = async (req, res) => {
   const product = getProductFromBody(req);
 
-  Product.find({ name: product.name })
+  Product.find({ name: product.name, user: await getOwnerId(req.params.token, req) })
     .populate('category')
     .populate('group')
     .exec()
@@ -275,56 +275,45 @@ exports.validate = (req, res, next) => {
   next();
 };
 
-exports.validationChainParam = [
-  param('productId')
-    .isMongoId()
-    .withMessage('Invalid id'),
-];
+exports.validationChainParam = [param('productId').isMongoId().withMessage('Invalid id')];
 
 exports.validationChainQuery = [
-  query('group')
-    .optional()
-    .isMongoId()
-    .withMessage('Invalid group id'),
-  query('category')
-    .optional()
-    .isMongoId()
-    .withMessage('Invalid category id'),
+  query('group').optional().isMongoId().withMessage('Invalid group id'),
+  query('category').optional().isMongoId().withMessage('Invalid category id'),
 ];
 
 exports.sharingTokenValidationChainParam = [
-  param('token')
-    .isMongoId()
-    .withMessage('Invalid token'),
+  param('token').isMongoId().withMessage('Invalid token'),
 ];
 
 exports.validationChainBody = [
-  body('name')
-    .isString()
-    .trim().notEmpty()
-    .withMessage('Field can not be empty'),
+  body('name').isString().trim().notEmpty().withMessage('Field can not be empty'),
 
   body('quantity')
     .notEmpty()
-    .withMessage('Field can not be empty').bail()
+    .withMessage('Field can not be empty')
+    .bail()
     .isNumeric()
     .withMessage('Not a number'),
 
   body('expiryDate')
     .notEmpty()
-    .withMessage('Field can not be empty').bail()
+    .withMessage('Field can not be empty')
+    .bail()
     .isDate()
     .withMessage('Not a valid date'),
 
   body('category')
     .notEmpty()
-    .withMessage('Field can not be empty').bail()
+    .withMessage('Field can not be empty')
+    .bail()
     .isMongoId()
     .withMessage('Invalid category id'),
 
   body('group')
     .notEmpty()
-    .withMessage('Field can not be empty').bail()
+    .withMessage('Field can not be empty')
+    .bail()
     .isMongoId()
     .withMessage('Invalid group id'),
 ];
