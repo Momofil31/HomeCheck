@@ -84,7 +84,7 @@ export default {
             confirmPassword: this.confirmPassword,
           })
           .then((response) => {
-            this.$router.push('/share');
+            if (this.$route.path !== '/settings') this.$router.push('/settings');
           });
       }
     },
