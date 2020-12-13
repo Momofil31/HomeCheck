@@ -110,7 +110,8 @@ describe('Test users controller', () => {
   });
 
   test('POST Creation should fail because email is already taken', async () => {
-    await util.registerUser(server);
+    const res = await util.registerUser(server);
+    await util.confirmUser(res);
 
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
@@ -123,6 +124,9 @@ describe('Test users controller', () => {
   });
 
   test("POST Login should fail because email doesn't exist", async () => {
+    const res = await util.registerUser(server);
+    await util.confirmUser(res);
+
     const response = await server.post(`${basePath}/login`).send({
       email: 'Tes@email.it',
       password: 'Password!234',
@@ -132,7 +136,8 @@ describe('Test users controller', () => {
   });
 
   test('POST Login should fail because password is wrong', async () => {
-    await util.registerUser(server);
+    const res = await util.registerUser(server);
+    await util.confirmUser(res);
 
     const response = await server.post(`${basePath}/login`).send({
       email: 'Test@email.it',
@@ -181,7 +186,7 @@ describe('Test users controller', () => {
     expect(decoded).toMatchObject(userData);
   });
 
-  test('PUT Update password should fail because old password is wrong', async () => {
+  test('PATCH Update password should fail because old password is wrong', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -203,7 +208,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("PUT Update password should fail because newPassword and confirmPassword don't match", async () => {
+  test("PATCH Update password should fail because newPassword and confirmPassword don't match", async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -225,7 +230,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PUT Update password should fail because request body is invalid', async () => {
+  test('PATCH Update password should fail because request body is invalid', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -243,6 +248,27 @@ describe('Test users controller', () => {
       },
     };
     expect(response.status).toBe(400);
+    expect(response.body).toMatchObject(desiredResponse);
+  });
+
+  test('PATCH Update password should fail because authentication token is invalid', async () => {
+    const testUser = await util.getTestUserAuthToken(server);
+
+    const response = await server
+      .patch(`${basePath}/password`)
+      .set('Authorization', `Bearer ${testUser.token}1`)
+      .send({
+        newPassword: 'Test123',
+        confirmPassword: 'Test123!',
+      });
+
+    const desiredResponse = {
+      error: {
+        message: 'Authentication failed.',
+        description: 'JWT token is not a valid token.',
+      },
+    };
+    expect(response.status).toBe(401);
     expect(response.body).toMatchObject(desiredResponse);
   });
 
