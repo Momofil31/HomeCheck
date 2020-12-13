@@ -73,7 +73,7 @@ exports.getOne = (req, res) => {
 
       return res.status(200).json({
         data: {
-          message: 'Get category successfull',
+          message: 'Get category successful',
           category: {
             id: category._id,
             name: category.name,
@@ -99,13 +99,13 @@ exports.getOne = (req, res) => {
 };
 
 exports.updateOne = (req, res) => {
+  const { categoryId } = req.params;
   const newCategory = {
-    _id: req.body.id ? req.body.id : '',
     name: req.body.name ? req.body.name : '',
     icon: req.body.icon ? req.body.icon : '',
   };
 
-  if (newCategory._id === '') {
+  if (categoryId === '') {
     return res.status(400).json({
       error: {
         message: 'Update category failed',
@@ -122,51 +122,32 @@ exports.updateOne = (req, res) => {
     });
   }
 
-  Category.findById(newCategory._id)
+  Category.findOneAndUpdate({ _id: categoryId, user: req.userData.userId }, newCategory)
     .exec()
-    .then((category) => {
-      if (!category) {
-        return res.status(404).json({
-          error: {
-            message: 'Update failed',
-            description: 'Category not found',
+    .then((response) => {
+      if (response) {
+        return res.status(200).json({
+          data: {
+            message: 'Update successful',
+            category: {
+              id: response._id,
+              name: response.name,
+              icon: response.icon,
+              default: response.default,
+            },
           },
         });
       }
-      if (category.user.toString() !== req.userData.userId) {
-        return res.status(403).json({
-          error: {
-            message: 'Update failed.',
-            description: `User not authorized to update category ${category.name}.`,
-          },
-        });
-      }
-      Category.findByIdAndUpdate(newCategory._id, newCategory)
-        .exec()
-        .then((result) => {
-          res.status(200).json({
-            data: {
-              message: 'Update successful.',
-              category: {
-                id: result.id,
-                name: result.name,
-                icon: result.icon,
-                default: result.default,
-              },
-            },
-          });
-        })
-        .catch((err) => {
-          res.status(500).json({
-            error: {
-              message: 'Update failed.',
-              descrition: 'Something went wrong during update.',
-              ...err,
-            },
-          });
-        });
+
+      return res.status(404).json({
+        error: {
+          message: 'Update failed',
+          description: 'Category not found',
+        },
+      });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         error: {
           message: 'Update failed.',
