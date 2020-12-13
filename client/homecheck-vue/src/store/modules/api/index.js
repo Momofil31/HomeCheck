@@ -32,10 +32,12 @@ export default {
 
           config.params = request.data;
 
-          axios.get(window.$apiBaseUrl + request.endpoint, config)
+          axios
+            .get(window.$apiBaseUrl + request.endpoint, config)
             .then((response) => {
               resolve(response.data);
-            }).catch((error) => {
+            })
+            .catch((error) => {
               if (error.response) reject(error.response.data);
               reject({});
             });
@@ -60,10 +62,12 @@ export default {
             };
           }
 
-          axios.post(window.$apiBaseUrl + request.endpoint, request.data, config)
+          axios
+            .post(window.$apiBaseUrl + request.endpoint, request.data, config)
             .then((response) => {
               resolve(response.data);
-            }).catch((error) => {
+            })
+            .catch((error) => {
               if (error.response) reject(error.response.data);
               reject({});
             });
@@ -87,15 +91,47 @@ export default {
             };
           }
 
-          axios.put(window.$apiBaseUrl + request.endpoint, request.data, config)
+          axios
+            .put(window.$apiBaseUrl + request.endpoint, request.data, config)
             .then((response) => {
               resolve(response.data);
-            }).catch((error) => {
+            })
+            .catch((error) => {
               if (error.response) reject(error.response.data);
               reject({});
             });
         } catch (exception) {
-          reject('error in api post function');
+          reject('error in api put function');
+        }
+      });
+    },
+
+    patch(context, request) {
+      const Instance = this;
+      return new Promise((resolve, reject) => {
+        try {
+          let config = {};
+          if (Instance.getters.isLoggedIn) {
+            const token = localStorage.getItem('token');
+            config = {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Access-Control-Allow-Headers': true,
+              },
+            };
+          }
+
+          axios
+            .patch(window.$apiBaseUrl + request.endpoint, request.data, config)
+            .then((response) => {
+              resolve(response.data);
+            })
+            .catch((error) => {
+              if (error.response) reject(error.response.data);
+              reject({});
+            });
+        } catch (exception) {
+          reject('error in api patch function');
         }
       });
     },
@@ -114,10 +150,12 @@ export default {
             };
           }
 
-          axios.delete(window.$apiBaseUrl + request.endpoint, config)
+          axios
+            .delete(window.$apiBaseUrl + request.endpoint, config)
             .then((response) => {
               resolve(response.data);
-            }).catch((error) => {
+            })
+            .catch((error) => {
               if (error.response) reject(error.response.data);
               reject({});
             });

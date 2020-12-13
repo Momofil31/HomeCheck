@@ -10,7 +10,7 @@ router.post('/register', UsersController.register);
 
 router.post('/passwordReset', UsersController.resetPassword);
 
-router.put('/password', checkAuth, UsersController.updatePassword);
+router.patch('/password', checkAuth, UsersController.updatePassword);
 
 router.get('/confirm/:token', UsersController.confirm);
 

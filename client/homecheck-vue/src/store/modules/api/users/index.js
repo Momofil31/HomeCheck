@@ -75,7 +75,7 @@ export default {
       this.commit('layout/UpdateLoadingStatus', true);
       const Instance = this;
       return new Promise((resolve, reject) => {
-        Instance.dispatch('api/put', {
+        Instance.dispatch('api/patch', {
           endpoint: 'v2/users/password',
           data: filters,
         })

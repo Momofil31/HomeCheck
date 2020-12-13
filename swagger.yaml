@@ -1,19 +1,19 @@
 openapi: 3.0.0
 info:
   version: '1.0'
-  title: "HomeCheck"
+  title: 'HomeCheck'
   description: UNITN - Ingegneria del software 2 project
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
 
 security:
-  - bearerAuth: [ ]
+  - bearerAuth: []
 paths:
   /users/login:
     summary: Login
     post:
-      security: [ ]
+      security: []
       summary: Send login data
       tags:
         - Users
@@ -30,7 +30,7 @@ paths:
   /users/register:
     summary: Register
     post:
-      security: [ ]
+      security: []
       summary: Send register data
       tags:
         - Users
@@ -45,7 +45,7 @@ paths:
   /users/confirm/{token}:
     summary: Confirmation
     get:
-      security: [ ]
+      security: []
       summary: Confirm account
       tags:
         - Users
@@ -58,6 +58,65 @@ paths:
           description: Token not found
         '500':
           description: Error in confirmation
+  /users/passwordReset:
+    summary: Reset Password
+    post:
+      security: []
+      summary: Send a new password to user's email
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: 'Email of the user'
+      responses:
+        '200':
+          description: 'New password sent'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRes'
+        '404':
+          description: 'Cannot find a user with the requested email.'
+        '500':
+          description: 'Something went wrong during reset password.'
+  /users/password:
+    summary: Password
+    patch:
+      summary: Update Password
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                  description: 'Old password of the user'
+                newPassword:
+                  type: string
+                  description: 'New password of the user'
+                confirmPassword:
+                  type: string
+                  description: 'Confirm of new password of the user'
+      responses:
+        '200':
+          description: 'Update password successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRes'
+        '400':
+          description: 'Data not correctly provided'
+        '500':
+          description: 'Something went wrong during update password.'
   /products:
     summary: Products Collection
     get:
@@ -87,7 +146,7 @@ paths:
                   type: string
                   description: 'Name of the product'
                 quantity:
-                  type: "integer"
+                  type: 'integer'
                   description: 'Product quantity'
                 expiryDate:
                   type: string
@@ -112,9 +171,9 @@ paths:
   /products/{productId}:
     summary: Product
     parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id of the product"
+      - name: 'productId'
+        in: 'path'
+        description: 'Id of the product'
         required: true
     get:
       summary: Get product by id
@@ -131,19 +190,19 @@ paths:
                 1:
                   value:
                     data:
-                      message: "Get product successful"
+                      message: 'Get product successful'
                       product:
-                        id: "1"
-                        name: "Tomato Sauce"
+                        id: '1'
+                        name: 'Tomato Sauce'
                         quantity: 7
                         expiryDate: 25/12/2020
                         category:
-                          id: "1"
-                          name: "Sauce"
-                          icon: "/path/to/icon"
+                          id: '1'
+                          name: 'Sauce'
+                          icon: '/path/to/icon'
                         group:
-                          id: "1"
-                          name: "Pantry"
+                          id: '1'
+                          name: 'Pantry'
         '401':
           description: 'User not logged in'
     put:
@@ -160,7 +219,7 @@ paths:
                   type: string
                   description: 'Name of the product'
                 quantity:
-                  type: "integer"
+                  type: 'integer'
                   description: 'Product quantity'
                 expiryDate:
                   type: string
@@ -250,9 +309,9 @@ paths:
   /categories/{categoryId}:
     summary: Category
     parameters:
-      - name: "categoryId"
-        in: "path"
-        description: "Id of the category"
+      - name: 'categoryId'
+        in: 'path'
+        description: 'Id of the category'
         required: true
     get:
       summary: Get category by id
@@ -268,9 +327,9 @@ paths:
               examples:
                 1:
                   value:
-                    id: "1"
-                    name: "Bread"
-                    icon: "/path/to/icon"
+                    id: '1'
+                    name: 'Bread'
+                    icon: '/path/to/icon'
                     default: false
         '400':
           description: No category provided
@@ -348,9 +407,9 @@ paths:
   /groups/{groupId}:
     summary: Group
     parameters:
-      - name: "groupId"
-        in: "path"
-        description: "Id of the group"
+      - name: 'groupId'
+        in: 'path'
+        description: 'Id of the group'
         required: true
     get:
       summary: Get group by id
@@ -366,8 +425,8 @@ paths:
               examples:
                 1:
                   value:
-                    id: "1"
-                    name: "Pantry"
+                    id: '1'
+                    name: 'Pantry'
         '400':
           description: No group provided
         '401':
@@ -431,7 +490,7 @@ paths:
         description: 'Token generated by the owner of the product'
         required: true
     get:
-      security: [ ]
+      security: []
       summary: 'Get list of shared products'
       tags:
         - Sharing
@@ -447,17 +506,17 @@ paths:
   /sharing/{token}/products/{productId}:
     summary: 'Shared product'
     parameters:
-      - name: "productId"
-        in: "path"
-        description: "Id of the product"
+      - name: 'productId'
+        in: 'path'
+        description: 'Id of the product'
         required: true
-      - name: "token"
-        in: "path"
-        description: "Token generated by the owner of the product"
+      - name: 'token'
+        in: 'path'
+        description: 'Token generated by the owner of the product'
         required: true
     get:
       summary: Get shared product by id
-      security: [ ]
+      security: []
       tags:
         - Sharing
       responses:
@@ -536,6 +595,30 @@ components:
         lastname:
           type: string
           description: 'Lastname of the user'
+    UserRes:
+      type: object
+      required:
+        - id
+        - email
+        - password
+        - firstname
+        - lastname
+      properties:
+        id:
+          type: integer
+          description: 'Id of the user'
+        email:
+          type: string
+          description: 'Email address of the user'
+        password:
+          type: string
+          description: 'Password of the user'
+        firstname:
+          type: string
+          description: 'Firstname of the user'
+        lastname:
+          type: string
+          description: 'Lastname of the user'
     SharingToken:
       type: object
       properties:
@@ -590,7 +673,7 @@ components:
                   type: string
                   description: 'Name of the product'
                 quantity:
-                  type: "integer"
+                  type: 'integer'
                   description: 'Product quantity'
                 expiryDate:
                   type: string
@@ -689,7 +772,7 @@ components:
                     type: string
                     description: 'Name of the product'
                   quantity:
-                    type: "integer"
+                    type: 'integer'
                     description: 'Product quantity'
                   expiryDate:
                     type: string
