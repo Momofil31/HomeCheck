@@ -69,7 +69,7 @@ describe('Test sharing controller', () => {
 
     const sharing = await Sharing.findOne({ user: testUser.user.id })
       .exec()
-      .then((category) => category)
+      .then((token) => token)
       .catch(() => null);
 
     expect(response.body.data.sharing.token).toBe(sharing._id.toString());
@@ -89,5 +89,47 @@ describe('Test sharing controller', () => {
       .send();
 
     expect(response.status).toBe(409);
+  });
+
+  test('DELETE sharing token', async () => {
+    const sharing = {
+      _id: mongoose.Types.ObjectId(),
+      user: testUser.user.id,
+    };
+
+    await Sharing.create(sharing);
+
+    const response = await server
+      .delete(`${basePath}/token`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.sharing.token).toBe(sharing._id.toString());
+
+    const sharingToken = await Sharing.findOne({ user: testUser.user.id })
+      .exec()
+      .then((token) => token)
+      .catch(() => null);
+
+    // no token in db
+    expect(sharingToken).toBe(null);
+  });
+
+  test('DELETE sharing token not present', async () => {
+    const response = await server
+      .delete(`${basePath}/token`)
+      .set('Authorization', `Bearer ${testUser.token}`)
+      .send();
+
+    expect(response.status).toBe(404);
+
+    const sharingToken = await Sharing.findOne({ user: testUser.user.id })
+      .exec()
+      .then((token) => token)
+      .catch(() => null);
+
+    // no token in db
+    expect(sharingToken).toBe(null);
   });
 });
