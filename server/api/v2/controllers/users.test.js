@@ -185,7 +185,7 @@ describe('Test users controller', () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
-      .put(`${basePath}/password`)
+      .patch(`${basePath}/password`)
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         oldPassword: 'Password!23',
@@ -207,7 +207,7 @@ describe('Test users controller', () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
-      .put(`${basePath}/password`)
+      .patch(`${basePath}/password`)
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         oldPassword: 'Password!234',
@@ -229,7 +229,7 @@ describe('Test users controller', () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
-      .put(`${basePath}/password`)
+      .patch(`${basePath}/password`)
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         newPassword: 'Test123',
@@ -250,7 +250,7 @@ describe('Test users controller', () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
-      .put(`${basePath}/password`)
+      .patch(`${basePath}/password`)
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         oldPassword: 'Password!234',
