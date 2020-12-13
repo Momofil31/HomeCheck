@@ -60,8 +60,8 @@ exports.getOne = (req, res) => {
         });
       }
       if (
-        category.user.toString() !== req.userData.userId
-        && category.user.toString() !== process.env.ADMIN_USER_ID
+        category.user.toString() !== req.userData.userId &&
+        category.user.toString() !== process.env.ADMIN_USER_ID
       ) {
         return res.status(403).json({
           error: {
@@ -122,7 +122,9 @@ exports.updateOne = (req, res) => {
     });
   }
 
-  Category.findOneAndUpdate({ _id: categoryId, user: req.userData.userId }, newCategory)
+  Category.findOneAndUpdate({ _id: categoryId, user: req.userData.userId }, newCategory, {
+    new: true,
+  })
     .exec()
     .then((response) => {
       if (response) {
@@ -177,7 +179,7 @@ exports.createOne = (req, res) => {
 
   // TODO: Check if category icon is valid
 
-  Category.find({ name: category.name })
+  Category.find({ name: category.name, user: req.userData.userId })
     .exec()
     .then((response) => {
       if (response.length >= 1) {
