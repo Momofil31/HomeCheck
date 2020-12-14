@@ -81,7 +81,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('POST create product 200 - product already exists but belongs to a different user', async () => {
+  test('POST create product 201 - product already exists but belongs to a different user', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -138,7 +138,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('POST create product 200', async () => {
+  test('POST create product 201', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',

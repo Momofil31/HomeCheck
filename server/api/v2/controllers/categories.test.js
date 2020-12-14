@@ -143,7 +143,7 @@ describe('Test category controller', () => {
     expect(response.status).toBe(403);
   });
 
-  test('POST create a category 200 - category already exists but belongs to a different user', async () => {
+  test('POST create a category 201 - category already exists but belongs to a different user', async () => {
     const newUser = await util.getTestUserAuthToken(server);
 
     const category = new Category({
@@ -178,7 +178,7 @@ describe('Test category controller', () => {
     });
   });
 
-  test('POST create a category 200', async () => {
+  test('POST create a category 201', async () => {
     const response = await server
       .post(`${basePath}`)
       .set('Authorization', `Bearer ${testUser.token}`)
