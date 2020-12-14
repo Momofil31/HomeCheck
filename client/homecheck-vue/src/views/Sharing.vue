@@ -1,6 +1,9 @@
 <template>
+  
   <div id="products">
-
+    
+    <h1>Your shared HomeCheck</h1>
+    
     <ProductsCard
         v-for="group in groups"
         :key="group.id"
