@@ -658,7 +658,6 @@ components:
       required:
         - id
         - email
-        - password
         - firstname
         - lastname
       properties:
