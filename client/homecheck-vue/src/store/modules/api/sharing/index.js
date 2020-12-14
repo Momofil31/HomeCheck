@@ -74,7 +74,7 @@ export default {
       return new Promise((resolve) => {
         Instance.dispatch('api/get', {
           endpoint: `v2/sharing-links/${filters.token}/products/${filters.productId}`,
-          data: filters,
+          data: [],
         })
           .then((data) => util.dispatchSuccess(data, Instance, resolve))
           .catch((data) => util.dispatchError(data, Instance));

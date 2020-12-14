@@ -35,30 +35,50 @@
                 required
               ></v-text-field>
             </v-col>
-            <v-col cols="12">
-              <v-select
-                label="Group*"
-                v-model="product.group"
-                :items="groups"
-                item-text="name"
-                item-value="id"
-                :readonly="readOnly"
-                :rules="groupRules"
-                required
-              ></v-select>
-            </v-col>
-            <v-col cols="12">
-              <v-select
-                label="Category*"
-                v-model="product.category"
-                :items="categories"
-                item-text="name"
-                item-value="id"
-                :readonly="readOnly"
-                :rules="categoryRules"
-                required
-              ></v-select>
-            </v-col>
+            <template v-if="!readOnly">
+              <v-col cols="12">
+                <v-select
+                  label="Group*"
+                  v-model="product.group"
+                  :items="groups"
+                  item-text="name"
+                  item-value="id"
+                  :rules="groupRules"
+                  required
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  label="Category*"
+                  v-model="product.category"
+                  :items="categories"
+                  item-text="name"
+                  item-value="id"
+                  :rules="categoryRules"
+                  required
+                ></v-select>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-col cols="12">
+                <v-text-field
+                  label="Group*"
+                  v-model="product.group.name"
+                  type="text"
+                  :readonly="readOnly"
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  label="Category*"
+                  v-model="product.category.name"
+                  :readonly="readOnly"
+                  type="text"
+                  required
+                ></v-text-field>
+              </v-col>
+            </template>
           </v-row>
         </v-container>
         <small>* indicates required field</small>
@@ -172,8 +192,17 @@ export default {
       const Instance = this;
 
       if (this.productId != '') {
+        
+        var url = 'api/products/GetOne';
+        var params = { id: this.productId };
+        if(this.readOnly){
+          url = 'api/sharing/GetProduct';
+          params.token = this.$route.params.token;
+          params.productId = this.productId;
+        }
+        
         this.$store
-          .dispatch('api/products/GetOne', { id: this.productId })
+          .dispatch(url, params)
           .then((data) => {
             Instance.product = data.result.product;
             delete Instance.product.id;
@@ -199,8 +228,11 @@ export default {
     },
 
     loadCategories() {
+      
+      if(this.readOnly) return;
+      
       const Instance = this;
-
+      
       this.$store
         .dispatch('api/categories/GetList', {})
         .then((data) => {
@@ -212,6 +244,9 @@ export default {
     },
 
     loadGroups() {
+      
+      if(this.readOnly) return;
+      
       const Instance = this;
 
       this.$store
