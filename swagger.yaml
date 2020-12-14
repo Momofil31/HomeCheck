@@ -1,11 +1,16 @@
 openapi: 3.0.0
 info:
-  version: '1.0'
+  version: '2.0'
   title: 'HomeCheck'
   description: UNITN - Ingegneria del software 2 project
   license:
     name: MIT
     url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+servers:
+  - url: http://homecheck-api.herokuapp.com/v2/
+    description: Production server (uses live data)
+  - url: http://localhost:8080/v2
+    description: Local server (demo on local host)
 
 security:
   - bearerAuth: []
@@ -25,6 +30,10 @@ paths:
       responses:
         '200':
           description: Logged in correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginRes'
         '401':
           description: User not logged in correctly
   /users/register:
@@ -42,6 +51,10 @@ paths:
       responses:
         '200':
           description: Register successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterRes'
   /users/confirm/{token}:
     summary: Confirmation
     get:
@@ -52,6 +65,10 @@ paths:
       responses:
         '201':
           description: Confirmation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterRes'
         '400':
           description: Token missing
         '404':
@@ -80,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserRes'
+                $ref: '#/components/schemas/PasswordResetRes'
         '404':
           description: 'Cannot find a user with the requested email.'
         '500':
@@ -112,7 +129,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserRes'
+                $ref: '#/components/schemas/PasswordUpdateRes'
         '400':
           description: 'Data not correctly provided'
         '500':
@@ -129,7 +146,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfProducts'
+                $ref: '#/components/schemas/ArrayOfProductsRes'
         '401':
           description: 'User not logged in'
     post:
@@ -163,7 +180,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductRes'
         '401':
           description: 'User not logged in'
         '403':
@@ -185,7 +202,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductRes'
               examples:
                 1:
                   value:
@@ -199,10 +216,13 @@ paths:
                         category:
                           id: '1'
                           name: 'Sauce'
-                          icon: '/path/to/icon'
+                          icon: '/path/to/ico.jpg'
                         group:
                           id: '1'
                           name: 'Pantry'
+                        request:
+                          type: 'GET'
+                          url: http://homecheck-api.herokuapp.com/v2/products/1
         '401':
           description: 'User not logged in'
     put:
@@ -236,7 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductRes'
         '401':
           description: 'User not logged in'
         '403':
@@ -251,7 +271,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductRes'
         '401':
           description: User not logged in
         '403':
@@ -264,11 +284,11 @@ paths:
         - Categories
       responses:
         '200':
-          description: Get categories successful
+          description: Get categories successful.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfCategories'
+                $ref: '#/components/schemas/ArrayOfCategoriesRes'
         '400':
           description: No category provided
         '401':
@@ -327,10 +347,16 @@ paths:
               examples:
                 1:
                   value:
-                    id: '1'
-                    name: 'Bread'
-                    icon: '/path/to/icon'
-                    default: false
+                    data:
+                      message: 'Get category successful'
+                      category:
+                        id: '1'
+                        name: 'Bread'
+                        icon: '/path/to/icon.jpg'
+                        default: false
+                        request:
+                          type: 'GET'
+                          url: http://homecheck-api.herokuapp.com/v2/categories/1
         '400':
           description: No category provided
         '401':
@@ -359,7 +385,11 @@ paths:
                   description: 'Path of the category icon'
       responses:
         '200':
-          description: 'Successful update'
+          description: 'Update successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
         '401':
           description: 'User not logged in'
         '403':
@@ -399,7 +429,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfGroups'
+                $ref: '#/components/schemas/ArrayOfGroupsRes'
         '401':
           description: Authentication failed.
         '500':
@@ -421,12 +451,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
-              examples:
-                1:
-                  value:
-                    id: '1'
-                    name: 'Pantry'
+                $ref: '#/components/schemas/GroupRes'
         '400':
           description: No group provided
         '401':
@@ -500,7 +525,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ArrayOfProducts'
+                $ref: '#/components/schemas/ArrayOfProductsRes'
         '403':
           description: 'User not authorized'
   /sharing/{token}/products/{productId}:
@@ -525,7 +550,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/ProductRes'
         '403':
           description: 'User not authorized'
         '404':
@@ -550,7 +575,6 @@ components:
         password:
           type: string
           description: 'Password of the user'
-
     RegisterForm:
       type: object
       required:
@@ -571,30 +595,64 @@ components:
         lastname:
           type: string
           description: 'Lastname of the user'
-    User:
+    LoginRes:
       type: object
-      required:
-        - id
-        - email
-        - password
-        - firstname
-        - lastname
       properties:
-        id:
-          type: string
-          description: 'Id of the user'
-        email:
-          type: string
-          description: 'Email address of the user'
-        password:
-          type: string
-          description: 'Password of the user'
-        firstname:
-          type: string
-          description: 'Firstname of the user'
-        lastname:
-          type: string
-          description: 'Lastname of the user'
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Authentication successful
+            token:
+              type: string
+              description: 'JWT Authentication token'
+            user:
+              $ref: '#/components/schemas/UserRes'
+    RegisterRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Registration successful! Please, check your email to confirm your user.'
+            user:
+              $ref: '#/components/schemas/UserRes'
+    ConfirmRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Confirmation successful.'
+            user:
+              $ref: '#/components/schemas/UserRes'
+    PasswordResetRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'New password sent'
+            user:
+              $ref: '#/components/schemas/UserRes'
+    PasswordUpdateRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Update password successful'
+            user:
+              $ref: '#/components/schemas/UserRes'
     UserRes:
       type: object
       required:
@@ -605,49 +663,18 @@ components:
         - lastname
       properties:
         id:
-          type: integer
+          type: string
           description: 'Id of the user'
         email:
           type: string
           description: 'Email address of the user'
-        password:
-          type: string
-          description: 'Password of the user'
         firstname:
           type: string
           description: 'Firstname of the user'
         lastname:
           type: string
           description: 'Lastname of the user'
-    SharingToken:
-      type: object
-      properties:
-        data:
-          type: object
-          required:
-            - sharing
-          properties:
-            message:
-              type: string
-              description: 'Response status description'
-            sharing:
-              type: object
-              required:
-                - token
-              properties:
-                token:
-                  type: string
-                  description: 'Sharing token'
-                request:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      description: 'Request method'
-                    url:
-                      type: string
-                      description: 'Request url'
-    Product:
+    ProductRes:
       type: object
       properties:
         data:
@@ -708,43 +735,7 @@ components:
                     url:
                       type: string
                       description: 'Request url'
-    Category:
-      type: object
-      required:
-        - id
-        - name
-        - icon
-        - default
-        - user
-      properties:
-        id:
-          type: string
-          description: 'Id of the category'
-        name:
-          type: string
-          description: 'Name of the category'
-        icon:
-          type: string
-          description: 'Path of the category icon'
-        default:
-          type: boolean
-          description: 'Whether is a default category or not'
-        user:
-          type: string
-          description: 'Id of the user to whom this category belongs'
-    Group:
-      type: object
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: string
-          description: 'Id of the group'
-        name:
-          type: string
-          description: 'Name of the group'
-    ArrayOfProducts:
+    ArrayOfProductsRes:
       type: object
       properties:
         data:
@@ -798,28 +789,162 @@ components:
                       name:
                         type: string
                         description: 'Name of the group'
-    ArrayOfCategories:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: string
-            description: 'Id of the category'
-          name:
-            type: string
-            description: 'Name of the category'
-          icon:
-            type: string
-            description: 'Path of the category icon'
-    ArrayOfGroups:
-      type: array
-      items:
-        type: object
-        properties:
-          id:
-            type: string
-            description: 'Id of the group'
-          name:
-            type: string
-            description: 'Name of the group'
+    Category:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Get category successful
+            category:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 'Id of the category'
+                name:
+                  type: string
+                  description: 'Name of the category'
+                icon:
+                  type: string
+                  description: 'Path of the category icon'
+                default:
+                  type: boolean
+                  description: 'Whether is a default category or not'
+                user:
+                  type: string
+                  description: 'Id of the user to whom this category belongs'
+                request:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: 'Request method'
+                    url:
+                      type: string
+                      description: 'Request url'
+    ArrayOfCategoriesRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Get categories successful.'
+            categories:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: 'Id of the category'
+                  name:
+                    type: string
+                    description: 'Name of the category'
+                  icon:
+                    type: string
+                    description: 'Path of the category icon'
+                  default:
+                    type: boolean
+                    description: 'Whether is a default category or not'
+                  user:
+                    type: string
+                    description: 'Id of the user to whom this category belongs'
+                  request:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Request method'
+                      url:
+                        type: string
+                        description: 'Request url'
+    GroupRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Get groups successful.'
+            group:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: 'Id of the group'
+                name:
+                  type: string
+                  description: 'Name of the group'
+                request:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: 'Request method'
+                    url:
+                      type: string
+                      description: 'Request url'
+    ArrayOfGroupsRes:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: 'Get groups successful.'
+            groups:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: 'Id of the group'
+                  name:
+                    type: string
+                    description: 'Name of the group'
+                  request:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        description: 'Request method'
+                      url:
+                        type: string
+                        description: 'Request url'
+
+    SharingToken:
+      type: object
+      properties:
+        data:
+          type: object
+          required:
+            - sharing
+          properties:
+            message:
+              type: string
+              description: 'Response status description'
+            sharing:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  description: 'Sharing token'
+                request:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      description: 'Request method'
+                    url:
+                      type: string
+                      description: 'Request url'
