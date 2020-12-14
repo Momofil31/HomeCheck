@@ -24,7 +24,7 @@ describe('Test group controller', () => {
     done();
   });
 
-  test('GetList should return list of groups', async () => {
+  test('GET list of groups 200', async () => {
     const groups = [
       new Group({
         name: 'Test1',
@@ -47,7 +47,7 @@ describe('Test group controller', () => {
     expect(response.status).toBe(200);
   });
 
-  test('GetOne should return one group', async () => {
+  test('GET one group 200', async () => {
     const groupId = mongoose.Types.ObjectId();
 
     const groupModel = new Group({
@@ -64,7 +64,7 @@ describe('Test group controller', () => {
     expect(response.status).toBe(200);
   });
 
-  test("GetOne should fail because requested group doesn't exist", async () => {
+  test("GET one group 400 - doesn't exist", async () => {
     const groupId = mongoose.Types.ObjectId();
 
     const groupModel = new Group({
@@ -80,7 +80,8 @@ describe('Test group controller', () => {
 
     expect(response.status).toBe(404);
   });
-  test('GetOne should fail because groupId is not valid', async () => {
+
+  test('GET one group 400 - groupId is invalid', async () => {
     const groupId = mongoose.Types.ObjectId();
 
     const groupModel = new Group({

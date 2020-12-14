@@ -19,7 +19,7 @@ describe('Test users controller', () => {
     done();
   });
 
-  test('POST Creation should fail because no email was provided', async () => {
+  test('POST create user 400 - no email was provided', async () => {
     const response = await server.post(`${basePath}/register`).send({
       password: 'Password!234',
       firstname: 'A',
@@ -29,7 +29,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation should fail because no password was provided', async () => {
+  test('POST create user 400 - no password was provided', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       firstname: 'A',
@@ -39,7 +39,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation should fail because no firstname was provided', async () => {
+  test('POST create user 400 - no firstname was provided', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
@@ -49,7 +49,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation should fail because no lastname was provided', async () => {
+  test('POST create user 400 - no lastname was provided', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
@@ -59,7 +59,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation should fail because email is not a valid email (missing "@")', async () => {
+  test('POST create user 400 - email is not a valid email (missing "@")', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Testemail.it',
       password: 'Password!234',
@@ -70,7 +70,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation should fail because password is not valid', async () => {
+  test('POST create user 400 - because password is not valid', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password234',
@@ -81,7 +81,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('POST Creation of a new user should succeed', async () => {
+  test('POST create user 201', async () => {
     const response = await server.post(`${basePath}/register`).send({
       email: 'Test@email.it',
       password: 'Password!234',
@@ -109,7 +109,7 @@ describe('Test users controller', () => {
     expect(fetchedUser._id.toString()).toBe(response.body.data.user.id);
   });
 
-  test('POST Creation should fail because email is already taken', async () => {
+  test('POST create user 409 - email is already taken', async () => {
     const res = await util.registerUser(server);
     await util.confirmUser(res);
 
@@ -123,7 +123,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(409);
   });
 
-  test("POST Login should fail because email doesn't exist", async () => {
+  test("POST login user 401 - email doesn't exist", async () => {
     const res = await util.registerUser(server);
     await util.confirmUser(res);
 
@@ -135,7 +135,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(401);
   });
 
-  test('POST Login should fail because password is wrong', async () => {
+  test('POST login user 401 - password is wrong', async () => {
     const res = await util.registerUser(server);
     await util.confirmUser(res);
 
@@ -147,7 +147,7 @@ describe('Test users controller', () => {
     expect(response.status).toBe(401);
   });
 
-  test('POST Login should succeed', async () => {
+  test('POST login user 200', async () => {
     const res = await util.registerUser(server);
     await util.confirmUser(res);
 
@@ -186,7 +186,7 @@ describe('Test users controller', () => {
     expect(decoded).toMatchObject(userData);
   });
 
-  test('PATCH Update password should fail because old password is wrong', async () => {
+  test('PATCH update password 400 - old password is wrong', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -208,7 +208,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("PATCH Update password should fail because newPassword and confirmPassword don't match", async () => {
+  test("PATCH update password 400 - newPassword and confirmPassword don't match", async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -230,7 +230,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PATCH Update password should fail because request body is invalid', async () => {
+  test('PATCH update password 400 - request body is invalid', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -251,7 +251,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PATCH Update password should fail because authentication token is invalid', async () => {
+  test('PATCH update password 401 - authentication token is invalid', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -272,7 +272,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PUT Update password should succeed', async () => {
+  test('PATCH update password 200', async () => {
     const testUser = await util.getTestUserAuthToken(server);
 
     const response = await server
@@ -299,7 +299,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("POST Reset password should fail because email doens't exists", async () => {
+  test("POST reset password 404 - email doens't exists", async () => {
     await util.registerUser(server);
     const response = await server.post(`${basePath}/passwordReset`).send({
       email: 'Tes@email.it',
@@ -315,7 +315,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('POST Reset password should succeed', async () => {
+  test('POST reset password 200', async () => {
     await util.registerUser(server);
     const response = await server.post(`${basePath}/passwordReset`).send({
       email: 'Test@email.it',
@@ -336,7 +336,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("GET Confirm token should fail because token doesn't match", async () => {
+  test("GET confirm token 404 - token doesn't match", async () => {
     const regResponse = await util.registerUser(server);
     const token = 'token1234&';
 
@@ -353,7 +353,7 @@ describe('Test users controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('GET Confirm token should succeed', async () => {
+  test('GET confirm token 200', async () => {
     const regResponse = await util.registerUser(server);
     const token = 'token1234&';
 

@@ -33,6 +33,13 @@
   "jest": {
     "verbose": true,
     "collectCoverage": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/server/api/v1"
+    ],
+    "coveragePathIgnorePatterns": [
+      "node_modules",
+      "/server/api/v1"
+    ]
   }
 }

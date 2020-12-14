@@ -33,7 +33,7 @@ describe('Test product controller', () => {
     done();
   });
 
-  test('POST CreateOne should fail because product already exists', async () => {
+  test('POST create product 409 - product already exists', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -81,7 +81,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('POST CreateOne should succeed because product already exists but belongs to a different user', async () => {
+  test('POST create product 200 - product already exists but belongs to a different user', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -138,7 +138,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('POST CreateOne should succeed', async () => {
+  test('POST create product 200', async () => {
     category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -182,7 +182,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('GET GetList by group should succeed', async () => {
+  test('GET get list of products by group 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
 
     const response = await server
@@ -223,7 +223,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('GET GetList by category should succeed', async () => {
+  test('GET get list of products by category 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
 
     const response = await server
@@ -264,7 +264,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('GET GetList should succeed', async () => {
+  test('GET get list of products 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
 
     const response = await server
@@ -305,7 +305,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("GET GetOne should fail because product doesn't exist", async () => {
+  test("GET get list of products 404 - product doesn't exist", async () => {
     await util.createTestProducts(category, group, testUser.user.id);
 
     const notExistingProductId = mongoose.Types.ObjectId();
@@ -325,7 +325,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('GET GetOne should succeed', async () => {
+  test('GET get one product 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
     const productToFind = await Product.find()
       .exec()
@@ -353,7 +353,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("PUT UpdateOne should fail because product doesn't exist", async () => {
+  test("PUT update product 404 - product doesn't exist", async () => {
     await util.createTestProducts(category, group, testUser.user.id);
     const notExistingProductId = mongoose.Types.ObjectId();
 
@@ -378,7 +378,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PUT UpdateOne should succeed', async () => {
+  test('PUT update product 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
     const productToUpdate = await Product.find()
       .exec()
@@ -412,7 +412,7 @@ describe('Test product controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("DELETE DeleteOne should fail because product doesn't exist", async () => {
+  test("DELETE delete product 404 - product doesn't exist", async () => {
     await util.createTestProducts(category, group, testUser.user.id);
     const notExistingProductId = mongoose.Types.ObjectId();
 
@@ -429,7 +429,7 @@ describe('Test product controller', () => {
     });
   });
 
-  test('DELETE DeleteOne should succeed', async () => {
+  test('DELETE delete product 200', async () => {
     await util.createTestProducts(category, group, testUser.user.id);
     const productToDelete = await Product.find()
       .exec()

@@ -24,7 +24,7 @@ describe('Test category controller', () => {
     done();
   });
 
-  test('GET list of categories', async () => {
+  test('GET list of categories 200', async () => {
     const categories = [
       new Category({
         name: 'Test1',
@@ -51,7 +51,7 @@ describe('Test category controller', () => {
     expect(response.body.data.categories).toHaveLength(2);
   });
 
-  test('GET one category', async () => {
+  test('GET get one category 200', async () => {
     const categoryId = mongoose.Types.ObjectId();
 
     const category = new Category({
@@ -78,7 +78,7 @@ describe('Test category controller', () => {
     });
   });
 
-  test('GET one category 404', async () => {
+  test("GET get one category 404 - category doesn't exist", async () => {
     const categoryId = mongoose.Types.ObjectId();
 
     const category = new Category({
@@ -99,7 +99,7 @@ describe('Test category controller', () => {
     expect(response.status).toBe(404);
   });
 
-  test('GET one category 400 invalid id', async () => {
+  test('GET get one category 400 -invalid id', async () => {
     const categoryId = mongoose.Types.ObjectId();
 
     const category = new Category({
@@ -120,7 +120,7 @@ describe('Test category controller', () => {
     expect(response.status).toBe(400);
   });
 
-  test('GET one category 403 unathorized user', async () => {
+  test('GET get one category 403 - unathorized user', async () => {
     const categoryId = mongoose.Types.ObjectId();
 
     const category = new Category({
@@ -143,7 +143,7 @@ describe('Test category controller', () => {
     expect(response.status).toBe(403);
   });
 
-  test('POST create a category should succeed because category already exists but belongs to a different user', async () => {
+  test('POST create a category 200 - category already exists but belongs to a different user', async () => {
     const newUser = await util.getTestUserAuthToken(server);
 
     const category = new Category({
@@ -178,7 +178,7 @@ describe('Test category controller', () => {
     });
   });
 
-  test('POST create a category ', async () => {
+  test('POST create a category 200', async () => {
     const response = await server
       .post(`${basePath}`)
       .set('Authorization', `Bearer ${testUser.token}`)
@@ -202,7 +202,7 @@ describe('Test category controller', () => {
     });
   });
 
-  test('POST create a category already present', async () => {
+  test('POST create a category 409 - category already present', async () => {
     const category = new Category({
       _id: mongoose.Types.ObjectId(),
       name: 'Test1',
@@ -225,7 +225,7 @@ describe('Test category controller', () => {
     expect(response.status).toBe(409);
   });
 
-  test('PUT update a category should fail because name and icon are not filled in', async () => {
+  test('PUT update a category 400 - name and icon are not filled in', async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,
@@ -256,7 +256,7 @@ describe('Test category controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test("PUT update category should fail because category doesn't exists", async () => {
+  test("PUT update category 404 - category doesn't exists", async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,
@@ -287,7 +287,7 @@ describe('Test category controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('PUT update a category', async () => {
+  test('PUT update a category 200', async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,
@@ -322,7 +322,7 @@ describe('Test category controller', () => {
     expect(updatedCategory.default).toBe(false);
   });
 
-  test("DELETE category should fail because category doesn't exist", async () => {
+  test("DELETE category 404 - category doesn't exist", async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,
@@ -352,7 +352,7 @@ describe('Test category controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('DELETE category should fail because user is not authorized to delete', async () => {
+  test('DELETE category 403 - user is not authorized to delete this category', async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,
@@ -382,7 +382,7 @@ describe('Test category controller', () => {
     expect(response.body).toMatchObject(desiredResponse);
   });
 
-  test('DELETE category should succeed', async () => {
+  test('DELETE category 200', async () => {
     const categoryId = mongoose.Types.ObjectId();
     const category = new Category({
       _id: categoryId,

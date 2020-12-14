@@ -30,7 +30,7 @@ describe('Test sharing controller', () => {
     done();
   });
 
-  test('GET sharing token', async () => {
+  test('GET get sharing token 200', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
@@ -47,7 +47,7 @@ describe('Test sharing controller', () => {
     expect(response.body.data.sharing.token).toBe(sharing._id.toString());
   });
 
-  test('GET sharing token 404', async () => {
+  test("GET get sharing token 404 - sharing token doesn't exist", async () => {
     const response = await server
       .get(`${basePath}/token`)
       .set('Authorization', `Bearer ${testUser.token}`)
@@ -56,7 +56,7 @@ describe('Test sharing controller', () => {
     expect(response.status).toBe(404);
   });
 
-  test('POST generate sharing token', async () => {
+  test('POST create sharing token 201', async () => {
     const response = await server
       .post(`${basePath}/token`)
       .set('Authorization', `Bearer ${testUser.token}`)
@@ -82,7 +82,7 @@ describe('Test sharing controller', () => {
     expect(response.body.data.sharing.token).toBe(sharing._id.toString());
   });
 
-  test('POST sharing token already present', async () => {
+  test('POST create sharing token 409 - sharing token already present', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
@@ -98,7 +98,7 @@ describe('Test sharing controller', () => {
     expect(response.status).toBe(409);
   });
 
-  test('DELETE sharing token', async () => {
+  test('DELETE delete sharing token 200', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
@@ -123,7 +123,7 @@ describe('Test sharing controller', () => {
     expect(sharingToken).toBe(null);
   });
 
-  test('DELETE sharing token not present', async () => {
+  test("DELETE delete sharing token 404 - sharing token doesn't exist", async () => {
     const response = await server
       .delete(`${basePath}/token`)
       .set('Authorization', `Bearer ${testUser.token}`)
@@ -140,22 +140,20 @@ describe('Test sharing controller', () => {
     expect(sharingToken).toBe(null);
   });
 
-  test('GET GetList shared products should succeed', async () => {
+  test('GET get list of shared products 200', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
     };
     await Sharing.create(sharing);
 
-    const response = await server
-      .get(`${basePath}/${sharing._id}/products`)
-      .send();
+    const response = await server.get(`${basePath}/${sharing._id}/products`).send();
 
     expect(response.status).toBe(200);
     expect(response.body.data.products.length).toBe(3);
   });
 
-  test('GET GetList shared products should failed when token is deleted', async () => {
+  test('GET get list of shared products 403 - should fail after token is deleted', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
@@ -163,9 +161,7 @@ describe('Test sharing controller', () => {
     await Sharing.create(sharing);
 
     // product shared correctly
-    const response = await server
-      .get(`${basePath}/${sharing._id}/products`)
-      .send();
+    const response = await server.get(`${basePath}/${sharing._id}/products`).send();
 
     expect(response.status).toBe(200);
     expect(response.body.data.products.length).toBe(3);
@@ -179,14 +175,12 @@ describe('Test sharing controller', () => {
     expect(response2.status).toBe(200);
 
     // error when access to products
-    const response3 = await server
-      .get(`${basePath}/${sharing._id}/products`)
-      .send();
+    const response3 = await server.get(`${basePath}/${sharing._id}/products`).send();
 
     expect(response3.status).toBe(403);
   });
 
-  test('GET GetOne shared product should succeed', async () => {
+  test('GET get one shared product 200', async () => {
     const sharing = {
       _id: mongoose.Types.ObjectId(),
       user: testUser.user.id,
