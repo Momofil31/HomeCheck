@@ -3,13 +3,15 @@
     <v-card-title>{{ title }}</v-card-title>
     
     <div class="products-cards">
-      <ProductCard 
-        v-for="product in products"
-        :key="product.id"
-        :product=product
-        :enableDelete=enableDelete
-        @view=viewProduct
-        @delete=deleteProduct />
+      <v-row>
+        <ProductCard 
+          v-for="product in products"
+          :key="product.id"
+          :product=product
+          :enableDelete=enableDelete
+          @view=viewProduct
+          @delete=deleteProduct />
+      </v-row>
     </div>
     
   </v-card>
