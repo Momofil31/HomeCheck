@@ -117,6 +117,10 @@ export default {
       type: String,
       default: '',
     },
+    readOnly: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data() {
@@ -137,11 +141,6 @@ export default {
       categories: [],
       groups: [],
     };
-  },
-  computed: {
-    readOnly: function() {
-      return this.action === 'View';
-    },
   },
   methods: {
     save() {

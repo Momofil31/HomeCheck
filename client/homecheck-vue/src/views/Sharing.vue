@@ -13,6 +13,7 @@
     <v-dialog v-model="dialogUpdate" :retain-focus="false" max-width="600px">
       <ProductForm
           action="View"
+          :readOnly="true"
           :product-id="selectedProduct.id"
           :dialog="dialogUpdate"
           @close-dialog="closeDialog()"
