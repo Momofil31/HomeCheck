@@ -1,7 +1,6 @@
 <template
-  ><div>
+  ><div :class="{'sidebar-open': !mini}">
     <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon @click="sidebarMenu = !sidebarMenu"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-btn @click="logoutClicked">
         <v-icon>logout</v-icon>
