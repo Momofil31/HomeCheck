@@ -6,7 +6,7 @@ function getSharingFromEntity(sharing, req) {
 
   toRtn.request = {};
   toRtn.request.type = 'GET';
-  toRtn.request.url = `${req.headers.host}/v2/sharing-links/${sharing._id}/products`;
+  toRtn.request.url = `${req.headers.host}/v2/sharing-links/token`;
 
   return toRtn;
 }

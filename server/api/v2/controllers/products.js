@@ -24,7 +24,7 @@ function getProductFromEntity(product, req) {
 
   toRtn.request = {};
   toRtn.request.type = 'GET';
-  toRtn.request.url = `${req.headers.host}/products/${product._id}`;
+  toRtn.request.url = `${req.headers.host}/v2/products/${product._id}`;
 
   return toRtn;
 }
