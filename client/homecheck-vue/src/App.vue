@@ -1,4 +1,5 @@
 <template>
+  
   <v-app>
     <div id="loader" v-show="isLoading">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -48,5 +49,9 @@ export default {
       return this.$route.params.token;
     },
   },
+  
+  created() {
+    document.title = "HomeCheck"
+  }
 };
 </script>
