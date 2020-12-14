@@ -70,8 +70,8 @@ exports.confirmationEmail = async (email, name, link, token) => {
     });
   }
 
-  const htmlMail = `<p>Hello ${name}, <br/>to confirm your account and start using Homecheck go to this <a href="${link}">link</a></p>
-                    <p>If you want to use the API instead here is the token: ${token}</p>`;
+  const htmlMail = `<p>Hello ${name}, <br/>to confirm your account and start using Homecheck go to this link:<br><a href="${link}">${link}</a></p>
+                    <p>If you want to use the API instead here is the token: <br>${token}</p>`;
   const textMail = `Hello ${name}, to confirm your account and start using Homecheck go to this link: ${link}.
                     If you want to use the API instead here is the token: ${token}`;
 
