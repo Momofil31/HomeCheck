@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const user = process.env.MAIL_ADDRESS;
 const pass = process.env.MAIL_PW;
 
-const transporter = nodemailer.createTransport({
+let transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true, // use SSL
@@ -14,6 +14,23 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.resetPasswordMail = async (email, password) => {
+  if (process.env.NODE_ENV === 'test') {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    const testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+      },
+    });
+  }
+
   const htmlMail = `<p>Here is your new password.</p>
                       <h4>${password}</h4> 
                     `;
@@ -36,6 +53,23 @@ exports.resetPasswordMail = async (email, password) => {
 };
 
 exports.confirmationEmail = async (email, name, link, token) => {
+  if (process.env.NODE_ENV === 'test') {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    const testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+      },
+    });
+  }
+
   const htmlMail = `<p>Hello ${name}, <br/>to confirm your account and start using Homecheck go to this <a href="${link}">link</a></p>
                     <p>If you want to use the API instead here is the token: ${token}</p>`;
   const textMail = `Hello ${name}, to confirm your account and start using Homecheck go to this link: ${link}.
