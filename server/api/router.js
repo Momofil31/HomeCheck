@@ -19,5 +19,5 @@ module.exports = (app) => {
   app.use('/v2/categories', v2categoryRoutes);
   app.use('/v2/groups', v2groupRoutes);
   app.use('/v2/users', v2userRoutes);
-  app.use('/v2/sharing', v2sharingRoutes);
+  app.use('/v2/sharing-links', v2sharingRoutes);
 };

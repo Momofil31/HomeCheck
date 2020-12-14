@@ -8,7 +8,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/get', {
-          endpoint: 'v2/sharing/token',
+          endpoint: 'v2/sharing-links/token',
           data: filters,
         })
           .then((data) => util.dispatchSuccess(data, Instance, resolve))
@@ -21,7 +21,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/delete', {
-          endpoint: 'v2/sharing/token',
+          endpoint: 'v2/sharing-links/token',
           data: filters,
         })
           .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
@@ -34,7 +34,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/post', {
-          endpoint: 'v2/sharing/token',
+          endpoint: 'v2/sharing-links/token',
           data: filters,
         })
           .then((data) => util.dispatchSuccessWithMessage(data, Instance, resolve))
@@ -47,7 +47,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/get', {
-          endpoint: `v2/sharing/${filters.token}/groups`,
+          endpoint: `v2/sharing-links/${filters.token}/groups`,
           data: filters,
         })
           .then((data) => util.dispatchSuccess(data, Instance, resolve))
@@ -60,7 +60,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/get', {
-          endpoint: `v2/sharing/${filters.token}/products`,
+          endpoint: `v2/sharing-links/${filters.token}/products`,
           data: filters,
         })
           .then((data) => util.dispatchSuccess(data, Instance, resolve))
@@ -73,7 +73,7 @@ export default {
       const Instance = this;
       return new Promise((resolve) => {
         Instance.dispatch('api/get', {
-          endpoint: `v2/sharing/${filters.token}/products/${filters.productId}`,
+          endpoint: `v2/sharing-links/${filters.token}/products/${filters.productId}`,
           data: filters,
         })
           .then((data) => util.dispatchSuccess(data, Instance, resolve))

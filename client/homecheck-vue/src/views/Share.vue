@@ -30,7 +30,7 @@ export default {
   methods: {
     getToken() {
       this.$store.dispatch('api/sharing/GetSharingToken', {}).then((response) => {
-        this.sharingLink = `${document.location.origin}/sharing/${response.result.sharing.token}`;
+        this.sharingLink = `${document.location.origin}/sharing/${response.result.sharingLinks.token}`;
       });
     },
     deleteToken() {
@@ -40,7 +40,7 @@ export default {
     },
     createToken() {
       this.$store.dispatch('api/sharing/CreateSharingToken', {}).then((response) => {
-        this.sharingLink = `${document.location.origin}/sharing/${response.result.sharing.token}`;
+        this.sharingLink = `${document.location.origin}/sharing/${response.result.sharingLinks.token}`;
       });
     },
     copyInClipboard() {

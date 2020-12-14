@@ -9,7 +9,7 @@ info:
 servers:
   - url: http://homecheck-api.herokuapp.com/v2/
     description: Production server (uses live data)
-  - url: http://localhost:8080/v2
+  - url: http://localhost:3000/v2
     description: Local server (demo on local host)
 
 security:
@@ -460,7 +460,7 @@ paths:
           description: Group not found
         '500':
           description: Something went wrong when retrieving group
-  /sharing/token:
+  /sharing-links/token:
     summary: Food storage shared token
     get:
       summary: Get shared token
@@ -472,7 +472,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharingToken'
+                $ref: '#/components/schemas/SharingLinkToken'
         '401':
           description: 'User not logged in'
         '404':
@@ -487,7 +487,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharingToken'
+                $ref: '#/components/schemas/SharingLinkToken'
         '401':
           description: 'User not logged in'
         '409':
@@ -502,12 +502,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SharingToken'
+                $ref: '#/components/schemas/SharingLinkToken'
         '401':
           description: 'User not logged in'
         '403':
           description: 'Not authorized to do this action'
-  /sharing/{token}/products:
+  /sharing-links/{token}/products:
     summary: 'Shared products collection'
     parameters:
       - name: 'token'
@@ -528,7 +528,7 @@ paths:
                 $ref: '#/components/schemas/ArrayOfProductsRes'
         '403':
           description: 'User not authorized'
-  /sharing/{token}/products/{productId}:
+  /sharing-links/{token}/products/{productId}:
     summary: 'Shared product'
     parameters:
       - name: 'productId'
@@ -920,18 +920,18 @@ components:
                         type: string
                         description: 'Request url'
 
-    SharingToken:
+    SharingLinkToken:
       type: object
       properties:
         data:
           type: object
           required:
-            - sharing
+            - sharingLinks
           properties:
             message:
               type: string
               description: 'Response status description'
-            sharing:
+            sharingLinks:
               type: object
               required:
                 - token

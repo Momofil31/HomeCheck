@@ -6,7 +6,7 @@ function getSharingFromEntity(sharing, req) {
 
   toRtn.request = {};
   toRtn.request.type = 'GET';
-  toRtn.request.url = `${req.headers.host}/v2/sharing/${sharing._id}/products`;
+  toRtn.request.url = `${req.headers.host}/v2/sharing-links/${sharing._id}/products`;
 
   return toRtn;
 }
@@ -27,7 +27,7 @@ exports.getOne = (req, res) => {
       return res.status(200).json({
         data: {
           message: 'Get token successful',
-          sharing: getSharingFromEntity(sharing[0], req),
+          sharingLinks: getSharingFromEntity(sharing[0], req),
         },
       });
     })
@@ -66,7 +66,7 @@ exports.createOne = (req, res) => {
         return res.status(201).json({
           data: {
             message: 'Get token successful',
-            sharing: getSharingFromEntity(sharingModel, req),
+            sharingLinks: getSharingFromEntity(sharingModel, req),
           },
         });
       });
@@ -90,7 +90,7 @@ exports.deleteOne = (req, res) => {
         return res.status(200).json({
           data: {
             message: 'Delete token successful',
-            sharing: getSharingFromEntity(response, req),
+            sharingLinks: getSharingFromEntity(response, req),
           },
         });
       }

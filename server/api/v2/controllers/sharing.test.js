@@ -7,7 +7,7 @@ const Products = require('../../../models/Product');
 
 const server = supertest(app);
 
-const basePath = '/v2/sharing';
+const basePath = '/v2/sharing-links';
 let testUser;
 
 describe('Test sharing controller', () => {
@@ -44,7 +44,7 @@ describe('Test sharing controller', () => {
       .send();
 
     expect(response.status).toBe(200);
-    expect(response.body.data.sharing.token).toBe(sharing._id.toString());
+    expect(response.body.data.sharingLinks.token).toBe(sharing._id.toString());
   });
 
   test("GET get sharing token 404 - sharing token doesn't exist", async () => {
@@ -67,7 +67,7 @@ describe('Test sharing controller', () => {
     expect(response.body).toMatchObject({
       data: {
         message: expect.stringMatching(/.*/),
-        sharing: {
+        sharingLinks: {
           token: expect.stringMatching(/.*/),
           request: expect.anything(),
         },
@@ -79,7 +79,7 @@ describe('Test sharing controller', () => {
       .then((token) => token)
       .catch(() => null);
 
-    expect(response.body.data.sharing.token).toBe(sharing._id.toString());
+    expect(response.body.data.sharingLinks.token).toBe(sharing._id.toString());
   });
 
   test('POST create sharing token 409 - sharing token already present', async () => {
@@ -112,7 +112,7 @@ describe('Test sharing controller', () => {
       .send();
 
     expect(response.status).toBe(200);
-    expect(response.body.data.sharing.token).toBe(sharing._id.toString());
+    expect(response.body.data.sharingLinks.token).toBe(sharing._id.toString());
 
     const sharingToken = await Sharing.findOne({ user: testUser.user.id })
       .exec()

@@ -62,7 +62,7 @@ const routes = [
     component: () => import('@/views/Settings.vue'),
   },
   {
-    path: '/sharing/:token',
+    path: '/sharing-links/:token',
     name: 'Sharing',
     component: () => import('@/views/Sharing.vue'),
   },
