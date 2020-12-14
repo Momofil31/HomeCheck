@@ -144,7 +144,7 @@ export default {
   },
   methods: {
     save() {
-      if (this.$props.action === 'Create') {
+      if (this.$props.action === 'Add') {
         if (this.$refs.form.validate()) {
           this.$store.dispatch('api/products/CreateOne', this.product).then((response) => {
             this.closeDialog();
