@@ -1,14 +1,13 @@
 <template>
-  <v-form ref="form" v-model="valid">
+  <v-form ref="form" v-model="valid" id="password-form">
     <v-container>
       <div class="text-h6">Change Password</div>
-      <v-row>
-        <v-col cols="12" sm="4">
+      <v-row >
+        <v-col cols="12">
           <v-text-field
             label="Current password*"
             v-model="currentPassword"
             min="8"
-            prepend-inner-icon="mdi-lock"
             :append-icon="!showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="changePasswordVisibility"
             :type="showPassword ? 'text' : 'password'"
@@ -17,12 +16,11 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="4">
+        <v-col cols="12">
           <v-text-field
             label="New Password"
             v-model="newPassword"
             min="8"
-            prepend-inner-icon="mdi-lock"
             :append-icon="!showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="changePasswordVisibility"
             :type="showPassword ? 'text' : 'password'"
@@ -31,12 +29,11 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="4">
+        <v-col cols="12">
           <v-text-field
             label="Confirm New Password"
             v-model="confirmPassword"
             min="8"
-            prepend-inner-icon="mdi-lock"
             :append-icon="!showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="changePasswordVisibility"
             :type="showPassword ? 'text' : 'password'"
