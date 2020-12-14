@@ -6,7 +6,7 @@
 
     <Toast />
 
-    <Navigation v-if="isLoggedIn" />
+    <Navigation v-if="isLoggedIn || isSharing" />
 
     <!-- Sizes your content based upon application components -->
     <v-main>
@@ -42,6 +42,10 @@ export default {
 
     isLoading() {
       return this.$store.getters['layout/isLoading'];
+    },
+    
+    isSharing() {
+      return this.$route.params.token;
     },
   },
 };

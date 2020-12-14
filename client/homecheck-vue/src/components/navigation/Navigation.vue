@@ -2,7 +2,7 @@
   ><div :class="{'sidebar-open': !mini}">
     <v-app-bar app color="primary" dark>
       <v-spacer></v-spacer>
-      <v-btn @click="logoutClicked">
+      <v-btn @click="logoutClicked" v-if="isLoggedIn">
         <v-icon>logout</v-icon>
         Logout
       </v-btn>
@@ -27,7 +27,7 @@
         </v-list-item>
       </v-list>
 
-      <v-list dense>
+      <v-list dense v-if="!isSharing || isLoggedIn">
         <NavigationItem
           v-for="item in items"
           :key="item.title"
@@ -36,6 +36,18 @@
           :title="item.title"
         />
       </v-list>
+      <template v-else>
+        <NavigationItem
+          icon="mdi-cart"
+          title="Products">
+        </NavigationItem>
+        <NavigationItem
+          action="/login"
+          icon="mdi-login"
+          title="Login">
+        </NavigationItem>
+      </template>
+      
     </v-navigation-drawer>
   </div>
 </template>
@@ -63,6 +75,14 @@ export default {
   computed: {
     mini() {
       return this.$vuetify.breakpoint.smAndDown || this.toggleMini;
+    },
+    
+    isSharing() {
+      return this.$route.params.token;
+    },
+    
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
     },
   },
   methods: {
