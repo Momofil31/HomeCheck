@@ -17,6 +17,7 @@ exports.getList = (req, res) => {
             name: category.name,
             icon: category.icon,
             default: category.default,
+            user: category.user,
             request: {
               type: 'GET',
               url: `${req.headers.host}/categories/${category._id}`,
@@ -79,6 +80,7 @@ exports.getOne = (req, res) => {
             name: category.name,
             icon: category.icon,
             default: category.default,
+            user: category.user,
             request: {
               type: 'GET',
               url: `${req.headers.host}/categories`,
@@ -136,6 +138,11 @@ exports.updateOne = (req, res) => {
               name: response.name,
               icon: response.icon,
               default: response.default,
+              user: response.user,
+              request: {
+                type: 'GET',
+                url: `${req.headers.host}/categories/${response._id}`,
+              },
             },
           },
         });
@@ -209,6 +216,7 @@ exports.createOne = (req, res) => {
               name: categoryModel.name,
               icon: categoryModel.icon,
               default: categoryModel.default,
+              user: categoryModel.user,
               request: {
                 type: 'GET',
                 url: `${req.headers.host}/categories/${categoryModel._id}`,
@@ -272,6 +280,11 @@ exports.deleteOne = (req, res) => {
                 name: category.name,
                 icon: category.icon,
                 default: category.default,
+                user: category.user,
+                request: {
+                  type: 'GET',
+                  url: `${req.headers.host}/categories/${category._id}`,
+                },
               },
             },
           });
