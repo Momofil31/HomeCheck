@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../../../models/User');
 const Category = require('../../../models/Category');
 const Group = require('../../../models/Group');
@@ -37,6 +38,62 @@ async function confirmUser(user) {
   await User.findByIdAndUpdate(user.body.data.user.id, { token: '', blocked: false }).exec();
 }
 
+async function createTestCategory(userId) {
+  const category = new Category({
+    _id: mongoose.Types.ObjectId(),
+    name: 'Test1',
+    icon: 'Test1.png',
+    user: userId,
+    default: false,
+  });
+
+  await Category.create(category);
+
+  return category;
+}
+
+async function createTestGroup() {
+  const group = new Group({
+    _id: mongoose.Types.ObjectId(),
+    name: 'Test',
+  });
+
+  await Group.create(group);
+
+  return group;
+}
+
+async function createTestProducts(category, group, userId) {
+  const products = [
+    new Product({
+      name: 'Product1',
+      quantity: '4',
+      expiryDate: '2020-12-25',
+      user: userId,
+      category: category._id,
+      group: group._id,
+    }),
+    new Product({
+      name: 'Product2',
+      quantity: '4',
+      expiryDate: '2020-12-25',
+      user: userId,
+      category: category._id,
+      group: group._id,
+    }),
+    new Product({
+      name: 'Product3',
+      quantity: '4',
+      expiryDate: '2020-12-25',
+      user: userId,
+      category: category._id,
+      group: group._id,
+    }),
+  ];
+
+  await Product.insertMany(products);
+}
+
 exports.getTestUserAuthToken = async (supertestServer) => {
   await clearUserTable();
   const response = await registerUser(supertestServer);
@@ -71,3 +128,9 @@ exports.clearSharingTable = async () => {
 exports.clearUserTable = async () => {
   await clearUserTable();
 };
+
+exports.createTestCategory = async (userId) => createTestCategory(userId);
+
+exports.createTestGroup = async () => createTestGroup();
+
+exports.createTestProducts = async (category, group, userId) => createTestProducts(category, group, userId);
