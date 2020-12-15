@@ -31,7 +31,7 @@ export default {
   props: {
     products: {
       type: Array,
-      default: []
+      default: () => []
     },
     title: {
       type: String,

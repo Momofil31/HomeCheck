@@ -60,15 +60,16 @@ export default {
         .dispatch('api/groups/GetList', {})
         .then((data) => {
           var groups = data.result.groups;
-          groups.forEach(function(group) {
+          groups.forEach(function(group, index) {
+            group.products = [];
+            Instance.groups.push(group);
             Instance.$store
               .dispatch('api/products/GetList', { group: group.id })
               .then((data) => {
-                group.products = data.result.products;
-                Instance.groups.push(group);
+                Instance.groups[index].products = data.result.products;
               })
               .catch((data) => {
-                Instance.groups = [];
+                Instance.groups[index].products = [];
               });
           });
         })

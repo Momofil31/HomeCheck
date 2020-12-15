@@ -26,9 +26,6 @@
                 Name
               </th>
               <th class="text-left">
-                Products
-              </th>
-              <th class="text-left">
                 Actions
               </th>
             </tr>
@@ -36,7 +33,6 @@
           <tbody>
             <tr v-for="item in categories" :key="item.name">
               <td>{{ item.name }}</td>
-              <td>0</td>
               <td>
                 <v-dialog
                   v-model="dialogUpdate"
