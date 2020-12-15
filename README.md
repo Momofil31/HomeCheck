@@ -10,8 +10,6 @@ Per testare in locale l'applicazione per prima cosa clonare il repository e fare
 
 ```git clone https://github.com/Momofil31/HomeCheck/```
 
-```git checkout develop```
-
 In un terminale installare le dipendenze ed eseguire il server Express
 
 ```cd server```
@@ -31,3 +29,9 @@ In un altra finestra del terminale installare le dipendenze ed eseguire l'applic
 L'API è raggiungibile all'indirizzo ```localhost:3000/```
 
 L'applicazione Vue è raggiungibile all'indirizzo ```localhost:8080/```
+
+Per eseguire i test lanciare jest mediante
+
+```cd server```
+
+```npm test```
