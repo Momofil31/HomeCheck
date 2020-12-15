@@ -30,7 +30,7 @@ if (process.env.JEST_WORKER_ID) {
   );
 }
 
-app.use(morgan('dev')); // Logs HTTP requests in node shell
+app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })); // Logs HTTP requests in node shell
 app.use(express.urlencoded({ extended: false })); // Parses URLs
 app.use(express.json()); // Parses JSON
 
