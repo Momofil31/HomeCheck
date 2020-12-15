@@ -45,13 +45,16 @@ export default {
         .dispatch('api/products/GetList', {})
         .then((data) => {
           var products = data.result.products;
-          var today = (new Date()).getTime();
+          var today = new Date();
+          var tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow = tomorrow.getTime();
           products.forEach(function(product){
             if(product.quantity <= 0) Instance.outStockProducts.push(product);
             
             var expiryDate = (new Date(product.expiryDate)).getTime()
             
-            if(expiryDate <= today) Instance.expiryProducts.push(product);
+            if(expiryDate <= tomorrow) Instance.expiryProducts.push(product);
           })
         })
         .catch((data) => {
