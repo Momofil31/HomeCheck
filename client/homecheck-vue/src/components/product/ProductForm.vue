@@ -148,11 +148,7 @@ export default {
         if (this.$refs.form.validate()) {
           this.$store.dispatch('api/products/CreateOne', this.product).then((response) => {
             this.closeDialog();
-            this.name = '';
-            this.expiryDate = '';
-            this.quantity = '';
-            this.category = '';
-            this.group = '';
+            this.$refs.form.reset()
           });
         }
       }
