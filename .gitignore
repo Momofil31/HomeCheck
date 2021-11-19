@@ -211,6 +211,7 @@ typings/
 
 # dotenv environment variables file
 #.env
+.env
 .env.test
 .env*.local
 
